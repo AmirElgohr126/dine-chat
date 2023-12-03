@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\App\Auth\LoginController;
+use App\Http\Controllers\App\Auth\LogoutController;
 use App\Http\Controllers\App\Auth\RegisterController;
 use App\Http\Controllers\App\Auth\VerificationController;
 
@@ -22,7 +23,9 @@ use App\Http\Controllers\App\Auth\VerificationController;
 */
 Route::prefix('auth')->group(function(){
     Route::post('register',[RegisterController::class,'register']);
-    Route::post('login',[LoginController::class,'login'])->middleware('verified');
+    Route::post('login',[LoginController::class,'login']);
+    Route::delete('logout',[LogoutController::class,'logout'])->middleware('verified');
+
 
 });
 Route::prefix('email')->group(function(){

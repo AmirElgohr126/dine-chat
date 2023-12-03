@@ -26,17 +26,22 @@ class LoginController extends Controller
             $credentials = $request->validated();
             // Attempt to generate a JWT token with the provided credentials
             $token = auth('api')->setTTL(env('JWT_TTL'))->attempt($credentials);
-
             // If token generation fails, throw an exception
             if (!$token) {
-                throw new Exception('Invalid credentials');
+                throw new Exception('invalid credentials');
             }
             $user = auth('api')->user();
+
+            // Check if the user is verified
+            if (!$user->email_verified_at) {
+                throw new Exception('Email not verified');
+            }
+
             // Return a successful response with the token and user information
             return finalResponse('success',200,["token"=>$token,"user"=> new UserResources($user)]);
         } catch (Exception $e) {
             // Handle exceptions, and return a failed response with a 401 status code
-            return finalResponse('failed',401,null,null, 'opps'.$e->getMessage());
+            return finalResponse('failed',401,null,null, 'opps '.$e->getMessage());
         }
     }
 }

@@ -20,9 +20,9 @@ class ContactFactory extends Factory
      */
     public function definition(): array
     {
-        $user = User::inRandomOrder()->first();
+        $userId = User::inRandomOrder()->first()->id;
         return [
-            'user_id' =>  $user->id,
+            'user_id' =>  $userId,
             'name' => $this->faker->name,
             'photo' => $this->faker->imageUrl(null, 200, 200),
             'phone' => $this->faker->phoneNumber,

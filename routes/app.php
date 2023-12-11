@@ -5,12 +5,12 @@ use Illuminate\Http\Request;
 
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\App\Nfc\NfcController;
 use App\Http\Controllers\App\Auth\LoginController;
 use App\Http\Controllers\App\Auth\LogoutController;
 use App\Http\Controllers\App\Auth\RegisterController;
 use App\Http\Controllers\App\Auth\VerificationController;
 use App\Http\Controllers\App\ContactsList\ContactsListController;
-
 
 /*
 |--------------------------------------------------------------------------
@@ -22,7 +22,7 @@ use App\Http\Controllers\App\ContactsList\ContactsListController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::group(['middleware' => ['set_lang']],function(){
+Route::middleware('set_lang')->group(function(){
 
     Route::prefix('user')->group(function(){
         Route::group(['prefix'=>'auth'],function()
@@ -52,4 +52,6 @@ Route::group(['middleware' => ['set_lang']],function(){
         })->middleware('auth')->name('verification.notice');// finshed
     });
 
+
+    Route::post('nfc/vaildate',[NfcController::class,'VaildateNfcParameter']);
 });

@@ -27,7 +27,7 @@ class UserFollowerFactory extends Factory
         return [
             'user_id' => $user->id,
             'contact_id' => $contact->id,
-            'follow_status' => $this->faker->randomElement(['follow', 'unfollow', 'invited']),
+            'follow_status' => $this->faker->randomElement(['follow', 'invited']),
         ];
     }
 }

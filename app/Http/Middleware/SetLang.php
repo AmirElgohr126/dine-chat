@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -16,8 +17,8 @@ class SetLang
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $preferredLanguage = $request->header('Accept-Language') ?? 'en';
-        app()->setLocale($preferredLanguage);
-        return $next($request);
+            $preferredLanguage = $request->header('Accept-Language') ?? 'en';
+            app()->setLocale($preferredLanguage);
+            return $next($request);
     }
 }

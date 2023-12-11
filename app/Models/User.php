@@ -1,8 +1,6 @@
 <?php
 
 namespace App\Models;
-
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -26,6 +24,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'email',
         'password',
         'photo',
+        'phone',
         'last_name',
     ];
 
@@ -77,5 +76,19 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         static::created(function ($user) {
             $user->sendEmailVerificationNotification();
         });
+    }
+    public function contacts()
+    {
+        return $this->hasMany(Contact::class,'user_id','id');
+    }
+
+    public function contactThroughFollowers() {
+        return $this->hasManyThrough(
+            Contact::class,
+            UserFollower::class,
+            "user_id",          // Foreign key on UserFollower table
+            'id',               // Local key on User table
+            'user_id',          // Foreign key on Contact table
+            'contact_id');      // Local key on UserFollower table);
     }
 }

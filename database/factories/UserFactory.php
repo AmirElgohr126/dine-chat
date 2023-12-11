@@ -21,11 +21,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'first_name' => $this->faker->firstName,
+            'last_name' => $this->faker->lastName,
+            'user_name' => $this->faker->userName,
+            'email' => $this->faker->unique()->safeEmail,
+            'photo' => 'default.jpg', // Assuming you have a default image for users
+            'phone' => $this->faker->unique()->phoneNumber,
+            'password' => bcrypt('password'), // You might want to use a better way to generate passwords
             'email_verified_at' => now(),
-            'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
         ];
     }
 

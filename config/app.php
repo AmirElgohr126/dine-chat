@@ -85,6 +85,10 @@ return [
 
     'locale' => 'en',
 
+    'languages' => [
+        'ar' => 'arabic',
+        'en' => 'englsih'
+    ],
     /*
     |--------------------------------------------------------------------------
     | Application Fallback Locale
@@ -168,6 +172,7 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+        App\Providers\ContactListServiceProvider::class,
     ])->toArray(),
 
     /*

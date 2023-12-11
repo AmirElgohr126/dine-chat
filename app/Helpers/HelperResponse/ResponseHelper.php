@@ -15,4 +15,15 @@ function finalResponse($message = "success", // success or failed
             'errors' => $errors
         ],$statusCode);
     }
+
+
+function pagnationResponse($model) : array
+    {
+        return [
+            'current_page' => $model->currentPage(),
+            'last_page' => $model->lastPage(),
+            'total' => $model->total(),
+            'per_page' => $model->perPage(),
+        ];
+    }
 ?>

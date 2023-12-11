@@ -10,7 +10,12 @@ class LogoutController extends Controller
 
     public function logout(Request $request)
     {
-        auth('api')->logout();
+        try {
+            auth('api')->logout();
         return finalResponse('success','200','logout successfully');
+        } catch (\Throwable $e) {
+            return finalResponse('failed',500,null,null, 'opps '.$e->getMessage());
+        }
+
     }
 }

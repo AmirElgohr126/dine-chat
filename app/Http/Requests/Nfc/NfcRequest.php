@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Contacts;
+namespace App\Http\Requests\Nfc;
 
-use App\Models\UserFollower;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FollowContactRequest extends FormRequest
+class NfcRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,17 +22,11 @@ class FollowContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "contact_id" => "required|exists:contacts,id"
+            'restaurant_id' => 'required',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'table_number' => 'required|numeric',
+            'chair_number' => 'required|numeric',
         ];
     }
-
-    // public function withValidator($validator)
-    // {
-    //     $validator->after(function ($validator) {
-
-
-    //     });
-    // }
-
-
 }

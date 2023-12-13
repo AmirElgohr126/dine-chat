@@ -1,16 +1,21 @@
-
 <?php
 
 use Illuminate\Http\Request;
 
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\App\Nfc\NfcController;
 use App\Http\Controllers\App\Auth\LoginController;
+use App\Http\Controllers\App\About\AboutController;
 use App\Http\Controllers\App\Auth\LogoutController;
 use App\Http\Controllers\App\Auth\RegisterController;
+use App\Http\Controllers\App\Profile\ProfileController;
 use App\Http\Controllers\App\Auth\VerificationController;
+use App\Http\Controllers\App\Settings\SettingsController;
+use App\Http\Controllers\App\Ratings\FoodRatingController;
+use App\Http\Controllers\App\Restaurant\RestaurantController;
+use App\Http\Controllers\App\Ratings\RestaurantRatingController;
 use App\Http\Controllers\App\ContactsList\ContactsListController;
+use App\Http\Controllers\App\Restaurant\GetMapsOfRestaurantController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,36 +27,64 @@ use App\Http\Controllers\App\ContactsList\ContactsListController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-Route::middleware('set_lang')->group(function(){
 
-    Route::prefix('user')->group(function(){
-        Route::group(['prefix'=>'auth'],function()
-        {
-            Route::post('/register',[RegisterController::class,'register']); // finshed
-            Route::post('/login',[LoginController::class,'login']); // finshed
-            Route::delete('/logout',[LogoutController::class,'logout'])->middleware('verified');// finshed
-        });
+Route::middleware('set_lang')->group(function () {
 
-        Route::group(['middleware' => ['auth','verified'],'prefix'=>'contactlist'],function()
-        {
-            Route::get('/',[ContactsListController::class,'getContactList']); //finshed
-            Route::post('/',[ContactsListController::class,'postContactList']); //finshed
-            Route::post('/follow',[ContactsListController::class,'followContact']); //finshed
-            Route::post('/unfollow',[ContactsListController::class,'unfollowContact']); //working
-            Route::post('/invite',[ContactsListController::class,'inviteContact']); //working
-        });
+    Route::group(['prefix' => 'user/auth'], function () {
+        Route::post('/register', [RegisterController::class, 'register']); // finished
+        Route::post('/login', [LoginController::class, 'login']); // finished
+        Route::delete('/logout', [LogoutController::class, 'logout'])->middleware('verified'); // finished
     });
-
-
-
-    Route::prefix('email')->group(function(){
-        Route::get('verify/{id}', [VerificationController::class,'verify'])->name('verification.verify');
-        Route::get('resend', [VerificationController::class,'resend'])->name('verification.resend');// finshed
+    // =====================================================================================
+    Route::prefix('email')->group(function () {
+        Route::get('verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
+        Route::get('resend', [VerificationController::class, 'resend'])->name('verification.resend'); // finished
         Route::get('verify', function () {
             return view('auth.verify-email');
-        })->middleware('auth')->name('verification.notice');// finshed
+        })->middleware('auth')->name('verification.notice'); // finished
     });
+    Route::group(['middleware' => ['auth', 'verified']], function () {
+        Route::group(['prefix' => 'contactlist'], function () {
+            Route::get('/', [ContactsListController::class, 'getContactList']); //finished
+            Route::post('/', [ContactsListController::class, 'postContactList']); //finished
+            Route::post('/follow', [ContactsListController::class, 'followContact']); //finished
+            Route::post('/unfollow', [ContactsListController::class, 'unfollowContact']); // finished
+            Route::post('/invite', [ContactsListController::class, 'inviteContact']); // finished
+        });
+        // =====================================================================================
+        Route::post('nfc/vaildate', [NfcController::class, 'VaildateNfcParameter']); // finished
+        // =====================================================================================
+        Route::group(['prefix' => 'restaurant'], function () {
+            Route::get('map', [GetMapsOfRestaurantController::class, 'closestRestaurants']); // finished
+            Route::get('user/count', [RestaurantController::class, 'usersInRestaurant']); // finished
+            Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // finished
+        });
+        // =====================================================================================
+        Route::group(['prefix' => 'rating'],function (){
+            Route::get('restaurant',[RestaurantRatingController::class,'restaurantsRating']); // finished
+            Route::get('food',[FoodRatingController::class,'rating']); // working
+        });
+        // =====================================================================================
+        Route::group(['prefix' => 'settings'], function () {
+            Route::post('email', [SettingsController::class, 'changeEmail']); // finished
+            Route::post('password', [SettingsController::class, 'changePassword']); // finished
+            Route::post('ghost', [SettingsController::class, 'changeToGhost']); // finished
+        });
+        // =====================================================================================
+        Route::group(['prefix' => 'profile'], function () {
+            Route::post('photo', [ProfileController::class, 'photo']); // finished
+            Route::post('name', [ProfileController::class, 'name']); // finished
+            Route::post('bio', [ProfileController::class, 'bio']); // finished
+        });
+        // =====================================================================================
+        Route::group(['prefix' => 'about'], function () {
+            Route::get('/policy', [AboutController::class, 'privacyPolicy']); // finished
+            Route::get('/terms', [AboutController::class, 'termsConditions']); // finished
+            Route::get('/aboutus', [AboutController::class, 'aboutUs']); // finished
+        });
+        // =====================================================================================
+        Route::post('user/follow',[RestaurantController::class,'followUser']); // finished
 
-
-    Route::post('nfc/vaildate',[NfcController::class,'VaildateNfcParameter']);
+    });
 });
+

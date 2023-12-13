@@ -16,12 +16,17 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this
-            ->call(UserSeeder::class)
-            ->call(ContactSeeder::class)
-            ->call(UserFollowerSeeder::class)
-            ->call(RestaurantSeeder::class)
-            ->call(TableSeeder::class)
-            ->call(ChairSeeder::class)
-            ->call(FoodSeeder::class);
+            // ->call(UserSeeder::class)
+            // ->call(ContactSeeder::class)
+            // ->call(UserFollowerSeeder::class)
+            // ->call(RestaurantSeeder::class)
+            // ->call(TableSeeder::class)
+            // ->call(ChairSeeder::class)
+            // ->call(FoodSeeder::class)
+            // ->call(AboutApplicationsSeeder::class)
+            // ->call(UserAttendanceSeeder::class);
+            // ->call(RestaurantRatingSeeder::class);
+            ->call(FoodImagesTableSeeder::class);
+
     }
 }

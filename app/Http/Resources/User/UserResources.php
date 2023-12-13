@@ -19,7 +19,7 @@ class UserResources extends JsonResource
             'first_name'=> $this->first_name,
             'user_name'=> $this->user_name,
             'email'=> $this->email,
-            'photo'=> env('APP_URL').'/public/storage/'.$this->photo,
+            'photo'=> env('APP_URL').'public/storage/'.$this->photo,
         ];
     }
 }

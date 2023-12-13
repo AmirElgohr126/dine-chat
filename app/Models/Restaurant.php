@@ -37,4 +37,15 @@ class Restaurant extends Model implements TranslatableContract
     {
         return $this->hasMany(Food::class,'restaurant_id','id');
     }
+    public function ratings()
+    {
+        return $this->hasMany(Food::class,'restaurant_id','id');
+    }
+
+
+
+    public function userAttendance()
+    {
+        return $this->hasMany(UserAttendance::class,'restaurant_id','id');
+    }
 }

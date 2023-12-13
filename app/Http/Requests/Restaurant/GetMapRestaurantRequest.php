@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Contacts;
+namespace App\Http\Requests\Restaurant;
 
-use App\Models\UserFollower;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FollowContactRequest extends FormRequest
+class GetMapRestaurantRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -23,17 +22,10 @@ class FollowContactRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "contact_id" => "required|exists:contacts,id"
+            'per_page' => 'required|integer',
+            'latitude' => 'required|numeric',
+            'longitude' => 'required|numeric',
+            'radius' => 'required|integer',
         ];
     }
-
-    // public function withValidator($validator)
-    // {
-    //     $validator->after(function ($validator) {
-
-
-    //     });
-    // }
-
-
 }

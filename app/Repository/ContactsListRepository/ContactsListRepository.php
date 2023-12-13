@@ -61,12 +61,11 @@ Class ContactsListRepository implements ContactsListInterface{
             }else{
                 $contact['photo'] = null;
             }
-        $contact['user_id']=$request->user()->id;
-        $savedContacts[] = $contact;
+            $contact['user_id']=$request->user()->id;
+            $savedContacts[] = $contact;
         }
-            $savedContacts = Contact::insert($savedContacts);
-
-            return $savedContacts;
+        $savedContacts = Contact::insert($savedContacts);
+        return $savedContacts;
     }
 
     /**
@@ -80,16 +79,28 @@ Class ContactsListRepository implements ContactsListInterface{
     {
             $id = $request->validated('contact_id');
             $user = $request->user();
-            $contact = Contact::find($id);
+            $contact = Contact::findOrfail($id);
             if($contact->status_on_app == 'not_subscrib')
             {
-                throw new Exception("cant't follow this member it is not subscribe on our app you can just invite him.");
+                throw new Exception("cant't follow this member it is not subscribe on our app you can just invite him.",400);
             }
-            $follow = UserFollower::create(['user_id'=>$user->id,'contact_id'=>$id,'follow_status'=>'follow']);
+
+            $isFollowing = UserFollower::where('user_id', $user->id)->where('contact_id', $contact->id)->exists();
+            if ($isFollowing) {
+                throw new Exception("you already following the contact.",400);
+            }
+            $followedUser = User::select(['id','phone'])->where('phone',$contact->phone)->first();
+
+            if($followedUser->phone != $contact->phone)
+            {
+                throw new Exception("somthing error in this contact",500);
+            }
+
+            $follow = UserFollower::create(['user_id'=>$user->id,'followed_user' => $followedUser->id,'contact_id'=>$id,'follow_status'=>'follow']);
             if ($follow) {
                 return $follow;
             } else {
-                throw new Exception("Error Processing Request");
+                throw new Exception("Error Processing Request",500);
             }
     }
     /**
@@ -120,14 +131,14 @@ Class ContactsListRepository implements ContactsListInterface{
         $contact = Contact::find($id);
         if(!$contact->status_on_app == 'not_subscrib')
         {
-            throw new Exception("cant't invite him it already subscribe.");
+            throw new Exception("cant't invite him it already subscribe.",400);
         }
         $follow = UserFollower::create(['user_id'=>$user->id,'contact_id'=>$id,'follow_status'=>'invited']);
         if ($follow) {
             // Mail::to($contact->email)->send(new inviteContact());
             return $follow;
         } else {
-            throw new Exception("Error Processing Request");
+            throw new Exception("Error Processing Request",500);
         }
     }
 }

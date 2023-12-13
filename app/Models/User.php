@@ -1,6 +1,9 @@
 <?php
 
 namespace App\Models;
+use App\Models\Contact;
+use App\Models\UserGhost;
+use App\Models\UserFollower;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -25,7 +28,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'password',
         'photo',
         'phone',
-        'last_name',
+        'ghost_mood'
     ];
 
     /**
@@ -81,14 +84,13 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return $this->hasMany(Contact::class,'user_id','id');
     }
+    public function ghost()
+    {
+        return $this->hasOne(UserGhost::class, 'user_id', 'id');
+    }
 
-    public function contactThroughFollowers() {
-        return $this->hasManyThrough(
-            Contact::class,
-            UserFollower::class,
-            "user_id",          // Foreign key on UserFollower table
-            'id',               // Local key on User table
-            'user_id',          // Foreign key on Contact table
-            'contact_id');      // Local key on UserFollower table);
+    public function restaurantRatings()
+    {
+        return $this->hasMany(RestaurantRating::class,'user_id','id');
     }
 }

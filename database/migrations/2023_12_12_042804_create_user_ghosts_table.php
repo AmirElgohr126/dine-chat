@@ -11,12 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_followers', function (Blueprint $table) {
+        Schema::create('user_ghosts', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('contact_id')->nullable()->references('id')->on('contacts')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->enum('follow_status',['follow','invited'])->default('follow');
-            $table->unique(['user_id','contact_id']);
+            $table->string('first_name');
+            $table->string('last_name');
+            $table->string('photo')->nullable(false);
+            $table->string('phone')->unique()->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_followers');
+        Schema::dropIfExists('user_ghosts');
     }
 };

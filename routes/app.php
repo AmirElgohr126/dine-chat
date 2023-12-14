@@ -62,7 +62,7 @@ Route::middleware('set_lang')->group(function () {
         // =====================================================================================
         Route::group(['prefix' => 'rating'],function (){
             Route::get('restaurant',[RestaurantRatingController::class,'restaurantsRating']); // finished
-            Route::get('food',[FoodRatingController::class,'rating']); // working
+            Route::get('food',[FoodRatingController::class,'foodsRating']); // finished
         });
         // =====================================================================================
         Route::group(['prefix' => 'settings'], function () {

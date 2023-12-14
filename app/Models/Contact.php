@@ -29,7 +29,7 @@ class Contact extends Model
     {
         // Event for decrypting the content after a Post is retrieved
         static::retrieved(function ($contact) {
-            $contact->photo = env('APP_URL').'/public/storage/'.$contact->photo;
+            $contact->photo = retriveMedia().$contact->photo;
         });
     }
 

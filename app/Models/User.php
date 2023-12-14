@@ -2,6 +2,7 @@
 
 namespace App\Models;
 use App\Models\Contact;
+use App\Models\Message;
 use App\Models\UserGhost;
 use App\Models\UserFollower;
 use Laravel\Sanctum\HasApiTokens;
@@ -92,5 +93,16 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     public function restaurantRatings()
     {
         return $this->hasMany(RestaurantRating::class,'user_id','id');
+    }
+
+
+    public function sentMessages()
+    {
+        return $this->hasMany(Message::class, 'sender_id');
+    }
+
+    public function receivedMessages()
+    {
+        return $this->hasMany(Message::class, 'receiver_id');
     }
 }

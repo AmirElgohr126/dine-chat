@@ -25,7 +25,7 @@ class UserAttendanceResource extends JsonResource
                 'first_name' => $this->users->first_name,
                 'last_name' => $this->users->last_name,
                 'email' => $this->users->email,
-                'photo' => $this->users->photo,
+                'photo' => retriveMedia().$this->users->photo,
                 'phone' => $this->users->phone,
                 'ghost_mood' => $this->users->ghost_mood,
                 'bio' => $this->users->bio,

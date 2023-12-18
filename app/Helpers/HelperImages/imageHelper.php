@@ -43,4 +43,15 @@ function updateAndDeleteFile($file, $model,string $attributename,string $disksto
     return false;
 }
 
+
+function retriveMedia() : string
+{
+    if(env('APP_URL')=='http://127.0.0.1:8000')
+    {
+        $path = env('APP_URL').'/';
+    }else{
+        $path = env('APP_URL') . '/public/storage/';
+    }
+    return $path;
+}
 ?>

@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\UserAttendance;
+use App\Models\FoodRating;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class UserAttendanceSeeder extends Seeder
+class FoodRatingsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        UserAttendance::factory(1)->create();
+        FoodRating::factory(50)->create();
     }
 }

@@ -16,11 +16,13 @@ class RestaurantRatingController extends Controller
         $request->validate([
             'user_id' => ['required',
                 Rule::exists('users', 'id')->where(function ($query) use ($user) {
-                    $query->where('id', '!=', $user->id);
-                })]
+                    $query->where('id', '!=', $user->id);})
+                ],
+            'restaurant_id' => ["required","exists:restaurants,id"]
         ]);
         try {
             $targetUserId = $request->user_id;
+            $restaurantId = $request->restaurant_id;
             $ratingsWithRestaurants = DB::table('users')
                 ->join('restaurant_ratings', 'users.id', '=', 'restaurant_ratings.user_id')
                 ->join('restaurants', 'restaurant_ratings.restaurant_id', '=', 'restaurants.id')
@@ -30,6 +32,7 @@ class RestaurantRatingController extends Controller
                 ->select(
                     'users.id as user_id',
                     'restaurant_ratings.id as rating_id',
+                    'restaurant_ratings.rating as rating',
                     'restaurants.id as restaurant_id',
                     'restaurants.images as restaurant_images',
                     'restaurants.phone as restaurant_phone',
@@ -39,6 +42,7 @@ class RestaurantRatingController extends Controller
                 ->where('users.id', $targetUserId)
                 ->where('locale', app()->getLocale())
                 ->groupBy('restaurants.id', 'users.id', 'restaurant_ratings.id', 'restaurant_translations.name', 'restaurants.images', 'restaurants.phone')
+                ->orderByRaw("restaurants.id = ? DESC", [$restaurantId])
                 ->get();
             if (isset($ratingsWithRestaurants)) {
                 return finalResponse('success', 200, $ratingsWithRestaurants);

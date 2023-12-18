@@ -24,9 +24,9 @@ class DatabaseSeeder extends Seeder
             // ->call(ChairSeeder::class)
             // ->call(FoodSeeder::class)
             // ->call(AboutApplicationsSeeder::class)
-            // ->call(UserAttendanceSeeder::class);
+            ->call(UserAttendanceSeeder::class);
             // ->call(RestaurantRatingSeeder::class);
-            ->call(FoodImagesTableSeeder::class);
+            // ->call(FoodImagesTableSeeder::class);
 
     }
 }

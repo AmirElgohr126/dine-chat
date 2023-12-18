@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Models\UserAttendance;
+use App\Models\Conversation;
 use Illuminate\Database\Seeder;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
-class UserAttendanceSeeder extends Seeder
+class ConversationsTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        UserAttendance::factory(1)->create();
+        Conversation::factory(50)->create();
     }
 }

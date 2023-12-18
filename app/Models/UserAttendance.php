@@ -39,15 +39,5 @@ class UserAttendance extends Model
 
 
 
-    protected static function booted()
-    {
-        static::addGlobalScope('createdWithinLastHour', function (Builder  $builder)
-        {
-            $builder->where('created_at', '>=', now()->subHours(1)); // last created from hour
-        });
-    }
-
-
-
 
 }

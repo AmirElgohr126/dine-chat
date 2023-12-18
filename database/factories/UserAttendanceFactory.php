@@ -32,9 +32,7 @@ class UserAttendanceFactory extends Factory
             'table_id' => function () {
                 return Table::factory()->create()->id;
             },
-            'user_id' => function () {
-                return User::factory()->create()->id;
-            },
+            'user_id' => 12,
             'created_at' => now(),
             'updated_at' => now()
         ];

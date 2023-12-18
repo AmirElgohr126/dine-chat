@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Contacts;
+namespace App\Http\Requests\Chat;
 
-use App\Models\UserFollower;
+use App\Models\UserAttendance;
 use Illuminate\Foundation\Http\FormRequest;
 
-class FollowContactRequest extends FormRequest
+class RequestNewChatRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,12 @@ class FollowContactRequest extends FormRequest
      */
     public function rules(): array
     {
+        $userId = auth()->id(); // Get the authenticated user ID
+
         return [
-            "contact_id" => "required|exists:contacts,id"
+            'message' => ['required', 'string'],
+            'user_id' => ['required', 'exists:users,id'],
+            'restaurant_id' => ['required', 'exists:restaurants,id']
         ];
     }
 

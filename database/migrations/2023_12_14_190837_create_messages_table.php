@@ -18,7 +18,7 @@ return new class extends Migration
             $table->text('content')->nullable();
             $table->string('attachment')->nullable();
             $table->foreignId('receiver_id')->references('id')->on('users')->onDelete('NO ACTION');
-            $table->foreignId('replay_on')->references('id')->on('messages')->onDelete('NO ACTION');
+            $table->foreignId('replay_on')->nullable()->references('id')->on('messages')->onDelete('NO ACTION');
             $table->timestamps();
         });
     }

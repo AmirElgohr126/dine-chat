@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('sender_id')->references('id')->on('users')->onDelete('NO ACTION');
             $table->foreignId('receiver_id')->references('id')->on('users')->onDelete('NO ACTION');
             $table->foreignId('restaurant_id')->references('id')->on('restaurants')->onDelete('NO ACTION');
-            $table->enum('status',['accept','reject']);
+            $table->enum('status',['accept','reject','invited']);
             $table->softDeletes();
             $table->timestamps();
         });

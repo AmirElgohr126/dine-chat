@@ -22,13 +22,11 @@ class GetMapsOfRestaurantController extends Controller
     public function closestRestaurants(GetMapRestaurantRequest $request)
     {
         try {
-
             // Extract parameters from the request
             $per_page = $request->per_page;
             $latitude = (float)$request->latitude;
             $longitude = (float)$request->longitude;
             $radius = (int)$request->radius;
-
             // Calculate the distance using Haversine formula
             $distance_result = "(6371 *
                                     acos(
@@ -40,7 +38,6 @@ class GetMapsOfRestaurantController extends Controller
                                         sin(radians(latitude))
                                         )
                                 )";
-
             // Retrieve restaurants within the specified radius, order by distance
             $restaurants = Restaurant::select('id', 'images', 'latitude', 'longitude')
                 ->selectRaw("{$distance_result} AS distance")
@@ -49,7 +46,6 @@ class GetMapsOfRestaurantController extends Controller
                 ->withCount('userAttendance')
                 ->paginate($per_page);
             $pagnation = pagnationResponse($restaurants); // Generate pagination response
-
             return finalResponse('success', 200, $restaurants->items(), $pagnation);  // Return the final response
         } catch (Exception $e) { // Handle exceptions and return an error response
             return finalResponse('error', 500, "Internal Server Error " . $e->getMessage(), null);
@@ -58,5 +54,5 @@ class GetMapsOfRestaurantController extends Controller
 
 
 
-    
+
 }

@@ -16,34 +16,33 @@ class NfcController extends Controller
         $data = $request->validated();
         try {
             // check card first ====================================================================================
-            $restaurant = Restaurant::findOrFail($data['restaurant_id']);
+            $restaurant = Restaurant::find($data['restaurant_id']);
+            if(!$restaurant)
+            {
+                throw new \Exception(__('errors.invalid_parameter'), 405);
+            }
             if (!($data['latitude'] == $restaurant->latitude && $data['longitude'] == $restaurant->longitude)) {
-                throw new \Exception(__('errors.invalid_parameter'));
+                throw new \Exception(__('errors.invalid_parameter'),405);
             }
-            $table = $restaurant->tables()->where('table_number', $data['table_number'])->firstOrFail();
-            $chair = $table->chairs()->where('chair_number', $data['chair_number'])->firstOrFail();
+            $table = $restaurant->tables()->where('table_number', $data['table_number'])->first();
+            if (!$table) {
+                throw new \Exception(__('errors.invalid_parameter'.' table_number'),405);
+            }
+            $chair = $table->chairs()->where('chair_number', $data['chair_number'])->first();
+            if (!$chair) {
+                throw new \Exception(__('errors.invalid_parameter' . ' chair_number'),405);
+            }
             // finsh card check ====================================================================================
-
-            // check if user in last hour make Reservation ========================================================
-            $lastHourReservation = UserAttendance::where('user_id', $request->user()->id)
-                ->where('created_at', '>', now()->subHour())
-                ->first();
-
-            if ($lastHourReservation) {
-                $lastHourReservation->created_at = now();
-                $lastHourReservation->save();
-                return finalResponse('success', 200, __('errors.valid_parameter'));
-            }
-            // finsh update user Reservation =======================================================================
-            $conflictingReservation = UserAttendance::where('chair_id', $chair->id)
+            $conflictingReservation = UserAttendance::
+                where('chair_id', $chair->id)
                 ->where('table_id', $table->id)
                 ->where('restaurant_id',$restaurant->id)
                 ->where('created_at', '>', now()->subHour())
                 ->first();
-
             if ($conflictingReservation) {
-                return finalResponse('failed', 405, null, null, __('errors.chair_table_already_reserved'));
+                throw new \Exception('this place is reservstion now ', 405);
             }
+            // there is no reservation
             $reserve = UserAttendance::create([
                 'user_id' => $request->user()->id,
                 'chair_id' => $chair->id,
@@ -53,10 +52,10 @@ class NfcController extends Controller
                 'updated_at' => now()
             ]);
             if ($reserve) {
-                return finalResponse('success', 200, __('errors.valid_parameter'));
+                return finalResponse('success', 200,'success reservation');
             }
         } catch (\Exception $e) {
-            return finalResponse('failed', 405, null, null, $e->getMessage());
+            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
 

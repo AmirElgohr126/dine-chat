@@ -4,6 +4,7 @@ namespace App\Models;
 use App\Models\Contact;
 use App\Models\Message;
 use App\Models\UserGhost;
+use App\Models\Conversation;
 use App\Models\UserFollower;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
@@ -90,11 +91,14 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasOne(UserGhost::class, 'user_id', 'id');
     }
 
+    // ================================= ratings restaurant ============================================
+
     public function restaurantRatings()
     {
         return $this->hasMany(RestaurantRating::class,'user_id','id');
     }
 
+    // ================================= message ============================================
 
     public function sentMessages()
     {
@@ -105,4 +109,24 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
+    
+    public function sentMessagesFromConversation($conversationId)
+    {
+        return $this->hasMany(Message::class, 'sender_id')
+            ->where('conversation_id', $conversationId)
+            ->latest('created_at');
+    }
+    public function receivedMessagesFromConversation($conversationId)
+    {
+        return $this->hasMany(Message::class, 'receiver_id')
+            ->where('conversation_id', $conversationId)
+            ->latest('created_at');
+    }
+    public function conversations()
+    {
+        return $this->hasMany(Conversation::class, 'sender_id','id');
+    }
+
+    // =================================  ============================================
+
 }

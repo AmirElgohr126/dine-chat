@@ -4,12 +4,14 @@ use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\App\Nfc\NfcController;
+use App\Http\Controllers\App\Chat\ChatController;
 use App\Http\Controllers\App\Auth\LoginController;
 use App\Http\Controllers\App\About\AboutController;
 use App\Http\Controllers\App\Auth\LogoutController;
 use App\Http\Controllers\App\Auth\RegisterController;
 use App\Http\Controllers\App\Profile\ProfileController;
 use App\Http\Controllers\App\Auth\VerificationController;
+use App\Http\Controllers\App\Chat\MessageController;
 use App\Http\Controllers\App\Settings\SettingsController;
 use App\Http\Controllers\App\Ratings\FoodRatingController;
 use App\Http\Controllers\App\Restaurant\RestaurantController;
@@ -38,7 +40,7 @@ Route::middleware('set_lang')->group(function () {
     // =====================================================================================
     Route::prefix('email')->group(function () {
         Route::get('verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
-        Route::get('resend', [VerificationController::class, 'resend'])->name('verification.resend'); // finished
+        Route::post('resend', [VerificationController::class, 'resend'])->name('verification.resend'); // finished
         Route::get('verify', function () {
             return view('auth.verify-email');
         })->middleware('auth')->name('verification.notice'); // finished
@@ -84,6 +86,24 @@ Route::middleware('set_lang')->group(function () {
         });
         // =====================================================================================
         Route::post('user/follow',[RestaurantController::class,'followUser']); // finished
+        // =====================================================================================
+
+        Route::group(['prefix' => 'chat','middleware'=>'check_reservation'], function () {
+            Route::get('/', [ChatController::class, 'getChats']); // finished .. get chats with only one message and info of user that i send to you
+            // ==========================
+            Route::post('request/send',[ChatController::class,'sendRequestChat']); // finished
+            Route::post('request/cancel',[ChatController::class,'cancelRequestChat']);
+            Route::get('request/list',[ChatController::class,'listRequestsChat']);
+            // ==========================
+            Route::post('inbox/accept',[ChatController::class,'inboxAcceptChat']);
+            Route::delete('inbox/reject',[ChatController::class,'inboxRejectChat']);
+            Route::get('inbox/list',[ChatController::class,'listInboxChat']);
+            // ===========================
+            Route::get('/{id}', [MessageController::class, 'getMessages']);
+            Route::post('{id}/send', [MessageController::class, 'sendMessage']);
+            Route::post('{id}/message/{id_message}/update', [MessageController::class, 'updateMessage']);
+            Route::delete('{id}/message/{id_message}/delete', [MessageController::class, 'deleteMessage']);
+        });
 
     });
 });

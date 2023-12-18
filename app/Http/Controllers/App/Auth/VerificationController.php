@@ -37,15 +37,19 @@ class VerificationController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function resend()
+    public function resend(Request $request)
     {
+        $request->validate([
+            'user_name' => 'required|string|exists:users,user_name'
+        ]);
+        $user = User::where('user_name','=',$request->user_name)->first();
         // Check if the user's email is already verified.
-        if (auth('api')->user()->hasVerifiedEmail()) {
+        if ($user->hasVerifiedEmail()) {
             return finalResponse('failed', 400, null, null, 'Email already verified.');
         }
 
         // Send the email verification notification to the user.
-        auth('api')->user()->sendEmailVerificationNotification();
+        $user->sendEmailVerificationNotification();
 
         // Respond with success message after sending the verification link.
         return finalResponse('success', 200, "Email verification link sent to your email address.");

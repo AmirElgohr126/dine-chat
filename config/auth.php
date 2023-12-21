@@ -45,6 +45,11 @@ return [
             'driver' => 'jwt',
             'provider' => 'users',
         ],
+
+        'restaurant' => [
+            'driver' => 'jwt',
+            'provider' => 'restaurant_users',
+        ],
     ],
 
     /*
@@ -65,15 +70,16 @@ return [
     */
 
     'providers' => [
+
         'users' => [
             'driver' => 'eloquent',
             'model' => App\Models\User::class,
         ],
 
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
+        'restaurant_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\RestaurantUser::class,
+        ],
     ],
 
     /*
@@ -98,6 +104,12 @@ return [
     'passwords' => [
         'users' => [
             'provider' => 'users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'restaurant_users' => [
+            'provider' => 'restaurant_users',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

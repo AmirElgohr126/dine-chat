@@ -5,7 +5,6 @@ use App\Models\Contact;
 use App\Models\Message;
 use App\Models\UserGhost;
 use App\Models\Conversation;
-use App\Models\UserFollower;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -109,7 +108,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
-    
+
     public function sentMessagesFromConversation($conversationId)
     {
         return $this->hasMany(Message::class, 'sender_id')
@@ -128,5 +127,20 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
 
     // =================================  ============================================
+    public function canAccessConversation($conversationId)
+    {
+        // Check if the user is authenticated
+        if (!auth('api')->check()) {
+            return false;
+        }
 
+        // Check if the user is part of the conversation
+        $conversation = Conversation::find($conversationId);
+        if (!$conversation) {
+            return false;
+        }
+        
+        // Check if the user is either the sender or receiver of the conversation
+        return $this->id == $conversation->sender_id || $this->id == $conversation->receiver_id;
+    }
 }

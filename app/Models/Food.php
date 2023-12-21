@@ -32,6 +32,19 @@ class Food extends Model implements TranslatableContract
     }
     public function images()
     {
-        return $this->hasMany(FoodImage::class,'food_id','id');
+        return $this->hasOne(FoodImage::class,'food_id','id');
     }
+
+
+
+
+
+    public static function findFoodById($foodId, $restaurantId)
+    {
+        return static::where('id', $foodId)->where('restaurant_id', $restaurantId)->first();
+    }
+
+    
+
+
 }

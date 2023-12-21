@@ -74,6 +74,17 @@ class ChatController extends Controller
                 throw new Exception("can't cat with yourself", 405);
             }
             $restaurant = Restaurant::find($request->restaurant_id); // restaurant i in it now fom user attendance
+
+
+            // check corresponding user is in reservation in this restaurant or no
+            $anotherUserAttendance = UserAttendance::where('user_id', $request->user_id)
+                ->where('created_at', '>', now()->subHour())
+                ->where('restaurant_id', $restaurant->id)
+                ->first();
+            if (!$anotherUserAttendance) {
+                throw new Exception('This user is not in your restaurant', 405);
+            }
+
             // 1- Handle the case where the conversation already exists
             $existingConversation = Conversation::
                 where(function ($query) use ($user, $request, $restaurant) {
@@ -97,14 +108,6 @@ class ChatController extends Controller
                 throw new Exception('you aleady make request chat before', 405);
             }
 
-            // check corresponding user is in reservation in this restaurant or no
-            $anotherUserAttendance = UserAttendance::where('user_id', $request->user_id)
-                ->where('created_at', '>', now()->subHour())
-                ->where('restaurant_id', $restaurant->id)
-                ->first();
-            if (!$anotherUserAttendance) {
-                throw new Exception('This user is not in your restaurant', 405);
-            }
 
             // check if follow it or no
             $checkFollow = UserFollower::where('user_id', $user->id)

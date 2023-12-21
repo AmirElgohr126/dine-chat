@@ -7,6 +7,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Database\Seeders\ContactSeeder;
 use Database\Seeders\UserFollowerSeeder;
+use Database\Seeders\MessagesTableSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -24,9 +25,11 @@ class DatabaseSeeder extends Seeder
             // ->call(ChairSeeder::class)
             // ->call(FoodSeeder::class)
             // ->call(AboutApplicationsSeeder::class)
-            ->call(UserAttendanceSeeder::class);
+            // ->call(UserAttendanceSeeder::class);
             // ->call(RestaurantRatingSeeder::class);
             // ->call(FoodImagesTableSeeder::class);
+            // ->call(MessagesTableSeeder::class);
+            ->call(RestaurantUserSeeder::class);
 
     }
 }

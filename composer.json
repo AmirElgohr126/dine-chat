@@ -33,7 +33,7 @@
         "files":[
                 "app/Helpers/HelperImages/imageHelper.php",
                 "app/Helpers/HelperResponse/ResponseHelper.php",
-                "app/Helpers/HelperDeleteMessage/ChatHelper.php"
+                "app/Helpers/HelperMessage/ChatHelper.php"
         ]
     },
     "autoload-dev": {

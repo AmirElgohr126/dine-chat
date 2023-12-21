@@ -47,6 +47,7 @@ class ResetPasswordRestaurantController extends Controller
             $otp = $user->otp->otp;
             if($otp == $request->otp && $user->otp->end_at < now())
             {
+                $otp->delete();
                 $user->password = Hash::make($request->password);
                 $user->save();
                 return finalResponse('success', 200, 'password reset successfully');

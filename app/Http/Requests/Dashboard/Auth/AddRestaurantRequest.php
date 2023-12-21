@@ -24,7 +24,7 @@ class AddRestaurantRequest extends FormRequest
         return [
             'first_name' => ['required','string'],
             'last_name' => ['required','string'],
-            'email' => ['required','email'],
+            'email' => ['required','email','unique:restaurant_users,email'],
             'phone' => ['required','numeric'],
             'order' => ['required','string'],
             'restaurant_name' => ['required','string'],

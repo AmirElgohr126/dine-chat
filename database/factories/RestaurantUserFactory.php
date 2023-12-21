@@ -24,7 +24,7 @@ class RestaurantUserFactory extends Factory
             'name' => $this->faker->name,
             'user_name' => $this->faker->userName,
             'email' => $this->faker->unique()->safeEmail,
-            'photo' => retriveMedia().'Dafaults\User\user.png',
+            'photo' => 'Dafaults/User/user.png',
             'phone' => $this->faker->unique()->phoneNumber,
             'password' => Hash::make('password'), // Hash the password
             'status' => $this->faker->randomElement(['active', 'inactive']),

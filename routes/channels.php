@@ -13,10 +13,7 @@ use Illuminate\Support\Facades\Broadcast;
 |
 */
 
-Broadcast::channel('private_chat.{id}', function ($user, $id) {
-    return (int) $user->id === (int) $id;
+Broadcast::channel('chat.{conversationId}', function ($user, $conversationId) {
+    // Check if the user is authorized to access the conversation
+    return $user->canAccessConversation($conversationId);
 });
-
-// Broadcast::channel('chat', function ($user) {
-//     return Auth::check();
-// });

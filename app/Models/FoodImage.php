@@ -20,4 +20,13 @@ class FoodImage extends Model
     {
         return $this->belongsTo(Food::class,'food_id','id');
     }
+
+
+    protected static function booted()
+    {
+        // Event for decrypting the content after a Post is retrieved
+        static::retrieved(function ($food) {
+            $food->image = retriveMedia() . $food->image;
+        });
+    }   
 }

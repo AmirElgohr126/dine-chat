@@ -20,6 +20,8 @@ class UserResources extends JsonResource
             'user_name'=> $this->user_name,
             'email'=> $this->email,
             'photo'=> retriveMedia().$this->photo,
+            'bio' => $this->bio ?? '',
+            'phone' => $this->phone
         ];
     }
 }

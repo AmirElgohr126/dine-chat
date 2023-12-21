@@ -1,4 +1,6 @@
 <?php
+
+use App\Models\Conversation;
 use App\Models\Restaurant;
 
 function determainPeriod(Restaurant $model)
@@ -20,6 +22,18 @@ function determainPeriod(Restaurant $model)
     }
 }
 
+
+function getOtherUser(Conversation $chat, $authId)
+{
+    $sender_id = $chat->sender_id;
+    $receiver = $chat->receiver_id;
+    switch ($authId) {
+        case $sender_id:
+            return $receiver;
+        case $receiver:
+            return $sender_id;
+    }
+}
 
 
 ?>

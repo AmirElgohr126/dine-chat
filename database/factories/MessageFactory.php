@@ -23,7 +23,7 @@ class MessageFactory extends Factory
     public function definition(): array
     {
         return [
-            'conversation_id' => Conversation::inRandomOrder()->first()->id,
+            'conversation_id' => 16,
             'sender_id' => User::inRandomOrder()->first()->id,
             'content' => $this->faker->paragraph,
             'attachment' => $this->faker->imageUrl(),

@@ -17,7 +17,7 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
-    
+
     'delete_unfollower' => env(now()->addHour()),
 
     /*

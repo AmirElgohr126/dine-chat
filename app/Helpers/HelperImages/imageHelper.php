@@ -11,12 +11,12 @@ use Illuminate\Support\Facades\Storage;
  *
  * @return string Returns the path at which the file was stored.
  */
-function storeFile($file,$type,$dirver) : string
-    {
-        $fileName = rand(100000, 999999) . time() . $file->getClientOriginalName();
-        $path = $file->storeAs($type, $fileName,$dirver);
-        return $path;
-    }
+function storeFile($file, $type, $dirver): string
+{
+    $fileName = rand(100000, 999999) . time() . $file->getClientOriginalName();
+    $path = $file->storeAs($type, $fileName, $dirver);
+    return $path;
+}
 
 /**
  * Deletes old files associated with an Eloquent model attribute and updates it with a new file.
@@ -29,27 +29,26 @@ function storeFile($file,$type,$dirver) : string
  *
  * @return bool Returns true if a file was provided and the operation was successful, otherwise returns false.
  */
-function updateAndDeleteFile($file, $model,string $attributename,string $diskstore,string $type, string $diskdelete) : bool
+function updateAndDeleteFile($file, $model, string $attributename, string $diskstore, string $type, string $diskdelete): bool
 {
-    if($file){
+    if ($file) {
         $old = $model->$attributename;
-        $path = storeFile($file,$type,$diskstore);
+        $path = storeFile($file, $type, $diskstore);
         $update = $model->update([$attributename => $path]);
         if ($old) {
             Storage::disk($diskdelete)->delete($old);
         }
-        return true ;
+        return true;
     }
     return false;
 }
 
 
-function retriveMedia() : string
+function retriveMedia(): string
 {
-    if(env('APP_URL')=='http://127.0.0.1:8000')
-    {
-        $path = env('APP_URL').'/';
-    }else{
+    if (env('APP_URL') == 'http://127.0.0.1:8000') {
+        $path = env('APP_URL') . '/';
+    } else {
         $path = env('APP_URL') . '/public/storage/';
     }
     return $path;

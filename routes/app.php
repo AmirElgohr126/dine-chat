@@ -92,17 +92,21 @@ Route::middleware('set_lang')->group(function () {
             Route::get('/', [ChatController::class, 'getChats']); // finished .. get chats with only one message and info of user that i send to you
             // ==========================
             Route::post('request/send',[ChatController::class,'sendRequestChat']); // finished
-            Route::post('request/cancel',[ChatController::class,'cancelRequestChat']);
-            Route::get('request/list',[ChatController::class,'listRequestsChat']);
+            Route::post('request/cancel',[ChatController::class,'cancelRequestChat']); // finished
+            Route::get('request/list',[ChatController::class,'listRequestsChat']); // finished
             // ==========================
-            Route::post('inbox/accept',[ChatController::class,'inboxAcceptChat']);
-            Route::delete('inbox/reject',[ChatController::class,'inboxRejectChat']);
-            Route::get('inbox/list',[ChatController::class,'listInboxChat']);
+            Route::post('inbox/accept',[ChatController::class,'inboxAcceptChat']); // finished
+            Route::delete('inbox/reject',[ChatController::class,'inboxRejectChat']); // finished
+            Route::get('inbox/list',[ChatController::class,'listInboxChat']); // finished
             // ===========================
-            Route::get('/{id}', [MessageController::class, 'getMessages']);
-            Route::post('{id}/send', [MessageController::class, 'sendMessage']);
-            Route::post('{id}/message/{id_message}/update', [MessageController::class, 'updateMessage']);
-            Route::delete('{id}/message/{id_message}/delete', [MessageController::class, 'deleteMessage']);
+            Route::get('/{id}', [MessageController::class, 'getMessages'])
+                ->where('id', '[0-9]+');
+            Route::post('{id}/send', [MessageController::class, 'sendMessage'])
+                ->where('id', '[0-9]+');
+            Route::post('{id}/message/{id_message}/update', [MessageController::class, 'updateMessage'])
+                ->where('id', '[0-9]+')->where('id_message','[0-9]+');
+            Route::delete('{id}/message/{id_message}/delete', [MessageController::class, 'deleteMessage'])
+                ->where('id', '[0-9]+')->where('id_message', '[0-9]+');
         });
 
     });

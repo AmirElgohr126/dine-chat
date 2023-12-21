@@ -32,7 +32,7 @@ class Conversation extends Model
      */
     public function messages()
     {
-        return $this->hasMany(Message::class,'conversation_id','id');
+        return $this->hasMany(Message::class,'conversation_id','id')->latest();
     }
 
     /**
@@ -56,5 +56,5 @@ class Conversation extends Model
     {
         return $this->belongsTo(User::class,'sender_id','id');
     }
-
+    
 }

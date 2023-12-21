@@ -77,7 +77,7 @@ class RestaurantUser extends User implements ShouldQueue, JWTSubject
     {
         // Event for decrypting the content after a Post is retrieved
         static::retrieved(function ($user) {
-            $user->photo = retriveMedia() . $user->photo;
+            $user->photo = retriveMedia() . $user->photo; 
         });
     }
 }

@@ -15,7 +15,7 @@ class AboutController extends Controller
             if ($privacyPolicy) {
                 return finalResponse('success', 200, $privacyPolicy);
             } else {
-                throw new Exception('Privacy policy not found', 404);
+                throw new Exception(__('errors.privacy_not_found'), 404);
             }
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), $e->getMessage());
@@ -28,7 +28,7 @@ class AboutController extends Controller
             if ($terms_conditions) {
                 return finalResponse('success', 200, $terms_conditions);
             } else {
-                throw new Exception('Terms & conditions not found', 404);
+                throw new Exception(__('errors.terms_not_found'), 404);
             }
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), $e->getMessage());
@@ -41,7 +41,7 @@ class AboutController extends Controller
             if ($about_us) {
                 return finalResponse('success', 200, $about_us);
             } else {
-                throw new Exception('about us not found', 404);
+                throw new Exception(__('about_not_found'), 404);
             }
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), $e->getMessage());

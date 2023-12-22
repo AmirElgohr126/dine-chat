@@ -24,13 +24,13 @@ class MessageController extends Controller
                 ->where(function ($query) use ($user) {
                     $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
                 })
-                ->where('restaurant_id', $request->restaurant_id)
+                ->where('restaurant_id', $restaurant->id)
                 ->where('status', 'accept')
                 ->withTrashed()
                 ->where('deleted_at', '>', now())
                 ->first();
             if (!$conversation) {
-                throw new Exception("not found ", 404);
+                throw new Exception(__('errors.not_found'), 404);
             }
             $messages = $conversation->messages()->paginate($per_page);
             $pagnation = pagnationResponse($messages); // Generate pagination response
@@ -57,7 +57,7 @@ class MessageController extends Controller
                 ->first();
             // ================================================================
             if (!$conversation) {
-                throw new Exception("Conversation not found", 404);
+                throw new Exception(__("errors.No_conversation_found"), 404);
             }
             if ($request->hasFile('attachment')) {
                 $media = $request->file('attachment');
@@ -100,11 +100,11 @@ class MessageController extends Controller
                 ->first();
             // ================================================================
             if (!$conversation) {
-                throw new Exception("Conversation not found", 404);
+                throw new Exception(__('errors.No_conversation_found'), 404);
             }
             $message = $conversation->messages()->where('id',$id_message)->where('sender_id',$user->id)->first();
             if (!$message) {
-                throw new Exception("message not found", 404);
+                throw new Exception(__('errors.No_message_found'), 404);
             }
             $message->update([
                 'content' => $request->message,
@@ -134,15 +134,15 @@ class MessageController extends Controller
                 ->first();
             // ================================================================
             if (!$conversation) {
-                throw new Exception("Conversation not found", 404);
+                throw new Exception(__('errors.No_conversation_found'), 404);
             }
             $message = $conversation->messages()->where('id', $id_message)->where('sender_id', $user->id)->first();
             if (!$message) {
-                throw new Exception("message not found", 404);
+                throw new Exception(__('errors.No_message_found'), 404);
             }
             $message->delete();
             MessageSent::dispatch($conversation->id, $message);
-            return finalResponse('success', 200, 'message was deleted');
+            return finalResponse('success', 200, __('errors.message_was_deleted'));
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, $e->getMessage());
         }
@@ -167,16 +167,16 @@ class MessageController extends Controller
             ->first();
         // ================================================================
         if (!$conversation) {
-            throw new Exception("Conversation not found", 404);
+            throw new Exception(__('errors.No_conversation_found'), 404);
         }
         $message = $conversation->messages()->where('id', $id_message)->where('sender_id', $user->id)->first();
         if (!$message) {
-            throw new Exception("message not found", 404);
+            throw new Exception(__('errors.No_message_found'), 404);
         }
         $message->update([
             'attachment' => '',
         ]);
-            return finalResponse('success', 200, 'message was deleted');
+            return finalResponse('success', 200, __('errors.message_was_deleted'));
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, $e->getMessage());
         }

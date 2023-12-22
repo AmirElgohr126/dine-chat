@@ -18,7 +18,7 @@ class SettingsController extends Controller
             $user = $request->user();
             $newEmail = User::where('email', $request->email)->first();
             if (isset($newEmail)) {
-                throw new Exception("email already exists", 405);
+                throw new Exception(__('errors.email_already_exists'), 405);
             }
             $user->update([
                 'email' => $request->email,
@@ -26,7 +26,7 @@ class SettingsController extends Controller
             ]);
             $user->sendEmailVerificationNotification();
             auth('api')->logout();
-            return finalResponse('success', 200, 'Logout successfully please check your mail to verify email and login again');
+            return finalResponse('success', 200, __('errors.logout_success'));
         } catch (Exception $e) {
             return finalResponse('faild', 500, null, null, $e->getMessage());
         }
@@ -51,14 +51,14 @@ class SettingsController extends Controller
 
         // Check if the current password matches the user's actual password
         if (!Hash::check($request->input('current_password'), $user->password)) {
-            return finalResponse('failed', 401, null, null, 'Current password is incorrect');
+            return finalResponse('failed', 401, null, null, __('errors.current_password_incorrect'));
         }
 
         // Update the user's password
         $user->password = Hash::make($request->new_password);
         $user->save();
 
-        return finalResponse('success', 200, 'Password changed successfully');
+        return finalResponse('success', 200, __('errors.password_changed_success'));
     }
 
 
@@ -84,7 +84,7 @@ class SettingsController extends Controller
                 'last_name' => $mood ? 'Shadowvale' : $ghost->last_name,
                 'phone' => $mood ? null : $ghost->phone,
             ]);
-            return finalResponse('success', 200, 'Ghost mode updated successfully');
+            return finalResponse('success', 200, __('errors.ghost_mode_updated_success'));
         }catch(Exception $e){
             return finalResponse('failed', 500, null, null, 'internal server error');
         }

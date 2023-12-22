@@ -82,25 +82,25 @@ Class ContactsListRepository implements ContactsListInterface{
             $contact = Contact::findOrfail($id);
             if($contact->status_on_app == 'not_subscrib')
             {
-                throw new Exception("cant't follow this member it is not subscribe on our app you can just invite him.",400);
+                throw new Exception(__('errors.can_not_follow'),400);
             }
 
             $isFollowing = UserFollower::where('user_id', $user->id)->where('contact_id', $contact->id)->exists();
             if ($isFollowing) {
-                throw new Exception("you already following the contact.",400);
+                throw new Exception(__("errors.already_following"),400);
             }
             $followedUser = User::select(['id','phone'])->where('phone',$contact->phone)->first();
 
             if($followedUser->phone != $contact->phone)
             {
-                throw new Exception("somthing error in this contact",500);
+                throw new Exception(__('errors.error_in_contact'),500);
             }
 
             $follow = UserFollower::create(['user_id'=>$user->id,'followed_user' => $followedUser->id,'contact_id'=>$id,'follow_status'=>'follow']);
             if ($follow) {
                 return $follow;
             } else {
-                throw new Exception("Error Processing Request",500);
+                throw new Exception(__('errors.Error_Processing_Request'),500);
             }
     }
     /**
@@ -131,14 +131,14 @@ Class ContactsListRepository implements ContactsListInterface{
         $contact = Contact::find($id);
         if(!$contact->status_on_app == 'not_subscrib')
         {
-            throw new Exception("cant't invite him it already subscribe.",400);
+            throw new Exception(__('errors.can_not_invite'),400);
         }
         $follow = UserFollower::create(['user_id'=>$user->id,'contact_id'=>$id,'follow_status'=>'invited']);
         if ($follow) {
             // Mail::to($contact->email)->send(new inviteContact());
             return $follow;
         } else {
-            throw new Exception("Error Processing Request",500);
+            throw new Exception(__('errors.Error_Processing_Request'),500);
         }
     }
 }

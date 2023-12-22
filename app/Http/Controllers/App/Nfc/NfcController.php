@@ -40,7 +40,7 @@ class NfcController extends Controller
                 ->where('created_at', '>', now()->subHour())
                 ->first();
             if ($conflictingReservation) {
-                throw new \Exception('this place is reservstion now ', 405);
+                throw new \Exception(__('errors.this_place_is_reservstion_now'), 405);
             }
             // there is no reservation
             $reserve = UserAttendance::create([
@@ -52,7 +52,7 @@ class NfcController extends Controller
                 'updated_at' => now()
             ]);
             if ($reserve) {
-                return finalResponse('success', 200,'success reservation');
+                return finalResponse('success', 200,__('errors.success_reservation'));
             }
         } catch (\Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());

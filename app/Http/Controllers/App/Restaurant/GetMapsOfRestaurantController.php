@@ -48,7 +48,7 @@ class GetMapsOfRestaurantController extends Controller
             $pagnation = pagnationResponse($restaurants); // Generate pagination response
             return finalResponse('success', 200, $restaurants->items(), $pagnation);  // Return the final response
         } catch (Exception $e) { // Handle exceptions and return an error response
-            return finalResponse('error', 500, "Internal Server Error " . $e->getMessage(), null);
+            return finalResponse('error', 500, "Internal Server Error" . $e->getMessage(), null);
         }
     }
 

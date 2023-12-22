@@ -45,13 +45,13 @@ class VerificationController extends Controller
         $user = User::where('user_name','=',$request->user_name)->first();
         // Check if the user's email is already verified.
         if ($user->hasVerifiedEmail()) {
-            return finalResponse('failed', 400, null, null, 'Email already verified.');
+            return finalResponse('failed', 400, null, null, __('errors.email_not_verified'));
         }
 
         // Send the email verification notification to the user.
         $user->sendEmailVerificationNotification();
 
         // Respond with success message after sending the verification link.
-        return finalResponse('success', 200, "Email verification link sent to your email address.");
+        return finalResponse('success', 200, __('errors.email_send'));
     }
 }

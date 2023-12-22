@@ -56,7 +56,7 @@ class ContactsListController extends Controller
     {
         try {
             $this->repo->followContact($request);
-            return finalResponse('success',200,'you follow this contact');
+            return finalResponse('success',200,__('errors.you_follow_this_contact'));
         } catch (Exception $th) {
             return finalResponse('failed',$th->getCode(),null,null, $th->getMessage());
         }

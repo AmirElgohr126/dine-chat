@@ -18,7 +18,7 @@ class RestaurantController extends Controller
         try {
             $restaurant = Restaurant::find($request->restaurant_id);
             if (!$restaurant) {
-                throw new Exception('no restaurant with this id', 405);
+                throw new Exception(__('errors.no_restaurant'), 405);
             }
             $userAttendance = $restaurant->userAttendance()->with(['users', 'tables', 'chairs'])->get();
             if (isset($userAttendance) == null) {
@@ -36,7 +36,7 @@ class RestaurantController extends Controller
         try {
             $restaurant = Restaurant::find($request->restaurant_id);
             if (!$restaurant) {
-                throw new Exception('no restaurant with this id', 405);
+                throw new Exception(__('errors.no_restaurant'), 405);
             }
             $assetRestaurant = $restaurant->tables()->with('chairs')->get();
             return finalResponse('success', 200, $assetRestaurant);
@@ -65,9 +65,9 @@ class RestaurantController extends Controller
                     'follow_status' => 'follow',
                     ]);
 
-                return finalResponse('success', 200,'you follow this person ');
+                return finalResponse('success', 200, __('errors.you_follow'));
             } else {
-                throw new Exception('User is already being followed.', 400);
+                throw new Exception(__('errors.already_followed'), 400);
             }
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());

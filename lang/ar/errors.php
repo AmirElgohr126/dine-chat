@@ -2,20 +2,54 @@
 
 return [
 
-    /*
-    |--------------------------------------------------------------------------
-    | Authentication Language Lines
-    |--------------------------------------------------------------------------
-    |
-    | The following language lines are used during authentication for various
-    | messages that we need to display to the user. You are free to modify
-    | these language lines according to your application's requirements.
-    |
-    */
-
-    'invailed_parameter' => 'بطاقة المعاملة غير صالحة',
-    'valid_parameter' => 'بطاقة المعاملة صالحة',
-
+    'invalid_parameter' => 'بطاقة بارامتر غير صالحة',
+    'valid_parameter' => 'بطاقة بارامتر صالحة',
+    'privacy_not_found' => 'سياسة الخصوصية غير موجودة',
+    'terms_not_found' => 'الشروط والأحكام غير موجودة',
+    'about_not_found' => 'حولنا غير موجود',
+    'invalid_credentials' => 'بيانات الاعتماد غير صالحة',
+    'email_not_verified' => 'البريد الإلكتروني غير متحقق',
+    'logout_successfully' => 'تسجيل الخروج بنجاح',
+    'login_successfully' => 'تسجيل الدخول بنجاح',
+    'already_verified' => 'البريد الإلكتروني تم التحقق منه بالفعل.',
+    'email_send' => "تم إرسال رابط التحقق من البريد الإلكتروني إلى عنوان بريدك الإلكتروني.",
+    "can_not_chat_with_yourself" => "لا يمكنك الدردشة مع نفسك",
+    'user_not_in_restaurant' => 'هذا المستخدم ليس في مطعمك',
+    'make_request_before' => 'لقد قمت بالفعل بطلب الدردشة من قبل',
+    'suucess_request' => 'نجاح طلب الدردشة',
+    'No_conversation_found' => 'لم يتم العثور على محادثة',
+    "No_request_matching" => 'لا يوجد طلب يطابق المحادثة للإلغاء',
+    'No_matching_conversation' => 'لم يتم العثور على محادثة مطابقة',
+    'not_found' => 'غير موجود',
+    'No_message_found' => 'لم يتم العثور على رسالة',
+    'message_was_deleted' => 'تم حذف الرسالة',
+    'you_follow_this_contact' => 'أنت تتابع هذا الاتصال',
+    "can_not_follow" => "لا يمكن متابعة هذا العضو، ليس مشتركًا في تطبيقنا، يمكنك فقط دعوته",
+    'already_following' => 'أنت بالفعل تتابع هذا الاتصال.',
+    'error_in_contact' => "خطأ في هذا الاتصال",
+    'Error_Processing_Request' => "خطأ في معالجة الطلب",
+    'can_not_invite' => "لا يمكن دعوته، إنه مشترك بالفعل.",
+    'this_place_is_reservstion_now' => 'هذا المكان محجوز الآن',
+    'success_reservation' => 'حجز ناجح',
+    "Can't_update_in_ghost" => "لا يمكن التحديث في وضع الشبح",
+    "Photo_updated" => 'تم تحديث الصورة بنجاح',
+    "No_valid_photo" => 'لم يتم توفير صورة صالحة.',
+    "bio_updated" => 'تم تحديث السيرة الذاتية بنجاح',
+    "Name_updated" => 'تم تحديث الاسم بنجاح',
+    "Failed_to_update_name" => 'فشل تحديث الاسم',
+    'no_ratings' => 'لا توجد تقييمات',
+    "no_review_for_user" => "لا توجد مراجعات للمستخدم",
+    'no_restaurant' => 'لا يوجد مطعم بهذا الهوية',
+    'you_follow' => 'أنت تتابع هذا الشخص ',
+    'already_followed' => 'المستخدم متابع بالفعل.',
+    'email_already_exists' => "البريد الإلكتروني موجود بالفعل",
+    'logout_success' => 'تم تسجيل الخروج بنجاح، يرجى التحقق من بريدك للتحقق من البريد الإلكتروني وتسجيل الدخول مرة أخرى',
+    'current_password_incorrect' => 'كلمة المرور الحالية غير صحيحة',
+    'password_changed_success' => 'تم تغيير كلمة المرور بنجاح',
+    'ghost_mode_updated_success' => 'تم تحديث وضع الشبح بنجاح',
+    'check_mail' => 'تحقق من البريد',
+    'falied_otp' => 'فشل تغيير كلمة المرور، يرجى إدخال رمز التحقق الصحيح',
 
 ];
+
 ?>

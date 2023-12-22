@@ -47,7 +47,7 @@ class RestaurantRatingController extends Controller
             if (isset($ratingsWithRestaurants)) {
                 return finalResponse('success', 200, $ratingsWithRestaurants);
             }
-            throw new Exception("no review for user", 204);
+            throw new Exception(__('errors.no_review_for_user'), 204);
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }

@@ -15,14 +15,14 @@ class ProfileController extends Controller
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
                 if ($user->ghost_mood == 1) {
-                    throw new Exception("Can't update in ghost mood", 400);
+                    throw new Exception(__("errors.Can't_update_in_ghost"), 400);
                 }
                 $update = updateAndDeleteFile($photo, $user, 'photo', 'public', 'user', 'public');
                 if ($update) {
-                    return finalResponse('success', 200, 'Photo updated successfully');
+                    return finalResponse('success', 200, __("errors.Photo_updated"));
                 }
             }
-            throw new Exception('No valid photo file provided.', 400);
+            throw new Exception(__('errors.No_valid_photo'), 400);
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), $e->getMessage());
         }
@@ -36,7 +36,7 @@ class ProfileController extends Controller
             $bio = $request->bio;
             $user->bio = $bio;
             $user->save();
-            return finalResponse('success', 200, 'bio updated successfully');
+            return finalResponse('success', 200, __('errors.bio_updated'));
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), $e->getMessage());
         }
@@ -60,9 +60,9 @@ class ProfileController extends Controller
                 $user->update($updateData);
             }
 
-            return finalResponse('success', 200, 'Name updated successfully');
+            return finalResponse('success', 200, __('errors.Name_updated'));
         } catch (Exception $e) {
-            return finalResponse('failed', 500, 'Failed to update name');
+            return finalResponse('failed', 500, __('errors.Failed_to_update_name'));
         }
     }
 }

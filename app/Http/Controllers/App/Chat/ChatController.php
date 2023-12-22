@@ -6,7 +6,6 @@ use App\Models\Restaurant;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use App\Models\UserAttendance;
-use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\RequestNewChatRequest;
 use App\Http\Resources\Chats\ListRequestResource;
@@ -71,18 +70,16 @@ class ChatController extends Controller
         try {
             $user = $request->user();
             if ($user->id == $request->user_id) {
-                throw new Exception("can't cat with yourself", 405);
+                throw new Exception(__('errors.can_not_chat_with_yourself'), 405);
             }
             $restaurant = Restaurant::find($request->restaurant_id); // restaurant i in it now fom user attendance
-
-
             // check corresponding user is in reservation in this restaurant or no
             $anotherUserAttendance = UserAttendance::where('user_id', $request->user_id)
                 ->where('created_at', '>', now()->subHour())
                 ->where('restaurant_id', $restaurant->id)
                 ->first();
             if (!$anotherUserAttendance) {
-                throw new Exception('This user is not in your restaurant', 405);
+                throw new Exception(__('errors.user_not_in_restaurant'), 405);
             }
 
             // 1- Handle the case where the conversation already exists
@@ -105,9 +102,8 @@ class ChatController extends Controller
                 ->first();
 
             if ($existingConversation) {
-                throw new Exception('you aleady make request chat before', 405);
+                throw new Exception(__('errors.make_request_before'), 405);
             }
-
 
             // check if follow it or no
             $checkFollow = UserFollower::where('user_id', $user->id)
@@ -127,7 +123,7 @@ class ChatController extends Controller
             ]);
             // fire events to receiver_id on private chanal to make him accept or reject
             // fire events for notification and so on ...
-            return finalResponse('success', 200, 'succes request chat');
+            return finalResponse('success', 200, __('errors.suucess_request'));
         } catch (Exception $e) {
             return finalResponse('falied', $e->getCode(), null, null, $e->getMessage());
         }
@@ -157,7 +153,7 @@ class ChatController extends Controller
                 ->withTrashed()
                 ->paginate($per_page);
             if (!$conversations->items()) {
-                throw new Exception('No conversation found', 204);
+                throw new Exception(__('errors.No_conversation_found'), 204);
             }
             $conversations = ListRequestResource::collection($conversations);
             $pagnateConversation = pagnationResponse($conversations);
@@ -192,7 +188,7 @@ class ChatController extends Controller
                 ->where('deleted_at', '>', now())
                 ->first();
             if (!$conversation) {
-                throw new Exception('No request matching conversation for cancellation', 405);
+                throw new Exception(__('errors.No_request_matching'), 405);
             }
             // Update the conversation status to 'canceled'
             $conversation->update(['status' => 'reject']);
@@ -226,7 +222,7 @@ class ChatController extends Controller
                 ->with('sender:id,first_name,last_name,photo')
                 ->paginate($per_page);
             if ($conversations->isEmpty()) {
-                throw new Exception('No incoming chat requests found', 204);
+                throw new Exception(__('errors.No_conversation_found'), 204);
             }
 
             $formattedConversations = ListRequestResource::collection($conversations);
@@ -237,7 +233,6 @@ class ChatController extends Controller
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
-
     /**
      * Accept an incoming chat request for the authenticated user.
      *
@@ -270,7 +265,7 @@ class ChatController extends Controller
                     $conversations->update(['status' => 'accept']);
                     return finalResponse('success', 200, $conversations);
                 }
-            return throw new Exception('No matching conversation found', 405);
+            return throw new Exception(__('errors.No_matching_conversation'), 405);
         } catch (Exception $e) {
             // Handle other exceptions
             return finalResponse('failed', $e->getCode(),null,null,$e->getMessage());
@@ -307,7 +302,7 @@ class ChatController extends Controller
                 $conversation->update(['status' => 'reject']);
                 return finalResponse('success', 200, $conversation);
             }
-            throw new Exception('No matching conversation found', 405);
+            throw new Exception(__('errors.No_matching_conversation'), 405);
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }

@@ -12,7 +12,7 @@ class LogoutController extends Controller
     {
         try {
             auth('api')->logout();
-        return finalResponse('success','200','logout successfully');
+        return finalResponse('success','200',__('errors.logout_successfully'));
         } catch (\Throwable $e) {
             return finalResponse('failed',500,null,null, 'opps '.$e->getMessage());
         }

@@ -28,7 +28,7 @@ class ResetPasswordRestaurantController extends Controller
             $expire_at = $otp->end_at;
             $otp = $otp->otp;
             Mail::to($user->email)->send(new OtpRestaurantMail($user->name,$otp,$expire_at));
-            return finalResponse('success', 200, 'success please check your mail');
+            return finalResponse('success', 200, __('errors.check_mail'));
 
         } catch (Exception $e) {
             return finalResponse('failed',400,null,null,$e->getMessage());
@@ -50,9 +50,9 @@ class ResetPasswordRestaurantController extends Controller
                 $otp->delete();
                 $user->password = Hash::make($request->password);
                 $user->save();
-                return finalResponse('success', 200, 'password reset successfully');
+                return finalResponse('success', 200, __('errors.password_changed_success'));
             }
-            throw new Exception("failed to change password please enter right otp",400);
+            throw new Exception(__('errors.falied_otp'),400);
         } catch (Exception $e) {
             return finalResponse('failed',400,null,null,$e->getMessage());
         }

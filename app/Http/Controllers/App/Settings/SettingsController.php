@@ -64,28 +64,38 @@ class SettingsController extends Controller
 
     public function changeToGhost(Request $request)
     {
-        $request->validate([
-            'ghost_mode' => 'required|boolean',
-        ]);
-        try{
+        try {
             $user = $request->user();
-            $mood = $request->ghost_mode;
-            $ghost = UserGhost::firstOrCreate(['user_id' => $user->id], [
-                'first_name' => $user->first_name,
-                'last_name' => $user->last_name,
-                'phone' => $user->phone,
-                'photo' => $user->photo,
-            ]);
+            $mood = $user->ghost_mood;
+            if ($mood == 1) {
+                // convert to user
+                $ghost = UserGhost::where('user_id' , $user->id)->first();
+                $user->update([
+                    'ghost_mood' => 0,
+                    'photo' => $ghost->photo,
+                    'first_name' => $ghost->first_name,
+                    'last_name' => $ghost->last_name,
+                    'phone' => $ghost->phone,
+                ]);
+            }else{
+                // convert to ghost
+                $ghost = UserGhost::firstOrCreate(['user_id' => $user->id], [
+                    'first_name' => $user->first_name,
+                    'last_name' => $user->last_name,
+                    'phone' => $user->phone,
+                    'photo' => $user->photo,
+                ]);
+                $user->update([
+                    'ghost_mood' => 1,
+                    'photo' => "Ghost/ghost.jpg",
+                    'first_name' => 'Spectra',
+                    'last_name' => 'Shadowvale',
+                    'phone' => '00000000000',
+                ]);
+            }
 
-            $user->update([
-                'ghost_mood' => $mood,
-                'photo' => env('APP_URL') . "/public/storage/Ghost/ghost.jpg",
-                'first_name' => $mood ? 'Spectra' : $ghost->first_name,
-                'last_name' => $mood ? 'Shadowvale' : $ghost->last_name,
-                'phone' => $mood ? null : $ghost->phone,
-            ]);
             return finalResponse('success', 200, __('errors.ghost_mode_updated_success'));
-        }catch(Exception $e){
+        } catch (Exception $e) {
             return finalResponse('failed', 500, null, null, 'internal server error');
         }
     }

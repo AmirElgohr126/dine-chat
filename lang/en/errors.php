@@ -22,6 +22,7 @@ return [
     'email_not_verified' => 'Email not verified',
     'logout_successfully' => 'logout successfully',
     'login_successfully' => 'login successfully',
+    'register_successfully' => 'login successfully',
     'already_verified' => 'Email already verified.',
     'email_send' => "Email verification link sent to your email address.",
     "can_not_chat_with_yourself" => "can't cat with yourself",

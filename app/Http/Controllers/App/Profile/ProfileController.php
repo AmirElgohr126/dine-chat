@@ -72,9 +72,7 @@ class ProfileController extends Controller
     public function getUser(Request $request)
     {
         try {
-
             $user = $request->user('api');
-
             return finalResponse('success', 200, new UserResources($user));
         } catch (Exception $e) {
             return finalResponse('faield', 400, null, null, $e->getMessage());

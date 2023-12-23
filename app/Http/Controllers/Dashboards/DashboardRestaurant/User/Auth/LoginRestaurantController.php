@@ -5,6 +5,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\Auth\LoginRestaurantRequest;
+use App\Models\RestaurantUser;
 
 class LoginRestaurantController extends Controller
 {
@@ -13,12 +14,16 @@ class LoginRestaurantController extends Controller
         try {
             //  Validate user credentials from the incoming request
             $credentials = $request->validated();
+            $email = RestaurantUser::where('email',$credentials['email'])->first();
+            if(!$email)
+            {
+                throw new Exception(_('errors.email_not_found'));
+            }
             // Attempt to generate a JWT token with the provided credentials
             $token = auth('restaurant')->setTTL(env('JWT_TTL'))->attempt($credentials);
-            // dd($token);
             // If token generation fails, throw an exception
             if (!$token) {
-                throw new Exception('invalid credentials');
+                throw new Exception(__('errors.invalid_credentials'));
             }
             $user = auth('restaurant')->user();
             // Check if the user is verified

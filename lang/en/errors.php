@@ -61,6 +61,7 @@ return [
     'ghost_mode_updated_success' => 'Ghost mode updated successfully',
     'check_mail' => 'check mail',
     'falied_otp' => 'failed to change password please enter right otp',
+    'email_not_found' => 'email not found',
 
 
 ];

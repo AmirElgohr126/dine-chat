@@ -22,7 +22,7 @@ class LoginRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|exists:restaurant_users,eamil,max:255',
+            'email' => ['required', 'email','max:255'],
             'password' => 'required|string'
         ];
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\App\Profile;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\UserResources;
 
 class ProfileController extends Controller
 {
@@ -63,6 +64,20 @@ class ProfileController extends Controller
             return finalResponse('success', 200, __('errors.Name_updated'));
         } catch (Exception $e) {
             return finalResponse('failed', 500, __('errors.Failed_to_update_name'));
+        }
+    }
+
+
+
+    public function getUser(Request $request)
+    {
+        try {
+
+            $user = $request->user('api');
+
+            return finalResponse('success', 200, new UserResources($user));
+        } catch (Exception $e) {
+            return finalResponse('faield', 400, null, null, $e->getMessage());
         }
     }
 }

@@ -36,7 +36,7 @@ class RegisterRequest extends FormRequest
                 'regex:/^(?=.*[a-z])/',     // At least one lowercase letter
                 'regex:/^(?=.*[0-9])/',     // At least one digit
                 'regex:/^(?=.*[@$!%*?&])/'], // At least one special character
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:6144', // Assuming 'image' is the field type in your database
+            // 'photo' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:6144', // Assuming 'image' is the field type in your database
         ];
     }
 
@@ -52,9 +52,10 @@ class RegisterRequest extends FormRequest
 
         $validated['password'] = Hash::make($validated['password']); // hash password
 
-        // Process and store the user's photo
-        $photo = $validated['photo'];
-        $pathImage = storeFile($photo, 'user', 'public'); // helper in helper image file return path of file
+        // // Process and store the user's photo
+        // $photo = $validated['photo'];
+        // $pathImage = storeFile($photo, 'user', 'public'); // helper in helper image file return path of file
+        $pathImage = ';rkl';
         $validated['photo'] = $pathImage; // Update the 'photo' field in the validated data with the stored path
 
         return $validated;

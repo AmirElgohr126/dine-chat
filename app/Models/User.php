@@ -78,7 +78,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         // Event for decrypting the content after a Post is retrieved
         static::created(function ($user) {
-            $user->sendEmailVerificationNotification();
+            //$user->sendEmailVerificationNotification();
         });
     }
     public function contacts()
@@ -139,7 +139,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         if (!$conversation) {
             return false;
         }
-        
+
         // Check if the user is either the sender or receiver of the conversation
         return $this->id == $conversation->sender_id || $this->id == $conversation->receiver_id;
     }

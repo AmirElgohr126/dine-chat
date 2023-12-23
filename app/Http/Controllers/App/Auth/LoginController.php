@@ -38,7 +38,7 @@ class LoginController extends Controller
             }
 
             // Return a successful response with the token and user information
-            return finalResponse('success',200,["token"=>$token]);
+            return finalResponse('success',200,["token"=>$token,"user"=> new UserResources($user)]);
         } catch (Exception $e) {
             // Handle exceptions, and return a failed response with a 401 status code
             return finalResponse('failed',$e->getCode(),null,null, 'opps '.$e->getMessage());

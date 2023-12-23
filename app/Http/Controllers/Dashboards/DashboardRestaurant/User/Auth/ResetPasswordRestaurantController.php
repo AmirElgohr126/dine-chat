@@ -15,13 +15,12 @@ class ResetPasswordRestaurantController extends Controller
     {
         try {
             $request->validate([
-                'email' => ['required','email']
+                'email' => ['required','email','exists:restaurant_users,email']
             ]);
             $email = $request->email;
             $user = RestaurantUser::where('email',$email)->first();
             $generatedOtp = rand(100000, 999999);
-            $otp = $user->otp()->create(
-                [
+            $otp = $user->otp()->create([
                     'otp' => $generatedOtp,
                     'end_at' => now()->addHour()
                 ]);

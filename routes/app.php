@@ -46,6 +46,7 @@ Route::middleware('set_lang')->group(function () {
         })->middleware('auth')->name('verification.notice'); // finished
     });
     Route::group(['middleware' => ['auth', 'verified']], function () {
+
         Route::group(['prefix' => 'contactlist'], function () {
             Route::get('/', [ContactsListController::class, 'getContactList']); //finished
             Route::post('/', [ContactsListController::class, 'postContactList']); //finished
@@ -74,6 +75,7 @@ Route::middleware('set_lang')->group(function () {
         });
         // =====================================================================================
         Route::group(['prefix' => 'profile'], function () {
+            Route::get('user', [ProfileController::class, 'getUser']); // finished
             Route::post('photo', [ProfileController::class, 'photo']); // finished
             Route::post('name', [ProfileController::class, 'name']); // finished
             Route::post('bio', [ProfileController::class, 'bio']); // finished

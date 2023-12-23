@@ -24,7 +24,7 @@ class RegisterController extends Controller
         try {
             $data = $request->processedData();
             $user = User::create($data); // Create a new user
-            return finalResponse('success',200,__('errors.login_successfully'));
+            return finalResponse('success',200,__('errors.email_send'));
         } catch (Exception $e) {
             // handle it appropriately
             return finalResponse('faild',500,null,null, 'something error happen ' . $e->getMessage());

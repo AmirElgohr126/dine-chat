@@ -45,11 +45,11 @@ Route::middleware('set_lang')->group(function () {
             return view('auth.verify-email');
         })->middleware('auth')->name('verification.notice'); // finished
     });
+    Route::post('/', [ContactsListController::class, 'postContactList']); //finished
     Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::group(['prefix' => 'contactlist'], function () {
             Route::get('/', [ContactsListController::class, 'getContactList']); //finished
-            Route::post('/', [ContactsListController::class, 'postContactList']); //finished
             Route::post('/follow', [ContactsListController::class, 'followContact']); //finished
             Route::post('/unfollow', [ContactsListController::class, 'unfollowContact']); // finished
             Route::post('/invite', [ContactsListController::class, 'inviteContact']); // finished

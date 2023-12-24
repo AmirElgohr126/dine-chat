@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LoginRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LogoutRestaurantController;
+use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\ProfileRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\ResetPasswordRestaurantController;
 
 /*
@@ -39,6 +40,11 @@ Route::middleware('set_lang')->group(function () {
         Route::post('update',[FoodController::class,'updateFood']);
         Route::post('delete',[FoodController::class,'deleteFood']);
         Route::get('get',[FoodMenuController::class,'menu']);
+    });
+    Route::group(['prefix'=>'profile','middleware'=>['auth:restaurant']],function()
+    {
+        Route::post('update',[ProfileRestaurantController::class,'updateProfile']);
+        Route::post('/password/update',[ProfileRestaurantController::class,'changePassword']);
     });
 
 });

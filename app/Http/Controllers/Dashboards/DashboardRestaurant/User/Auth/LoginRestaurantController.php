@@ -17,7 +17,7 @@ class LoginRestaurantController extends Controller
             $email = RestaurantUser::where('email',$credentials['email'])->first();
             if(!$email)
             {
-                throw new Exception(_('errors.email_not_found'));
+                throw new Exception(__('errors.email_not_found'));
             }
             // Attempt to generate a JWT token with the provided credentials
             $token = auth('restaurant')->setTTL(env('JWT_TTL'))->attempt($credentials);
@@ -34,7 +34,7 @@ class LoginRestaurantController extends Controller
             return finalResponse('success', 200, ["token" => $token, "user" => $user]);
         } catch (Exception $e) {
         //     // Handle exceptions, and return a failed response with a 401 status code
-            return finalResponse('failed', 400, null, null, 'opps ' . $e->getMessage());
+            return finalResponse('failed', 400, null, null,  $e->getMessage());
         }
     }
 }

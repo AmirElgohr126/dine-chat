@@ -21,10 +21,11 @@ class ContactsRequest extends FormRequest
      */
     public function rules(): array
     {
+        
         return [
-            '*.name' => 'required|string',
-            '*.phone' => 'required|string',
-            '*.photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6048',
+            'contact.*.name' => 'required|string',
+            'contact.*.phone' => 'required|string',
+            'contact.*.photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6048',
         ];
     }
 }

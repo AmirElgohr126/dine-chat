@@ -39,6 +39,7 @@ Class ContactsListRepository implements ContactsListInterface{
      * @return mixed
      * @throws \Exception
      */
+    // In your repository or service
     public function postContactList(ContactsRequest $request)
     {
         $contacts = $request->validated();
@@ -46,25 +47,33 @@ Class ContactsListRepository implements ContactsListInterface{
         $phones = Contact::pluck('phone')->all();
         $phonesUser = User::pluck('phone')->all();
         $savedContacts = []; // Initialize an array to store saved contacts
-        foreach ($contacts as $contact ) // Loop through each contact from the request
+
+        foreach ($contacts['contact'] as $contact) // Loop through each contact from the request
         {
-            if(in_array($contact['phone'] ,$phones))
-            {
+            if (in_array($contact['phone'], $phones)) {
                 continue; // Skip if the phone is already in the contacts
             }
-            if(in_array($contact['phone'],$phonesUser)){
-                $contact['status'] = 'subscrib';  // Set status to 'subscrib' if the phone is in users
+
+            if (in_array($contact['phone'], $phonesUser)) {
+                $contact['status_on_app'] = 'subscrib';  // Set status to 'subscrib' if the phone is in users
+            } else {
+                $contact['status_on_app'] = 'not_subscrib'; // Set status to 'not_subscribed' if the phone is not in users
             }
+            
             // Handle photo if set
-            if(isset($contact['photo'])){
+            if (isset($contact['photo'])) {
                 $contact['photo'] = storeFile($contact['photo'], 'contacts', 'public');
-            }else{
+            } else {
                 $contact['photo'] = null;
             }
-            $contact['user_id']=$request->id;
+
+            $contact['user_id'] = $request->id;
+
+            // Use insert method for each contact separately
+            Contact::create($contact);
             $savedContacts[] = $contact;
         }
-        $savedContacts = Contact::insert($savedContacts);
+
         return $savedContacts;
     }
 

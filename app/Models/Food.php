@@ -38,13 +38,24 @@ class Food extends Model implements TranslatableContract
 
 
 
+    
+    public function averageRating()
+    {
+        return $this->rating()->avg('rating');
+    }
+
+
+    public function userCount()
+    {
+        return $this->rating()->distinct('user_id')->count('user_id');
+    }
 
     public static function findFoodById($foodId, $restaurantId)
     {
         return static::where('id', $foodId)->where('restaurant_id', $restaurantId)->first();
     }
 
-    
+
 
 
 }

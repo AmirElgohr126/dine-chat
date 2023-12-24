@@ -20,6 +20,10 @@ class ResetPasswordRestaurantController extends Controller
             $email = $request->email;
             $user = RestaurantUser::where('email',$email)->first();
             $generatedOtp = rand(100000, 999999);
+            if($user->otp)
+            {
+                $user->otp->delete();
+            }
             $otp = $user->otp()->create([
                     'otp' => $generatedOtp,
                     'end_at' => now()->addHour()

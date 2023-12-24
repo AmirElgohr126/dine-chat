@@ -44,7 +44,7 @@ class ContactsListController extends Controller
             $savedContacts = $this->repo->postContactList($request);
             return finalResponse('success',200,$savedContacts);
         } catch (Exception $th) {
-            return finalResponse('failed',$th->getCode(),null,null, $th->getMessage());
+            return finalResponse('failed',400,null,null, $th->getMessage());
         }
     }
 

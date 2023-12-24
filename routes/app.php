@@ -45,7 +45,8 @@ Route::middleware('set_lang')->group(function () {
             return view('auth.verify-email');
         })->middleware('auth')->name('verification.notice'); // finished
     });
-    Route::post('/', [ContactsListController::class, 'postContactList']); //finished
+    Route::post('contactlist/add', [ContactsListController::class, 'postContactList']); //finished
+
     Route::group(['middleware' => ['auth', 'verified']], function () {
 
         Route::group(['prefix' => 'contactlist'], function () {

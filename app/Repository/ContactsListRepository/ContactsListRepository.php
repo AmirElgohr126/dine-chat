@@ -61,7 +61,7 @@ Class ContactsListRepository implements ContactsListInterface{
             }else{
                 $contact['photo'] = null;
             }
-            $contact['user_id']=$request->user()->id;
+            $contact['user_id']=$request->id;
             $savedContacts[] = $contact;
         }
         $savedContacts = Contact::insert($savedContacts);

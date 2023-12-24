@@ -24,7 +24,7 @@ class ContactsRequest extends FormRequest
         return [
             '*.name' => 'required|string',
             '*.phone' => 'required|string',
-            '*.photo' => 'sometimes|image|mimes:jpeg,png,jpg,gif|max:6048',
+            '*.photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6048',
         ];
     }
 }

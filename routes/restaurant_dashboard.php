@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
+use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\GetInfoController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LoginRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LogoutRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\ProfileRestaurantController;
@@ -36,15 +37,16 @@ Route::middleware('set_lang')->group(function () {
 
     Route::group(['prefix'=>'food','middleware'=>['auth:restaurant']],function()
     {
-        Route::post('add',[FoodController::class,'addFood']);
-        Route::post('update',[FoodController::class,'updateFood']);
-        Route::post('delete',[FoodController::class,'deleteFood']);
-        Route::get('get',[FoodMenuController::class,'menu']);
+        Route::post('add',[FoodController::class,'addFood']); // finished
+        Route::post('update',[FoodController::class,'updateFood']); // finished
+        Route::post('update',[FoodController::class,'updateFood']); // finished
+        Route::get('get',[FoodMenuController::class,'menu']); // finished
     });
     Route::group(['prefix'=>'profile','middleware'=>['auth:restaurant']],function()
     {
-        Route::post('update',[ProfileRestaurantController::class,'updateProfile']);
-        Route::post('/password/update',[ProfileRestaurantController::class,'changePassword']);
+        Route::post('update',[ProfileRestaurantController::class,'updateProfile']); // finished
+        Route::post('/password/update',[ProfileRestaurantController::class,'changePassword']); // finished
+        Route::get('',[GetInfoController::class,'getUser']); // finished
     });
 
 });

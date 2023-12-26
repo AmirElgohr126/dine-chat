@@ -19,6 +19,7 @@ class FoodController extends Controller
             $restaurantId = $user->restaurant_id;
             $data = $request->validated();
             extract($data);
+
             $pathImage = storeFile($photo, "restaurant_$restaurantId/food", 'public'); // helper in helper image file return path of file
             DB::beginTransaction();
             $food = Food::create([
@@ -71,11 +72,10 @@ class FoodController extends Controller
             ]);
             // Handle image update if needed
             if (isset($photo)) {
-                $modelImage = FoodImage::where('food_id',$food->id)->first();
-                $udpate = updateAndDeleteFile($photo,$modelImage, "image", "public","restaurant_$restaurantId/food","public");
-                if(!$udpate)
-                {
-                    throw new Exception("error in storing photo",400);
+                $modelImage = FoodImage::where('food_id', $food->id)->first();
+                $udpate = updateAndDeleteFile($photo, $modelImage, "image", "public", "restaurant_$restaurantId/food", "public");
+                if (!$udpate) {
+                    throw new Exception("error in storing photo", 400);
                 }
             }
             DB::commit();
@@ -108,6 +108,30 @@ class FoodController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
             return finalResponse('failed', 400, null, null, $e->getMessage());
+        }
+    }
+
+
+    public function getOneFood(Request $request)
+    {
+        try {
+            $user = $request->user('restaurant');
+            $food = Food::where('id', $request->id)
+                ->where('restaurant_id', $user->restaurant_id)
+                ->with(['rating' => function ($query) {
+                    $query->selectRaw('food_id, AVG(rating) as average_rating, COUNT(id) as rating_count')
+                        ->groupBy('food_id');
+                }])
+                ->with(['images', 'translations' => function ($query) {
+                    $query->where('locale', app()->getLocale());
+                }])
+                ->first();
+            if (!$food) {
+                throw new Exception("no food found",400);
+            }
+            return finalResponse('success', 200, $food);
+        } catch (Exception $e) {
+            return finalResponse('faield', 400, null, null, $e->getMessage());
         }
     }
 }

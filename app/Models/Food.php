@@ -17,7 +17,7 @@ class Food extends Model implements TranslatableContract
 
     protected $table = 'foods';
 
-    protected $fillable = ['restaurant_id','price'];
+    protected $fillable = ['restaurant_id','price','details','status'];
     public $translatedAttributes = ['name'];
 
 

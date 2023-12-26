@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\Auth\LoginRestaurantRequest;
 use App\Models\RestaurantUser;
-
+use App\Http\Resources\User\UserRestaurantDashboardResources;
 class LoginRestaurantController extends Controller
 {
     public function loginRestaurant(LoginRestaurantRequest $request)
@@ -31,7 +31,7 @@ class LoginRestaurantController extends Controller
             //     throw new Exception('Email not verified',405);
             // }
             // Return a successful response with the token and user information
-            return finalResponse('success', 200, ["token" => $token, "user" => $user]);
+            return finalResponse('success', 200, ["token" => $token, "user" => new UserRestaurantDashboardResources($user)]);
         } catch (Exception $e) {
         //     // Handle exceptions, and return a failed response with a 401 status code
             return finalResponse('failed', 400, null, null,  $e->getMessage());

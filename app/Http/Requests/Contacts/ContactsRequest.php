@@ -21,8 +21,9 @@ class ContactsRequest extends FormRequest
      */
     public function rules(): array
     {
-        
+
         return [
+            'id' => 'required|exists:users,id',
             'contact.*.name' => 'required|string',
             'contact.*.phone' => 'required|string',
             'contact.*.photo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:6048',

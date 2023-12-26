@@ -68,16 +68,4 @@ class RestaurantUser extends User implements ShouldQueue, JWTSubject
     {
         return $this->hasOne(Otp::class, 'restaurant_user_id','id');
     }
-
-
-
-
-
-    protected static function booted()
-    {
-        // Event for decrypting the content after a Post is retrieved
-        static::retrieved(function ($user) {
-            $user->photo = retriveMedia() . $user->photo;
-        });
-    }
 }

@@ -13,6 +13,10 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('layout.app');
+Route::get('/privacy', function () {
+    return view('Privacy.Privacy');
+});
+
+Route::get('/terms', function () {
+    return view('Privacy.Terms');
 });

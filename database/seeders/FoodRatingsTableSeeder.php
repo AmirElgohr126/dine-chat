@@ -13,6 +13,6 @@ class FoodRatingsTableSeeder extends Seeder
      */
     public function run(): void
     {
-        FoodRating::factory(50)->create();
+        FoodRating::factory(10)->create();
     }
 }

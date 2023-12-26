@@ -1,4 +1,3 @@
-
 <?php
 
 use Illuminate\Http\Request;
@@ -8,20 +7,10 @@ use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\GetInfoController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LoginRestaurantController;
+use App\Http\Controllers\Dashboards\DashboardRestaurant\Notifications\NotificationController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LogoutRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\ProfileRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\ResetPasswordRestaurantController;
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
 
 
 
@@ -35,19 +24,25 @@ Route::middleware('set_lang')->group(function () {
     });
     Route::post('user/restaurant/add', [AddRestaurantOrder::class, 'OrderAddRestaurant']); // finished
 
-    Route::group(['prefix'=>'food','middleware'=>['auth:restaurant']],function()
-    {
-        Route::post('add',[FoodController::class,'addFood']); // finished
-        Route::post('update',[FoodController::class,'updateFood']); // finished
-        Route::post('update',[FoodController::class,'updateFood']); // finished
-        Route::get('get',[FoodMenuController::class,'menu']); // finished
+    Route::group(['prefix' => 'food', 'middleware' => ['auth:restaurant']], function () {
+        Route::post('add', [FoodController::class, 'addFood']); // finished
+        Route::post('update', [FoodController::class, 'updateFood']); // finished
+        Route::post('update', [FoodController::class, 'updateFood']); // finished
+        Route::get('get', [FoodMenuController::class, 'menu']); // finished
     });
-    Route::group(['prefix'=>'profile','middleware'=>['auth:restaurant']],function()
-    {
-        Route::post('update',[ProfileRestaurantController::class,'updateProfile']); // finished
-        Route::post('/password/update',[ProfileRestaurantController::class,'changePassword']); // finished
-        Route::get('',[GetInfoController::class,'getUser']); // finished
+    Route::group(['prefix' => 'profile', 'middleware' => ['auth:restaurant']], function () {
+        Route::post('update', [ProfileRestaurantController::class, 'updateProfile']); // finished
+        Route::post('/password/update', [ProfileRestaurantController::class, 'changePassword']); // finished
+        Route::get('', [GetInfoController::class, 'getUser']); // finished
     });
+    Route::group(['prefix' => 'notification', 'middleware' => ['auth:restaurant']], function () {
+        Route::get('/', [NotificationController::class, 'listNotification']); // finished
+        Route::post('create', [NotificationController::class, 'createNotification']); // finished
+        Route::get('send', [NotificationController::class, 'sendNotification']); // finished
+    });
+
+
+
 
 });
 

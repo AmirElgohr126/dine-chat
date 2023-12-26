@@ -38,7 +38,7 @@ class Food extends Model implements TranslatableContract
 
 
 
-    
+
     public function averageRating()
     {
         return $this->rating()->avg('rating');

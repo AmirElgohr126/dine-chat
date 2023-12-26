@@ -15,7 +15,16 @@
             background-color: #f8f8f8;
         }
 
-        h1,
+        h1 {
+            text-align: center;
+            color: #0066cc;
+            padding-bottom: 5px;
+            margin-top: 20px;
+            margin-bottom: 40px;
+            font-weight: 800;
+            
+        }
+
         h2,
         h3 {
             color: #0066cc;

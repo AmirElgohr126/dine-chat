@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('foods', function (Blueprint $table) {
             $table->text('details')->nullable();
-            $table->enum('status',['active','inactive']);
+            $table->enum('status',['active','banned']);
         });
     }
 

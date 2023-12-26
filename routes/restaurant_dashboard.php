@@ -25,10 +25,12 @@ Route::middleware('set_lang')->group(function () {
     Route::post('user/restaurant/add', [AddRestaurantOrder::class, 'OrderAddRestaurant']); // finished
 
     Route::group(['prefix' => 'food', 'middleware' => ['auth:restaurant']], function () {
+        Route::get('get', [FoodMenuController::class, 'menu']); // finished
         Route::post('add', [FoodController::class, 'addFood']); // finished
         Route::post('update', [FoodController::class, 'updateFood']); // finished
-        Route::post('update', [FoodController::class, 'updateFood']); // finished
-        Route::get('get', [FoodMenuController::class, 'menu']); // finished
+        Route::post('delete', [FoodController::class, 'deleteFood']); // finished
+        Route::get('/{id}', [FoodController::class, 'getOneFood'])
+        ->where('id', '[0-9]+'); // finished
     });
     Route::group(['prefix' => 'profile', 'middleware' => ['auth:restaurant']], function () {
         Route::post('update', [ProfileRestaurantController::class, 'updateProfile']); // finished

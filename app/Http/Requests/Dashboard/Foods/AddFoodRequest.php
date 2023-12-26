@@ -25,7 +25,7 @@ class AddFoodRequest extends FormRequest
             'ar.name' => ['required','string'],
             'en.name' => ['required','string'],
             'price' => ['required','numeric'],
-            'status' => ['required','in:active,inactive','string'],
+            'status' => ['required','in:active,banned','string'],
             'details' => ['required','string'],
             'photo' => ['required','image','mimes:jpeg,png,jpg,gif,svg','max:6144']
         ];

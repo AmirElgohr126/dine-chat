@@ -64,7 +64,7 @@ Class ContactsListRepository implements ContactsListInterface{
             if (isset($contact['photo'])) {
                 $contact['photo'] = storeFile($contact['photo'], 'contacts', 'public');
             } else {
-                $contact['photo'] = null;
+                $contact['photo'] = 'Dafaults\Contacts\avatar.png';
             }
 
             $contact['user_id'] = $request->id;

@@ -21,9 +21,9 @@ class FoodFactory extends Factory
      */
     public function definition(): array
     {
-        $restaurantId = Restaurant::inRandomOrder()->first()->id;
+        // $restaurantId = Restaurant::inRandomOrder()->first()->id;
         return [
-            'restaurant_id' => $restaurantId,
+            'restaurant_id' => 1,
             'price' => $this->faker->randomFloat(2, 1, 100),
             'en' => [
                 'name' => $this->faker->words(2, true), // English translation

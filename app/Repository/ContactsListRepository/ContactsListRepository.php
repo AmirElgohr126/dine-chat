@@ -59,7 +59,7 @@ Class ContactsListRepository implements ContactsListInterface{
             } else {
                 $contact['status_on_app'] = 'not_subscrib'; // Set status to 'not_subscribed' if the phone is not in users
             }
-            
+
             // Handle photo if set
             if (isset($contact['photo'])) {
                 $contact['photo'] = storeFile($contact['photo'], 'contacts', 'public');

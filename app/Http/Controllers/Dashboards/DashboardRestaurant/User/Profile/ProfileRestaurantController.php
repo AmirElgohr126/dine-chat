@@ -18,7 +18,6 @@ class ProfileRestaurantController extends Controller
                 'name' => ['required', 'regex:/^[a-zA-Z\s]+$/u', 'string', 'max:255'],
             ]);
             $user = $request->user('restaurant');
-            $path = 'Dafaults/User/user.png';
             if ($request->hasFile('photo')) {
                 $photo = $request->photo;
                 $path = storeFile($photo, 'restaurant_users', 'public');
@@ -26,10 +25,11 @@ class ProfileRestaurantController extends Controller
                 if ($oldPath != 'Dafaults/User/user.png') {
                     Storage::disk('public')->delete($oldPath);
                 }
+                $user->photo = $path;
+                $user->save();
             }
             $user->update([
                 'phone' => $request->phone,
-                'photo' => $path,
                 'name' => $request->name,
             ]);
                 return finalResponse('success', 200,__('errors.update_succeesfully'));

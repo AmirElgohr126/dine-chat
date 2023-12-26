@@ -52,6 +52,7 @@ return [
     'falied_otp' => 'failed to change password please enter right otp',
     'email_not_found' => 'email not found',
     'update_succeesfully' => 'update proflie succeesfully',
+    'succees_notification_create' => 'succees notification create',
 
 
 ];

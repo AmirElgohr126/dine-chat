@@ -18,7 +18,7 @@ class FoodRatingFactory extends Factory
     {
         return [
             'rating' => $this->faker->randomElement([1, 2, 3, 4, 5]),
-            'restaurant_id' => 11,
+            'restaurant_id' => 1,
             'food_id' => function () {
                 return \App\Models\Food::factory()->create()->id;
             },

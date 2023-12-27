@@ -67,7 +67,7 @@ Class ContactsListRepository implements ContactsListInterface{
                 $contact['photo'] = 'Dafaults\Contacts\avatar.png';
             }
 
-            $contact['user_id'] = $request->id;
+            $contact['user_id'] = $request->user()->id;
 
             // Use insert method for each contact separately
             Contact::create($contact);

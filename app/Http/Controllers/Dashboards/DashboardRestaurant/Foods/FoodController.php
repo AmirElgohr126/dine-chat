@@ -122,9 +122,7 @@ class FoodController extends Controller
                     $query->selectRaw('food_id, AVG(rating) as average_rating, COUNT(id) as rating_count')
                         ->groupBy('food_id');
                 }])
-                ->with(['images', 'translations' => function ($query) {
-                    $query->where('locale', app()->getLocale());
-                }])
+                ->with(['images', 'translations' ])
                 ->first();
             if (!$food) {
                 throw new Exception("no food found",400);

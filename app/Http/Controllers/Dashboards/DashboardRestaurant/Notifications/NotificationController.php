@@ -20,7 +20,7 @@ class NotificationController extends Controller
                 'restaurant_id' => $request->user('restaurant')->restaurant_id,
                 'title' => $request->title,
                 'message' => $request->message,
-                'status' => 'invalid', // pending - send now 
+                'status' => 'invalid', // pending - send now
             ]);
             if (!$notification) {
                 throw new Exception(__('errors.failed_create_notification'), 500);
@@ -54,7 +54,7 @@ class NotificationController extends Controller
 
     public function sendNotification(Request $request)
     {
-
+        
     }
 }
 

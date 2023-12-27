@@ -5,23 +5,30 @@ use Exception;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Notifications\CreateNotificationRequest;
 
 class NotificationController extends Controller
 {
-    public function createNotification(Request $request)
+    public function createNotification(CreateNotificationRequest $request)
     {
         try {
-            $request->validate([
-                'title' => 'required|string',
-                'message' => 'required|string',
-            ]);
-            // Create a new notification
-            $notification = Notification::create([
-                'restaurant_id' => $request->user('restaurant')->restaurant_id,
+            $request->validated();
+            $user = $request->user('restaurant');
+            $path = 'Dafaults/Notification/logo_notification.png';
+            $photo = $request->photo;
+            if($photo)
+            {
+                $path = storeFile($photo, "restaurant_$user->id/Notification", 'public');
+            }
+            $notificationData = [
+                'restaurant_id' => $user->restaurant_id,
                 'title' => $request->title,
                 'message' => $request->message,
-                'status' => 'invalid', // pending - send now
-            ]);
+                'status' => $request->status,
+                'send_at' => $request->status == 'pending' ? $request->send_at : null ,
+                'photo' => $path
+            ];
+            $notification = Notification::create($notificationData);
             if (!$notification) {
                 throw new Exception(__('errors.failed_create_notification'), 500);
             }
@@ -52,7 +59,7 @@ class NotificationController extends Controller
     }
 
 
-    public function sendNotification(Request $request)
+    public function sendNotificationNow(Request $request)
     {
         
     }

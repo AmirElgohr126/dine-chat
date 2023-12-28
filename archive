@@ -1,0 +1,48 @@
+
+    // public function sendNotificationNow(Request $request)
+    // {
+    //     $user = $request->user('restaurant');
+    //     $accessToken = app('firebase.access_token'); // Get the access token
+
+    //     $restaurantId = $user->restaurant_id; // replace with your desired restaurant_id
+    //     $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)
+    //         ->distinct()
+    //         ->pluck('user_id');
+    //     $deviceTokens = User::whereIn('id', $uniqueUserIds)
+    //         ->pluck('device_token')->toArray(); // 'device_tokens' in table users
+
+    //     $projectId = 'dinechate';
+    //     $curl = curl_init();
+    //     $Notification = Notification::where('restaurant_id', $restaurantId)->where('id',$request->id)->first();
+
+    //     $postData = [
+    //         'message' => [
+    //             'notification' => [
+    //                 'title' => $Notification->title,
+    //                 'body' => $Notification->message,
+    //                 'image' => retriveMedia() . $Notification->photo
+    //             ],
+    //             'registration_ids' => $deviceTokens, // Array of device tokens
+    //         ]
+    //     ];
+
+    //     $headers = [
+    //         'Authorization: Bearer ' . $accessToken,
+    //         'Content-Type: application/json'
+    //     ];
+
+    //     curl_setopt_array($curl, [
+    //         CURLOPT_URL => "https://fcm.googleapis.com/v1/projects/$projectId/messages:send",
+    //         CURLOPT_RETURNTRANSFER => true,
+    //         CURLOPT_CUSTOMREQUEST => "POST",
+    //         CURLOPT_POSTFIELDS => json_encode($postData),
+    //         CURLOPT_HTTPHEADER => $headers,
+    //     ]);
+
+    //     $response = curl_exec($curl);
+    //     if (curl_errno($curl)) {
+    //         $error_msg = curl_error($curl);
+    //     }
+    //     curl_close($curl);
+    //     return $response;
+    // }

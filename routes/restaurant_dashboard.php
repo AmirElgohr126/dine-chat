@@ -40,7 +40,7 @@ Route::middleware('set_lang')->group(function () {
     Route::group(['prefix' => 'notification', 'middleware' => ['auth:restaurant']], function () {
         Route::get('/', [NotificationController::class, 'listNotification']); // finished
         Route::post('create', [NotificationController::class, 'createNotification']); // finished
-        Route::get('send', [NotificationController::class, 'sendNotification']); // finished
+        Route::post('send', [NotificationController::class, 'sendNotificationNow']); // finished
     });
 
 

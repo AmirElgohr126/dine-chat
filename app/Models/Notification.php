@@ -18,7 +18,7 @@ class Notification extends Model
         'last_sent_at',
         'status',
         'photo',
-        'send_at',
+        'sent_at',
     ];
 
     // Define the relationship with the Restaurant model

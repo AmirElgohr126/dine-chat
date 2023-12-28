@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ContactListServiceProvider::class,
+        App\Providers\FirebaseServiceProvider::class,
     ])->toArray(),
 
     /*
@@ -190,6 +191,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
+        'Firebase' => App\Facades\FirebaseFacade::class,
     ])->toArray(),
 
 ];

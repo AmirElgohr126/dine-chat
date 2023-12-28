@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::table('notifications', function (Blueprint $table) {
             $table->enum('status', ['send_now', 'pending'])->default('pending')->change();
-            $table->timestamp('sent_at');
+            $table->timestamp('sent_at')->nullable();
             $table->string('photo')->nullable();
         });
     }

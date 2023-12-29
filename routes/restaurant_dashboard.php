@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodController;
+use App\Http\Controllers\Dashboards\DashboardRestaurant\Assest\RestaurantAssest;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\GetInfoController;
@@ -39,6 +40,11 @@ Route::middleware('set_lang')->group(function () {
     });
     Route::group(['prefix' => 'notification', 'middleware' => ['auth:restaurant']], function () {
         Route::get('/', [NotificationController::class, 'listNotification']); // finished
+        Route::post('create', [NotificationController::class, 'createNotification']); // finished
+        Route::post('send', [NotificationController::class, 'sendNotificationNow']); // finished
+    });
+    Route::group(['prefix' => 'restaurant', 'middleware' => ['auth:restaurant']], function () {
+        Route::get('/', [RestaurantAssest::class, 'createAssest']); // finished
         Route::post('create', [NotificationController::class, 'createNotification']); // finished
         Route::post('send', [NotificationController::class, 'sendNotificationNow']); // finished
     });

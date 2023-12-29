@@ -76,7 +76,7 @@ class NotificationController extends Controller
         if (empty($deviceTokens[0])) {
             return finalResponse('failed', 400, null, null, 'no participants');
         }
-        $projectId = 'dinechate';
+        $projectId = 'dine-chat';
         $Notification = Notification::where('restaurant_id', $restaurantId)->where('id', $request->id)->first();
 
         $responses = [];

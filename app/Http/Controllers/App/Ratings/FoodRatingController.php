@@ -35,7 +35,7 @@ class FoodRatingController extends Controller
                 ]) // Eager loading
                 ->get();
             if (!$foodRatings) {
-                return finalResponse('success', 200, __('errors.no_ratings'));
+                return finalResponse('success', 200, __('errors.no_ratings  '));
             }
             return finalResponse('success', 200, $foodRatings);
         } catch (\Exception $e) {

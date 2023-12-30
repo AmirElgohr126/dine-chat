@@ -18,7 +18,7 @@ class CreateNotificationRequest extends FormRequest
             'message' => 'required|string',
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:6144',
             'status' => 'required|in:send_now,pending',
-            'sent_at' => 'nullable|date|after:now|required_if:status,pending',
+            'sent_at' => 'sometimes|nullable|required_if:status,pending|date|after:now',
         ];
     }
 }

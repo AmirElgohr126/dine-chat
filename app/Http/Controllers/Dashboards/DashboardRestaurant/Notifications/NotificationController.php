@@ -33,6 +33,16 @@ class NotificationController extends Controller
                 'photo' => $path
             ];
             $notification = Notification::create($notificationData);
+
+            if($notification->status == 'send_now')
+            {
+                $this->sendNotify($notification, $user->restaurant_id);
+                $notification->last_sent_at = now();
+                $notification->sent_at = now();
+                $notification->save();
+            }
+
+
             if (!$notification) {
                 throw new Exception(__('errors.failed_create_notification'), 500);
             }
@@ -48,7 +58,6 @@ class NotificationController extends Controller
         try {
             $per_page = $request->per_page ?? 10;
             $user = $request->user('restaurant');
-
             // Fetch notifications for the given restaurant with related data
             $notifications = Notification::where('restaurant_id', $user->restaurant_id)
                 ->orderBy('created_at', 'desc') // You can adjust the ordering based on your needs
@@ -67,6 +76,21 @@ class NotificationController extends Controller
     {
         $user = $request->user('restaurant');
         $restaurantId = $user->restaurant_id; // replace with your desired restaurant_id
+
+        $Notification = Notification::where('restaurant_id', $restaurantId)->where('id', $request->id)->first();
+        $this->sendNotify($Notification,$restaurantId);
+
+        if ($Notification->status == 'send_now') {
+            $this->sendNotify($Notification, $user->restaurant_id);
+            $Notification->last_sent_at = now();
+            $Notification->save();
+        }
+    }
+
+
+
+    private function sendNotify($Notification,$restaurantId)
+    {
         $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)
             ->distinct()
             ->pluck('user_id');
@@ -76,7 +100,6 @@ class NotificationController extends Controller
             return finalResponse('failed', 400, null, null, 'no participants');
         }
         $projectId = 'dine-chat';
-        $Notification = Notification::where('restaurant_id', $restaurantId)->where('id', $request->id)->first();
         $responses = [];
         foreach ($deviceTokens as $deviceToken) {
             $curl = curl_init();
@@ -87,6 +110,18 @@ class NotificationController extends Controller
                         'body' => $Notification->message,
                         'image' => retriveMedia() . $Notification->photo
                     ],
+                    'android' => [
+                        'notification' => [
+                            'sound' => 'default'
+                        ]
+                    ],
+                    'apns' => [
+                        'payload' => [
+                            'aps' => [
+                                'sound' => 'default'
+                            ]
+                        ]
+                    ],
                     'token' => $deviceToken,
                 ]
             ];
@@ -95,7 +130,6 @@ class NotificationController extends Controller
                 'Authorization: Bearer ' . $accessToken,
                 'Content-Type: application/json'
             ];
-
             curl_setopt_array($curl, [
                 CURLOPT_URL => "https://fcm.googleapis.com/v1/projects/$projectId/messages:send",
                 CURLOPT_RETURNTRANSFER => true,
@@ -103,19 +137,14 @@ class NotificationController extends Controller
                 CURLOPT_POSTFIELDS => json_encode($postData),
                 CURLOPT_HTTPHEADER => $headers,
             ]);
-
             $response = curl_exec($curl);
-
             if (!curl_errno($curl)) {
                 $responses[] = json_decode($response, true);
             }
-
             curl_close($curl);
         }
-
         return $responses;
     }
-
 }
 
 ?>

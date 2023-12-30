@@ -15,12 +15,13 @@ class TablesDashboardRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'assets' => 'required|array',
-            'assets.*.id' => 'required|string',
-            'assets.*.x' => 'required|numeric',
-            'assets.*.y' => 'required|numeric',
-            'assets.*.img' => 'required|url',
-            'assets.*.key' => 'required|string',
+            'assets' => 'sometimes|array',
+            'assets.*.id' => 'required_with:assets|string',
+            'assets.*.x' => 'required_with:assets|numeric',
+            'assets.*.y' => 'required_with:assets|numeric',
+            'assets.*.img' => 'required_with:assets|string',
+            'assets.*.key' => 'required_with:assets|string',
+            'assets.*.nfc_number' => 'nullable|numeric',
             'boardWidth' => 'required|integer|min:0',
             'boardHeight' => 'required|integer|min:0'
         ];

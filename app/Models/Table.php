@@ -12,8 +12,11 @@ class Table extends Model
     use HasFactory;
 
     protected $fillable =[
-        'table_number',
         'restaurant_id',
+        'x',
+        'y',
+        'key',
+        'img',
     ];
 
 
@@ -22,9 +25,4 @@ class Table extends Model
         return $this->belongsTo(Restaurant::class,'restaurant_id','id');
     }
 
-
-    public function chairs()
-    {
-        return $this->hasMany(Chair::class,'table_id','id');
-    }
 }

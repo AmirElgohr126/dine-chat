@@ -3,6 +3,7 @@ namespace App\Http\Controllers\Dashboards\DashboardRestaurant\Notifications;
 
 use Exception;
 use App\Models\User;
+use Google\Auth\OAuth2;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\UserAttendance;
@@ -65,8 +66,6 @@ class NotificationController extends Controller
     public function sendNotificationNow(Request $request)
     {
         $user = $request->user('restaurant');
-        $accessToken = app('firebase.access_token'); // Get the access token
-
         $restaurantId = $user->restaurant_id; // replace with your desired restaurant_id
         $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)
             ->distinct()
@@ -78,9 +77,7 @@ class NotificationController extends Controller
         }
         $projectId = 'dine-chat';
         $Notification = Notification::where('restaurant_id', $restaurantId)->where('id', $request->id)->first();
-
         $responses = [];
-
         foreach ($deviceTokens as $deviceToken) {
             $curl = curl_init();
             $postData = [
@@ -90,10 +87,10 @@ class NotificationController extends Controller
                         'body' => $Notification->message,
                         'image' => retriveMedia() . $Notification->photo
                     ],
-                    'token' => $deviceToken, // Use single device token
+                    'token' => $deviceToken,
                 ]
             ];
-
+            $accessToken = FcmGoogleHelper::configureClient();
             $headers = [
                 'Authorization: Bearer ' . $accessToken,
                 'Content-Type: application/json'

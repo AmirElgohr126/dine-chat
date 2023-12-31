@@ -38,7 +38,6 @@ class NotificationController extends Controller
             {
                 $this->sendNotify($notification, $user->restaurant_id);
                 $notification->last_sent_at = now();
-                $notification->sent_at = now();
                 $notification->save();
             }
 

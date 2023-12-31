@@ -56,16 +56,16 @@ Route::middleware('set_lang')->group(function () {
             Route::post('/invite', [ContactsListController::class, 'inviteContact']); // finished
         });
         // =====================================================================================
-        Route::post('nfc/vaildate', [NfcController::class, 'VaildateNfcParameter']); // will updated
+        Route::post('nfc/vaildate', [NfcController::class, 'VaildateNfcParameter']); // finished
         // =====================================================================================
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('map', [GetMapsOfRestaurantController::class, 'closestRestaurants']); // finished
-            Route::get('user/count', [RestaurantController::class, 'usersInRestaurant']); // will updated
-            Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // will updated
+            Route::get('user', [RestaurantController::class, 'usersInRestaurant']); // finished
+            Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // finished
         });
         // =====================================================================================
         Route::group(['prefix' => 'rating'],function (){
-            Route::get('restaurant',[RestaurantRatingController::class,'restaurantsRating']); // will updated
+            Route::get('restaurant',[RestaurantRatingController::class,'restaurantsRating']); // finished
             Route::get('food',[FoodRatingController::class,'foodsRating']); // finished
         });
         // =====================================================================================

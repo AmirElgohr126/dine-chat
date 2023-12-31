@@ -20,7 +20,7 @@ class RestaurantController extends Controller
             if (!$restaurant) {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-            $userAttendance = $restaurant->userAttendance()->with(['users', 'tables', 'chairs'])->get();
+            $userAttendance = $restaurant->userAttendance()->with(['users', 'chairs'])->get();
             if (isset($userAttendance) == null) {
                 return finalResponse('success', 204);
             }
@@ -38,10 +38,10 @@ class RestaurantController extends Controller
             if (!$restaurant) {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-            $assetRestaurant = $restaurant->tables()->with('chairs')->get();
+            $assetRestaurant = $restaurant->with(['tables','chairs'])->get();
             return finalResponse('success', 200, $assetRestaurant);
         } catch (Exception $e) {
-            return finalResponse('success', $e->getCode(), null, null, $e->getMessage());
+            return finalResponse('success', 405, null, null, $e->getMessage());
         }
     }
 

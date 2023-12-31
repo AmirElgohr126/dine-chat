@@ -69,6 +69,10 @@ class SettingsController extends Controller
             $mood = $user->ghost_mood;
             if ($mood == 0) {
                 // convert to ghost
+                $ghost = UserGhost::where('user_id', $user->id)->first();
+                if ($ghost) {
+                    $ghost->delete();
+                }
                 $ghost = UserGhost::create([
                     'user_id' => $user->id,
                     'first_name' => $user->first_name,
@@ -83,7 +87,7 @@ class SettingsController extends Controller
                     'last_name' => 'Shadowvale',
                     'phone' => '00000000000',
                 ]);
-            }else{
+            } else {
                 // convert to user
                 $ghost = UserGhost::where('user_id', $user->id)->first();
                 $user->update([
@@ -97,7 +101,7 @@ class SettingsController extends Controller
             }
             return finalResponse('success', 200, __('errors.ghost_mode_updated_success'));
         } catch (Exception $e) {
-            return finalResponse('failed', 500, null, null, 'internal server error');
+            return finalResponse('failed', 500, null, null, 'internal server error' . $e->getMessage());
         }
     }
 }

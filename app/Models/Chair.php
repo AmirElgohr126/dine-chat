@@ -16,6 +16,7 @@ class Chair extends Model
         'y',
         'key',
         'img',
+        'nfc_number'
     ];
 
 

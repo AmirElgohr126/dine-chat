@@ -21,7 +21,7 @@ class TablesDashboardRequest extends FormRequest
             'assets.*.y' => 'required_with:assets|numeric',
             'assets.*.img' => 'required_with:assets|string',
             'assets.*.key' => 'required_with:assets|string',
-            'assets.*.nfc_number' => 'nullable|numeric',
+            'assets.*.nfc_number' => 'required_with:assets|integer',
             'boardWidth' => 'required|integer|min:0',
             'boardHeight' => 'required|integer|min:0'
         ];

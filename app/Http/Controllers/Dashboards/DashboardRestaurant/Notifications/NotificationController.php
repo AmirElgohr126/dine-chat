@@ -52,6 +52,26 @@ class NotificationController extends Controller
         }
     }
 
+    public function deleteNotification(Request $request)
+    {
+        try {
+            $request->validate([
+                'id' => 'required|exists:notifications,id'
+            ]);
+            $user = $request->user('restaurant');
+            $notification = Notification::where('restaurant_id', $user->restaurant_id)
+            ->where('id',$request->id)->first();
+            if($notification)
+            {
+                $notification->delete();
+            }else{
+                throw new Exception("notification not belongs to this restaurant", 400);
+            }
+            return finalResponse('success', 200,'deleted sucessfully');
+        } catch (Exception $e) {
+            return finalResponse('failed', 400, null, null, $e->getMessage());
+        }
+    }
 
     public function listNotification(Request $request)
     {
@@ -70,6 +90,7 @@ class NotificationController extends Controller
             return finalResponse('failed', 400, null, null, $e->getMessage());
         }
     }
+
 
 
     public function sendNotificationNow(Request $request)

@@ -76,7 +76,8 @@ class RestaurantAssest extends Controller
                         'x' => $table->x,
                         'y' => $table->y,
                         'img' => $table->img, // replace with actual image URL attribute
-                        'key' => $table->key
+                        'key' => $table->key,
+                        'name' => $table->name
                     ];
                 }
             }
@@ -90,7 +91,8 @@ class RestaurantAssest extends Controller
                         'y' => $chair->y,
                         'img' => $chair->img, // replace with actual image URL attribute
                         'key' => $chair->key,
-                        'nfc_number' => $chair->nfc_number
+                        'nfc_number' => $chair->nfc_number,
+                        'name' => $chair->name
                     ];
                 }
             }

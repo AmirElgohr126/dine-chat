@@ -25,8 +25,7 @@ class NfcRequest extends FormRequest
             'restaurant_id' => 'required',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
-            'table_number' => 'required|numeric',
-            'chair_number' => 'required|numeric',
+            'nfc_number' => 'required|numeric',
         ];
     }
 }

@@ -18,7 +18,6 @@ class UserAttendance extends Model
     protected $fillable =[
         'restaurant_id',
         'chair_id',
-        'table_id',
         'user_id',
     ];
 
@@ -28,9 +27,6 @@ class UserAttendance extends Model
     }
     public function users() {
         return $this->belongsTo(User::class,'user_id','id');
-    }
-    public function tables() {
-        return $this->belongsTo(Table::class,'table_id','id');
     }
     public function chairs() {
         return $this->belongsTo(Chair::class,'chair_id','id');

@@ -24,18 +24,14 @@ class NfcController extends Controller
             if (!($data['latitude'] == $restaurant->latitude && $data['longitude'] == $restaurant->longitude)) {
                 throw new \Exception(__('errors.invalid_parameter'),405);
             }
-            $table = $restaurant->tables()->where('table_number', $data['table_number'])->first();
-            if (!$table) {
-                throw new \Exception(__('errors.invalid_parameter'.' table_number'),405);
-            }
-            $chair = $table->chairs()->where('chair_number', $data['chair_number'])->first();
+            $nfcNumber = (int) $data['nfc_number'];
+            $chair = $restaurant->chairs()->where('nfc_number', '=',$nfcNumber)->first();
             if (!$chair) {
                 throw new \Exception(__('errors.invalid_parameter' . ' chair_number'),405);
             }
             // finsh card check ====================================================================================
             $conflictingReservation = UserAttendance::
                 where('chair_id', $chair->id)
-                ->where('table_id', $table->id)
                 ->where('restaurant_id',$restaurant->id)
                 ->where('created_at', '>', now()->subHour())
                 ->first();
@@ -46,7 +42,6 @@ class NfcController extends Controller
             $reserve = UserAttendance::create([
                 'user_id' => $request->user()->id,
                 'chair_id' => $chair->id,
-                'table_id' => $table->id,
                 'restaurant_id' => $restaurant->id,
                 'created_at' => now(),
                 'updated_at' => now()
@@ -58,5 +53,4 @@ class NfcController extends Controller
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
-
 }

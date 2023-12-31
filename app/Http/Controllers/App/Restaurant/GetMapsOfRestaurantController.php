@@ -43,10 +43,9 @@ class GetMapsOfRestaurantController extends Controller
                 ->selectRaw("{$distance_result} AS distance")
                 ->whereRaw("{$distance_result} < ?", [$radius])->orderBy('distance')
                 ->withTranslation()
-                ->withCount('userAttendance')
-                ->paginate($per_page);
-            $pagnation = pagnationResponse($restaurants); // Generate pagination response
-            return finalResponse('success', 200, $restaurants->items(), $pagnation);  // Return the final response
+                ->withCount('userAttendance')->get();
+
+                return finalResponse('success', 200, $restaurants);  // Return the final response
         } catch (Exception $e) { // Handle exceptions and return an error response
             return finalResponse('error', 500, "Internal Server Error" . $e->getMessage(), null);
         }

@@ -17,6 +17,7 @@ class Table extends Model
         'y',
         'key',
         'img',
+        'name'
     ];
 
 

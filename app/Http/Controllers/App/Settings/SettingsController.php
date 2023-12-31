@@ -67,19 +67,10 @@ class SettingsController extends Controller
         try {
             $user = $request->user();
             $mood = $user->ghost_mood;
-            if ($mood == 1) {
-                // convert to user
-                $ghost = UserGhost::where('user_id' , $user->id)->first();
-                $user->update([
-                    'ghost_mood' => 0,
-                    'photo' => $ghost->photo,
-                    'first_name' => $ghost->first_name,
-                    'last_name' => $ghost->last_name,
-                    'phone' => $ghost->phone,
-                ]);
-            }else{
+            if ($mood == 0) {
                 // convert to ghost
-                $ghost = UserGhost::firstOrCreate(['user_id' => $user->id], [
+                $ghost = UserGhost::create([
+                    'user_id' => $user->id,
                     'first_name' => $user->first_name,
                     'last_name' => $user->last_name,
                     'phone' => $user->phone,
@@ -92,8 +83,18 @@ class SettingsController extends Controller
                     'last_name' => 'Shadowvale',
                     'phone' => '00000000000',
                 ]);
+            }else{
+                // convert to user
+                $ghost = UserGhost::where('user_id', $user->id)->first();
+                $user->update([
+                    'ghost_mood' => 0,
+                    'photo' => $ghost->photo,
+                    'first_name' => $ghost->first_name,
+                    'last_name' => $ghost->last_name,
+                    'phone' => $ghost->phone,
+                ]);
+                $ghost->delete();
             }
-
             return finalResponse('success', 200, __('errors.ghost_mode_updated_success'));
         } catch (Exception $e) {
             return finalResponse('failed', 500, null, null, 'internal server error');

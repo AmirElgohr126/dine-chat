@@ -15,10 +15,9 @@ return new class extends Migration
             $table->id();
             $table->foreignId('restaurant_id')->references('id')->on('restaurants')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('chair_id')->references('id')->on('chairs')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->foreignId('table_id')->references('id')->on('tables')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
-        $table->unique(['restaurant_id', 'chair_id', 'table_id', 'user_id', 'created_at', 'updated_at'], 'user_attendance_unique');
+        $table->unique(['restaurant_id', 'chair_id', 'user_id', 'created_at', 'updated_at'], 'user_attendance_unique');
         });
     }
 

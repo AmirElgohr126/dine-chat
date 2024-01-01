@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Assest\RestaurantAssest;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController;
+use App\Http\Controllers\Dashboards\DashboardRestaurant\Tickets\TicketsController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\GetInfoController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LoginRestaurantController;
@@ -50,8 +51,14 @@ Route::middleware('set_lang')->group(function () {
         //
     });
 
+    Route::group(['prefix' => 'tickets', 'middleware' => ['auth:restaurant']], function () {
+        Route::get('/list', [TicketsController::class, 'listTiketsForUser']); // finished
+        Route::post('create', [TicketsController::class, 'create']); // finished
+        Route::post('message/store', [TicketsController::class, 'storeMessage']); // finished
 
-
+        Route::get('{ticketId}/messages', [TicketsController::class, 'getMessagesForTicket']) // finished
+            ->where('ticketId', '[0-9]+'); // Ensure ticketId is a number
+    });
 
 });
 

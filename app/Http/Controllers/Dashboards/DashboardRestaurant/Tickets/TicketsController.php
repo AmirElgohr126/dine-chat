@@ -21,13 +21,14 @@ class TicketsController extends Controller
         // Validate the request data
         $validatedData = $request->validate([
             'title' => 'required|string|max:255',
-            'image' => 'nullable|image|max:2048',
         ]);
-
+        $validatedData['image'] = 'Dafaults/Tikets/tekit.webp';
         // Create the ticket
-        $ticket = new Ticket($validatedData);
-        $ticket->restaurant_user_id = $request->user('restaurant');
-        $ticket->save();
+        $ticket = Ticket::create([
+                'title' => $validatedData['title'],
+                'image' => 'Dafaults/Tikets/tekit.webp',
+                'restaurant_user_id' => $request->user('restaurant')->id,
+            ]);
         return finalResponse('success',200,$ticket);
     }
 
@@ -49,17 +50,16 @@ class TicketsController extends Controller
             'message' => 'required|string',
         ]);
 
-        $message = new MessagesRestaurantsSupport([
+        $message = MessagesRestaurantsSupport::create([
             'ticket_id' => $validatedData['ticket_id'],
             'message' => $validatedData['message'],
         ]);
-        // Return a response, e.g., redirect or JSON response
         return finalResponse('success', 200, $message);
     }
 
 
 
-    public function getMessagesForTicket(Request $request, $ticketId)
+    public function getMessagesForTicket(Request $request)
     {
         // Validate the ticket ID
         $validatedData = $request->validate([

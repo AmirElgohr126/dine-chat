@@ -22,10 +22,10 @@ class RestaurantFactory extends Factory
         return [
             'number_of_floors' => $this->faker->randomDigitNotNull,
             'number_of_departments' => $this->faker->randomDigitNotNull,
-            'hall_height' => $this->faker->numberBetween(100, 500),
+            'hall_hight' => $this->faker->numberBetween(100, 500),
             'hall_width' => $this->faker->numberBetween(100, 500),
             'period_deleted_after' => $this->faker->numberBetween(1, 30),
-            'period_unit' => $this->faker->randomElement(['days', 'weeks', 'months']),
+            'period_unit' => $this->faker->randomElement(['hour', 'day', 'month', 'year']),
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
             'phone' => $this->faker->phoneNumber,

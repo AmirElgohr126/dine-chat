@@ -29,4 +29,12 @@ class Ticket extends Model
     {
         return $this->belongsTo(RestaurantUser::class, 'restaurant_user_id');
     }
+
+    protected static function booted()
+    {
+        // Event for decrypting the content after a Post is retrieved
+        static::retrieved(function ($ticket) {
+            $ticket->image = retriveMedia() . $ticket->image;
+        });
+    }
 }

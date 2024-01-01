@@ -56,8 +56,7 @@ Route::middleware('set_lang')->group(function () {
         Route::post('create', [TicketsController::class, 'create']); // finished
         Route::post('message/store', [TicketsController::class, 'storeMessage']); // finished
 
-        Route::get('{ticketId}/messages', [TicketsController::class, 'getMessagesForTicket']) // finished
-            ->where('ticketId', '[0-9]+'); // Ensure ticketId is a number
+        Route::get('messages', [TicketsController::class, 'getMessagesForTicket']); // finished
     });
 
 });

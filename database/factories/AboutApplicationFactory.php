@@ -6,9 +6,6 @@ namespace Database\Factories;
 use App\Models\AboutApplication;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Model>
- */
 class AboutApplicationFactory extends Factory
 {
 

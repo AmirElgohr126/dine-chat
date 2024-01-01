@@ -51,6 +51,9 @@ class Notification extends Model
         return Carbon::parse($value)->format('Y-m-d h:i A');
     }
 
-
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'notification_user');
+    }
 
 }

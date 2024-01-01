@@ -8,7 +8,7 @@ return [
     'terms_not_found' => 'Terms & conditions not found',
     'about_not_found' => 'about us not found',
     'invalid_credentials' => 'invalid credentials',
-    'email_not_verified' => 'Email not verified',
+    'email_verified' => 'Email verified',
     'logout_successfully' => 'logout successfully',
     'login_successfully' => 'login successfully',
     'register_successfully' => 'login successfully',

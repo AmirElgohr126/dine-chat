@@ -23,8 +23,12 @@ class TableFactory extends Factory
     {
         $restaurantId = Restaurant::inRandomOrder()->first()->id;
         return [
-            'table_number' => $this->faker->unique()->randomNumber(3),
-            'restaurant_id' => $restaurantId,
+            'restaurant_id' => Restaurant::factory(),
+            'x' => $this->faker->randomFloat(8, 0, 100),
+            'y' => $this->faker->randomFloat(8, 0, 100),
+            'img' => $this->faker->imageUrl(),
+            'key' => $this->faker->unique()->word,
+            'name' => $this->faker->word,
         ];
     }
 }

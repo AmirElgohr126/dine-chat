@@ -16,7 +16,6 @@ class TablesDashboardRequest extends FormRequest
     {
         return [
             'assets' => 'sometimes|array',
-            'assets.*.id' => 'required_with:assets|string',
             'assets.*.name' => 'required_with:assets|string',
             'assets.*.x' => 'required_with:assets|numeric',
             'assets.*.y' => 'required_with:assets|numeric',

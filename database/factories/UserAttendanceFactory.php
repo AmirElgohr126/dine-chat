@@ -29,9 +29,6 @@ class UserAttendanceFactory extends Factory
             'chair_id' => function () {
                 return Chair::factory()->create()->id;
             },
-            'table_id' => function () {
-                return Table::factory()->create()->id;
-            },
             'user_id' => 12,
             'created_at' => now(),
             'updated_at' => now()

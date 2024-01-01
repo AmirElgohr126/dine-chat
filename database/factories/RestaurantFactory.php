@@ -20,12 +20,16 @@ class RestaurantFactory extends Factory
     public function definition(): array
     {
         return [
-            'number_of_floors' => $this->faker->randomNumber(2),
-            'number_of_departments' => $this->faker->randomNumber(2),
+            'number_of_floors' => $this->faker->randomDigitNotNull,
+            'number_of_departments' => $this->faker->randomDigitNotNull,
+            'hall_height' => $this->faker->numberBetween(100, 500),
+            'hall_width' => $this->faker->numberBetween(100, 500),
+            'period_deleted_after' => $this->faker->numberBetween(1, 30),
+            'period_unit' => $this->faker->randomElement(['days', 'weeks', 'months']),
             'latitude' => $this->faker->latitude,
             'longitude' => $this->faker->longitude,
             'phone' => $this->faker->phoneNumber,
-            'images' => $this->faker->imageUrl,
+            'images' => $this->faker->imageUrl(),
             'en' => [
                 'name' => $this->faker->words(2, true), // English translation
             ],

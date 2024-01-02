@@ -101,7 +101,7 @@ class NotificationController extends Controller
         $this->sendNotify($Notification,$restaurantId);
 
         if ($Notification->status == 'send_now') {
-            $this->sendNotify($Notification, $user->restaurant_id);
+            $send = $this->sendNotify($Notification, $user->restaurant_id);
             $Notification->last_sent_at = now();
             $Notification->save();
         }
@@ -111,59 +111,62 @@ class NotificationController extends Controller
 
     private function sendNotify($Notification,$restaurantId)
     {
-        $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)
-            ->distinct()
-            ->pluck('user_id');
-        $deviceTokens = User::whereIn('id', $uniqueUserIds)
-            ->pluck('device_token'); // 'device_tokens' in table users
+        $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)->distinct()->pluck('user_id');
+
+        $deviceTokens = User::whereIn('id', $uniqueUserIds)->pluck('device_token'); // 'device_tokens' in table users
+
         if (empty($deviceTokens[0])) {
             return finalResponse('failed', 400, null, null, 'no participants');
         }
         $projectId = 'dine-chat';
-        $responses = [];
-        foreach ($deviceTokens as $deviceToken) {
-            $curl = curl_init();
-            $postData = [
-                'message' => [
-                    'notification' => [
-                        'title' => $Notification->title,
-                        'body' => $Notification->message,
-                        'image' => retriveMedia() . $Notification->photo
-                    ],
-                    'android' => [
-                        'notification' => [
-                            'sound' => 'default'
-                        ]
-                    ],
-                    'apns' => [
-                        'payload' => [
-                            'aps' => [
-                                'sound' => 'default'
-                            ]
-                        ]
-                    ],
-                    'token' => $deviceToken,
-                ]
-            ];
-            $accessToken = FcmGoogleHelper::configureClient();
-            $headers = [
-                'Authorization: Bearer ' . $accessToken,
-                'Content-Type: application/json'
-            ];
-            curl_setopt_array($curl, [
-                CURLOPT_URL => "https://fcm.googleapis.com/v1/projects/$projectId/messages:send",
-                CURLOPT_RETURNTRANSFER => true,
-                CURLOPT_CUSTOMREQUEST => "POST",
-                CURLOPT_POSTFIELDS => json_encode($postData),
-                CURLOPT_HTTPHEADER => $headers,
-            ]);
-            $response = curl_exec($curl);
-            if (!curl_errno($curl)) {
-                $responses[] = json_decode($response, true);
-            }
-            curl_close($curl);
-        }
-        return $responses;
+
+        $notificationSender = new NotificationSender($projectId);
+        $notificationSender->sendNotify($Notification, $deviceTokens);
+        return true;
+        // $responses = [];
+        // foreach ($deviceTokens as $deviceToken) {
+        //     $curl = curl_init();
+        //     $postData = [
+        //         'message' => [
+        //             'notification' => [
+        //                 'title' => $Notification->title,
+        //                 'body' => $Notification->message,
+        //                 'image' => retriveMedia() . $Notification->photo
+        //             ],
+        //             'android' => [
+        //                 'notification' => [
+        //                     'sound' => 'default'
+        //                 ]
+        //             ],
+        //             'apns' => [
+        //                 'payload' => [
+        //                     'aps' => [
+        //                         'sound' => 'default'
+        //                     ]
+        //                 ]
+        //             ],
+        //             'token' => $deviceToken,
+        //         ]
+        //     ];
+        //     $accessToken = FcmGoogleHelper::configureClient();
+        //     $headers = [
+        //         'Authorization: Bearer ' . $accessToken,
+        //         'Content-Type: application/json'
+        //     ];
+        //     curl_setopt_array($curl, [
+        //         CURLOPT_URL => "https://fcm.googleapis.com/v1/projects/$projectId/messages:send",
+        //         CURLOPT_RETURNTRANSFER => true,
+        //         CURLOPT_CUSTOMREQUEST => "POST",
+        //         CURLOPT_POSTFIELDS => json_encode($postData),
+        //         CURLOPT_HTTPHEADER => $headers,
+        //     ]);
+        //     $response = curl_exec($curl);
+        //     if (!curl_errno($curl)) {
+        //         $responses[] = json_decode($response, true);
+        //     }
+        //     curl_close($curl);
+        // }
+        // return $responses;
     }
 }
 

@@ -13,6 +13,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
         // $schedule->command('inspire')->hourly();
+        $schedule->command('app:delete-old-chats')
+            ->cron('0 0 1,11,21 * *');
     }
 
     /**

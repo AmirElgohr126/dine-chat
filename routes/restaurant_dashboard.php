@@ -15,9 +15,7 @@ use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\ProfileRest
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\ResetPasswordRestaurantController;
 
 
-
 Route::middleware('set_lang')->group(function () {
-
     Route::group(['prefix' => 'user/auth'], function () {
         Route::post('/login', [LoginRestaurantController::class, 'loginRestaurant']); // finished
         Route::post('/sendcode', [ResetPasswordRestaurantController::class, 'sendOTP']); // finished
@@ -25,8 +23,7 @@ Route::middleware('set_lang')->group(function () {
         Route::delete('/logout', [LogoutRestaurantController::class, 'logoutRestaurant']); // finished
     });
     Route::post('user/restaurant/add', [AddRestaurantOrder::class, 'OrderAddRestaurant']); // finished
-
-    Route::group(['prefix' => 'food', 'middleware' => ['auth:restaurant']], function () {
+    Route::group(['prefix' => 'food',    'middleware' => ['auth:restaurant']], function () {
         Route::get('get', [FoodMenuController::class, 'menu']); // finished
         Route::post('add', [FoodController::class, 'addFood']); // finished
         Route::post('update', [FoodController::class, 'updateFood']); // finished
@@ -45,22 +42,14 @@ Route::middleware('set_lang')->group(function () {
         Route::post('delete', [NotificationController::class, 'deleteNotification']); // finished
         Route::post('send', [NotificationController::class, 'sendNotificationNow']); // finished
     });
-    Route::group(['prefix' => 'tables', 'middleware' => ['auth:restaurant']], function () {
+    Route::group(['prefix' => 'tables',  'middleware' => ['auth:restaurant']], function () {
         Route::post('/create', [RestaurantAssest::class, 'createAssest']); // finished
         Route::get('/list', [RestaurantAssest::class, 'listAssets']); // finished
-        //
     });
-
     Route::group(['prefix' => 'tickets', 'middleware' => ['auth:restaurant']], function () {
         Route::get('/list', [TicketsController::class, 'listTiketsForUser']); // finished
         Route::post('create', [TicketsController::class, 'create']); // finished
         Route::post('message/store', [TicketsController::class, 'storeMessage']); // finished
-
         Route::get('messages', [TicketsController::class, 'getMessagesForTicket']); // finished
     });
-
 });
-
-
-
-

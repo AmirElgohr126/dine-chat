@@ -13,7 +13,7 @@ function finalResponse($message = "success", // success or failed
             "data" => $data,
             'pagination' => $pagnation,
             'errors' => $errors
-        ],$statusCode);
+        ],$statusCode, [], JSON_NUMERIC_CHECK);
     }
 
 

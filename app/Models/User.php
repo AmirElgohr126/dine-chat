@@ -51,6 +51,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
+        'phone' => 'string'
     ];
 
     /**
@@ -82,6 +83,8 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
             $user->sendEmailVerificationNotification();
         });
     }
+
+
     public function contacts()
     {
         return $this->hasMany(Contact::class,'user_id','id');

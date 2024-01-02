@@ -38,8 +38,10 @@ class RestaurantController extends Controller
             if (!$restaurant) {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-            $assetRestaurant = $restaurant->with(['tables','chairs'])->get();
-            return finalResponse('success', 200, $assetRestaurant);
+            $tables = $restaurant->tables()->get();
+            $chairs = $restaurant->chairs()->get();
+            
+            return finalResponse('success', 200, ['restaurant' => $restaurant,'tables'=>$tables,'chairs'=> $chairs]);
         } catch (Exception $e) {
             return finalResponse('success', 405, null, null, $e->getMessage());
         }

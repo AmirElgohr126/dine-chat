@@ -81,7 +81,6 @@ class ChatController extends Controller
             if (!$anotherUserAttendance) {
                 throw new Exception(__('errors.user_not_in_restaurant'), 405);
             }
-
             // 1- Handle the case where the conversation already exists
             $existingConversation = Conversation::
                 where(function ($query) use ($user, $request, $restaurant) {
@@ -100,11 +99,9 @@ class ChatController extends Controller
                 })
                 ->withTrashed()
                 ->first();
-
             if ($existingConversation) {
                 throw new Exception(__('errors.make_request_before'), 405);
             }
-
             // check if follow it or no
             $checkFollow = UserFollower::where('user_id', $user->id)
                 ->where('followed_user', $request->user_id)
@@ -265,7 +262,7 @@ class ChatController extends Controller
                     $conversations->update(['status' => 'accept']);
                     return finalResponse('success', 200, $conversations);
                 }
-            return throw new Exception(__('errors.No_matching_conversation'), 405);
+            throw new Exception(__('errors.No_matching_conversation'), 405);
         } catch (Exception $e) {
             // Handle other exceptions
             return finalResponse('failed', $e->getCode(),null,null,$e->getMessage());

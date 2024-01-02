@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('image')->nullable();
-            $table->enum('status',['reply','no_reply'])->default('reply');
+            $table->enum('status',['reply','no_reply'])->default('no_reply');
             $table->foreignId('restaurant_user_id')->references('id')->on('restaurant_users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->timestamps();
         });

@@ -36,7 +36,7 @@ class TicketsController extends Controller
     public function listTiketsForUser(Request $request)
     {
         $userId = $request->user('restaurant')->id;
-        $tickets = Ticket::where('restaurant_user_id', $userId)->get();
+        $tickets = Ticket::where('restaurant_user_id', $userId)->latest()->get();
         return finalResponse('success', 200, $tickets);
     }
 

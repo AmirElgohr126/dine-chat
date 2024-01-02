@@ -34,9 +34,8 @@ class RestaurantAssest extends Controller
 
             // Process assets if they are present
             if (isset($data['assets'])) {
-                $tables = $this->extractAssets($data['assets'], 'Table');
-                $chairs = $this->extractAssets($data['assets'], 'Chair');
-
+                $tables = $this->processingImage($this->extractAssets($data['assets'], 'Table'));
+                $chairs = $this->processingImage($this->extractAssets($data['assets'], 'Chair'));
                 $restaurant->tables()->delete();
                 $restaurant->chairs()->delete();
 
@@ -110,10 +109,6 @@ class RestaurantAssest extends Controller
         }
     }
 
-
-
-
-
     private function extractAssets($assets, $type)
     {
         return collect($assets)->filter(function ($asset) use ($type) {
@@ -144,5 +139,38 @@ class RestaurantAssest extends Controller
             'img' => $item->img_url,
             'key' => $key,
         ];
+    }
+
+
+    private function processingImage($assets)
+    {
+        foreach ($assets as &$asset) {
+            switch ($asset['key']) {
+                case 'Left Chair':
+                    $asset['img'] = retriveMedia().'Dafaults/assetsmedia/left-chair.svg';
+                    break;
+                case 'Right Chair':
+                    $asset['img'] = retriveMedia() . 'Dafaults/assetsmedia/right-chair.svg';
+                    break;
+                case 'Top Chair':
+                    $asset['img'] = retriveMedia() . 'Dafaults/assetsmedia/top-chair.svg';
+                    break;
+                case 'Bottom Chair':
+                    $asset['img'] = retriveMedia() . 'Dafaults/assetsmedia/bottom-chair.svg';
+                    break;
+                case 'Horizontal Table':
+                    $asset['img'] = retriveMedia() . 'Dafaults/assetsmedia/horizontal.svg';
+                    break;
+                case 'Vertical Table':
+                    $asset['img'] = retriveMedia() . 'Dafaults/assetsmedia/vertical.svg';
+                    break;
+                case 'Circle Table':
+                    $asset['img'] = retriveMedia() . 'Dafaults/assetsmedia/circle-table.svg';
+                    break;
+                default:
+                    break;
+            }
+        }
+        return $assets;
     }
 }

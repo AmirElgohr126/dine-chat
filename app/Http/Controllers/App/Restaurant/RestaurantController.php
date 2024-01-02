@@ -2,12 +2,13 @@
 namespace App\Http\Controllers\App\Restaurant;
 
 use Exception;
+use Carbon\Carbon;
 use App\Models\Restaurant;
-use Illuminate\Http\Request;
-use App\Http\Controllers\Controller;
-use App\Http\Resources\Restaurant\UserAttendanceResource;
 use App\Models\UserFollower;
+use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Http\Controllers\Controller;
+
 
 
 class RestaurantController extends Controller
@@ -20,12 +21,23 @@ class RestaurantController extends Controller
             if (!$restaurant) {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-            $userAttendance = $restaurant->userAttendance()->with(['users', 'chairs'])->get();
+
+            $oneHourAgo = Carbon::now()->subHour();
+            $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', $oneHourAgo)->get();
+
             if (isset($userAttendance) == null) {
                 return finalResponse('success', 204);
             }
-            $userAttendance = UserAttendanceResource::collection($userAttendance);
-            return finalResponse('success', 200, $userAttendance);
+            $data = [];
+            foreach ($userAttendance as $attendance) {
+                $userData = $attendance->users->toArray();
+                $userData['x'] = $attendance->chairs->x;
+                $userData['y'] = $attendance->chairs->y;
+                $userData['photo'] = retriveMedia() . $userData['photo']; // Update this line
+                $data[] = $userData; // Append the user data to the data array
+            }
+            // $userAttendance = UserAttendanceResource::collection($userAttendance);
+            return finalResponse('success', 200, $data);
         } catch (Exception $e) {
             return finalResponse('failed', 500, null, $e->getMessage());
         }
@@ -38,10 +50,24 @@ class RestaurantController extends Controller
             if (!$restaurant) {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
+            $oneHourAgo = Carbon::now()->subHour();
+            $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', $oneHourAgo)->get();
+
+            if (isset($userAttendance) == null) {
+                return finalResponse('success', 204);
+            }
+            $users = [];
+            foreach ($userAttendance as $attendance) {
+                $userData = $attendance->users->toArray();
+                $userData['x'] = $attendance->chairs->x;
+                $userData['y'] = $attendance->chairs->y;
+                $userData['photo'] = retriveMedia() . $userData['photo']; // Update this line
+                $users[] = $userData; // Append the user data to the data array
+            }
             $tables = $restaurant->tables()->get();
             $chairs = $restaurant->chairs()->get();
-            
-            return finalResponse('success', 200, ['restaurant' => $restaurant,'tables'=>$tables,'chairs'=> $chairs]);
+
+            return finalResponse('success', 200, ['restaurant' => $restaurant,'tables'=>$tables,'chairs'=> $chairs ,'users'=>$users]);
         } catch (Exception $e) {
             return finalResponse('success', 405, null, null, $e->getMessage());
         }

@@ -22,9 +22,14 @@ class NotificationSender
             'Content-Type' => 'application/json',
         ];
     }
+    
+    private function getAccessToken()
+    {
+        return FcmGoogleHelper::configureClient();
+    }
 
 
-    public function sendNotify($notification, $deviceTokens)
+    public function sendNotification($notification, $deviceTokens)
     {
         $url = "https://fcm.googleapis.com/v1/projects/{$this->projectId}/messages:send";
 
@@ -52,32 +57,26 @@ class NotificationSender
                         'token' => $token,
                     ],
                 ];
-
                 yield new Request('POST', $url, $this->headers, json_encode($postData));
             }
         };
-
+        $successful = 0;
+        $failed = 0;
         $pool = new Pool($this->client, $requests($deviceTokens), [
             'concurrency' => 500,
-            'fulfilled' => function ($response, $index) {
-                // Handle successful response
-                // $response->getBody() for response body if needed
-                echo "Notification sent to device {$index}\n";
+            'fulfilled' => function ($response, $index) use (&$successful) {
+                $successful++;
             },
-            'rejected' => function ($reason, $index) {
-                // Handle error
-                echo "Failed to send notification to device {$index}: {$reason}\n";
+            'rejected' => function ($reason, $index) use (&$failed) {
+                $failed++;
             },
         ]);
 
         $promise = $pool->promise();
         $promise->wait();
-        return true;
+        return ['successful' => $successful, 'failed' => $failed];
     }
-    private function getAccessToken()
-    {
-        return FcmGoogleHelper::configureClient();
-    }
+
 
 }
 

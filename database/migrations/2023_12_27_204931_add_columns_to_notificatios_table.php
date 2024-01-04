@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('notifications', function (Blueprint $table) {
-            $table->enum('status', ['send_now', 'pending'])->default('pending')->change();
+            $table->enum('status', ['send_now', 'pending','sent'])->default('pending')->change();
             $table->timestamp('sent_at')->nullable();
             $table->string('photo')->nullable();
         });

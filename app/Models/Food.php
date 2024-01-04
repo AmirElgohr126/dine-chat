@@ -36,7 +36,10 @@ class Food extends Model implements TranslatableContract
     }
 
 
-
+    public function foodRatings()
+    {
+        return $this->hasMany(FoodRating::class, 'food_id');
+    }
 
 
     public function averageRating()

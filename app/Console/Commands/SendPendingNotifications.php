@@ -29,25 +29,34 @@ class SendPendingNotifications extends Command
      */
     public function handle()
     {
-        $pendingNotifications = Notification::where('status', 'pending')->get();
+        $pendingNotifications = Notification::where('status', 'pending')->where('sent_at', '<', now())->get();
         if ($pendingNotifications->isEmpty()) {
             $this->info('No pending notifications to send.');
             return;
         }
         $projectId = 'dine-chat';
         $notificationController = new NotificationSender($projectId);
+
         foreach ($pendingNotifications as $notification) {
             try {
                 $uniqueUserIds = UserAttendance::where('restaurant_id', $notification->restaurant_id)->distinct()->pluck('user_id');
-                $deviceTokens = User::whereIn('id', $uniqueUserIds)->pluck('device_token'); // tokens of restaurant
+                $deviceTokens = User::whereIn('id', $uniqueUserIds)->pluck('device_token');
                 $deviceTokens = array_filter($deviceTokens->toArray());
-                $notificationController->sendNotification($notification,$deviceTokens);
-                $notification->status = 'sent'; // Update the status
-                $notification->save();
-                $this->info("Sent notification {$notification->id}");
+                $result = $notificationController->sendNotification($notification, $deviceTokens);
+
+                if ($result['successful'] > 0) {
+                    $notification->last_sent_at = now();
+                    $notification->status = 'sent';
+                    $notification->sent_at = now();
+                    $notification->save();
+                    $this->info("Successfully sent notification {$notification->id}");
+                } else {
+                    $this->error("Failed to send notification {$notification->id} - no successful sends");
+                }
             } catch (\Exception $e) {
                 $this->error("Failed to send notification {$notification->id}: {$e->getMessage()}");
             }
         }
     }
+
 }

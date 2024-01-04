@@ -22,7 +22,6 @@ class GetMapRestaurantRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'per_page' => 'required|integer',
             'latitude' => 'required|numeric',
             'longitude' => 'required|numeric',
             'radius' => 'required|integer',

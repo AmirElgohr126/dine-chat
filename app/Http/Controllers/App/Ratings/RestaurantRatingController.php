@@ -82,7 +82,6 @@ class RestaurantRatingController extends Controller
                 $restaurant->imagesFood = $imageUrls;
                 $restaurants[] = $restaurant;
             }
-
             return finalResponse('success', 200, $restaurants);
 
         } catch (Exception $e) {

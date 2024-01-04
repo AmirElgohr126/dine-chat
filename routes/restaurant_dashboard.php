@@ -58,5 +58,6 @@ Route::middleware('set_lang')->group(function () {
         Route::get('/clients', [StatisticsController::class, 'getRestaurantClients']);
         Route::get('/review-count', [StatisticsController::class, 'getRestaurantReveiwCount']);
         Route::get('/subscription-stats', [StatisticsController::class, 'subscription_statistics']);
+        Route::get('/food-rating', [StatisticsController::class, 'recentTransitions']);
     });
 });

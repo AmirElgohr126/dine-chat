@@ -1,10 +1,12 @@
 <?php
-namespace App\Http\Controllers\Dashboards\DashboardRestaurant\statistics;
+namespace App\Http\Controllers\Dashboards\DashboardRestaurant\Statistics;
 
 use DateTime;
+use App\Models\Food;
 use App\Models\FoodRating;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 class StatisticsController extends Controller
@@ -14,7 +16,7 @@ class StatisticsController extends Controller
     {
         $user = $request->user('restaurant');
         $ratings = FoodRating::where('restaurant_id', $user->restaurant_id)->pluck('rating');
-        $averageRating = $ratings->isNotEmpty() ? $ratings->avg() : 0;
+        $averageRating = $ratings->isNotEmpty() ? round($ratings->avg(),2) : 0;
         return finalResponse('success',200,$averageRating);
     }
     public function getRestaurantClients(Request $request)
@@ -71,8 +73,50 @@ class StatisticsController extends Controller
 
     public function recentTransitions(Request $request)
     {
+        $per_page = $request->per_page ?? 6;
+        $user = $request->user('restaurant');
+        $restaurant_id = $user->restaurant_id;
+        $foods = Food::where('restaurant_id', $restaurant_id)->paginate($per_page);
+        $foodRatingsDetails = [];
 
+        foreach ($foods as $food) {
+            $ratings = FoodRating::where('restaurant_id', $restaurant_id)->where('food_id', $food->id)->pluck('rating');
+            $averageRating = $ratings->isNotEmpty() ? $ratings->avg() : 0;
+            // Check if the images relation/object exists
+            $food->image = $food->images ? $food->images->image : null;
+            $food->rate = $averageRating;
+
+            $foodRatingsDetails[] = $food;
+        }
+
+        return finalResponse('success',200,$foodRatingsDetails);
     }
+    // public function recentTransitions(Request $request)
+    // {
+    //     $per_page = $request->per_page ?? 6;
+    //     $restaurant_id = $request->user('restaurant')->restaurant_id;
+
+    //     // Eager load relationships and calculate average rating using database query
+    //     $foods = Food::with('images')
+    //         ->where('restaurant_id', $restaurant_id)
+    //         ->withCount([
+    //             'rating as average_rating' => function ($query) {
+    //                 $query->select(DB::raw('coalesce(avg(rating),0)'));
+    //             }
+    //         ])
+    //         ->paginate($per_page);
+
+    //     // Prepare the response data
+    //     $foodRatingsDetails = $foods->map(function ($food) {
+    //         return [
+    //             'food' => $food,
+    //             'rating' => $food->average_rating,
+    //             'image' => $food->images ? $food->images->image : null
+    //         ];
+    //     });
+
+    //     return finalResponse('success', 200, $foodRatingsDetails);
+    // }
 }
 
 ?>

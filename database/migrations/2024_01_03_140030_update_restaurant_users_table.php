@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('restaurant_users',function(Blueprint $table){
-            $table->timestamp('start_subscription');
-            $table->timestamp('expire_subscription');
+            $table->timestamp('start_subscription')->nullable();
+            $table->timestamp('expire_subscription')->nullable();
         });
     }
 

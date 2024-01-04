@@ -38,6 +38,7 @@ class NotificationController extends Controller
             {
                 $this->sendNotify($notification, $user->restaurant_id);
                 $notification->last_sent_at = now();
+                $notification->status = 'sent';
                 $notification->save();
             }
 
@@ -95,34 +96,40 @@ class NotificationController extends Controller
     public function sendNotificationNow(Request $request)
     {
         $user = $request->user('restaurant');
-        $restaurantId = $user->restaurant_id; // replace with your desired restaurant_id
+        $restaurantId = $user->restaurant_id;
 
         $Notification = Notification::where('restaurant_id', $restaurantId)->where('id', $request->id)->first();
-        $this->sendNotify($Notification,$restaurantId);
-
-        if ($Notification->status == 'send_now') {
-            $send = $this->sendNotify($Notification, $user->restaurant_id);
-            $Notification->last_sent_at = now();
-            $Notification->save();
+        try {
+            $result = $this->sendNotify($Notification, $user->restaurant_id);
+            if ($result['successful'] > 0) {
+                // At least one notification was sent successfully
+                $Notification->last_sent_at = now();
+                $Notification->status = 'sent';
+                $Notification->save();
+                return $this->finalResponse('success', 200, null, null, 'notifications sent');
+            } else {
+                return $this->finalResponse('failed', 500, null, null, 'Notification sending failed');
+            }
+        } catch (Exception $e) {
+            return $this->finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
 
 
 
+
     private function sendNotify($Notification,$restaurantId)
     {
-        $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)->distinct()->pluck('user_id');
-
-        $deviceTokens = User::whereIn('id', $uniqueUserIds)->pluck('device_token'); // 'device_tokens' in table users
-
-        if (empty($deviceTokens[0])) {
-            return finalResponse('failed', 400, null, null, 'no participants');
+        $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)->distinct()->pluck('user_id'); // users id .
+        $deviceTokens = User::whereIn('id', $uniqueUserIds)->pluck('device_token'); // tokens of restaurant
+        $deviceTokens = array_filter($deviceTokens->toArray()); // empty invailed tokens
+        if (empty($deviceTokens)) {
+            return $this->finalResponse('failed', 400, null, null, 'no participants');
         }
         $projectId = 'dine-chat';
-
         $notificationSender = new NotificationSender($projectId);
-        $notificationSender->sendNotify($Notification, $deviceTokens);
-        return true;
+        $resault =  $notificationSender->sendNotification($Notification, $deviceTokens);
+        return $resault;
         // $responses = [];
         // foreach ($deviceTokens as $deviceToken) {
         //     $curl = curl_init();

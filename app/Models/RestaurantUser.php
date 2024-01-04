@@ -23,6 +23,7 @@ class RestaurantUser extends User implements ShouldQueue, JWTSubject
         'phone',
         'password',
         'status',
+        'expire_subscription',
         'restaurant_id'
     ];
 

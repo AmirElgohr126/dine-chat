@@ -24,20 +24,25 @@ class FoodRatingController extends Controller
         try {
             $targetUserId = $request->user_id;
             $restaurantId = $request->restaurant_id;
-            $foodRatings = FoodRating::where('user_id', $targetUserId)
-                ->where('restaurant_id', $restaurantId)
-                ->with([
-                    'food',  // Load the Food relationship
-                    'food.images',  // Load the images relationship for the Food
-                    'food.translations' => function ($query) {
-                        $query->where('locale', app()->getLocale());
-                    },
-                ]) // Eager loading
-                ->get();
-            if (!$foodRatings) {
+            $foodRatings = FoodRating::where('user_id', $targetUserId)->where('restaurant_id', $restaurantId)->get();
+            $data = [];
+            foreach ($foodRatings as $rating) {
+                $food = $rating->food;
+                $imageUrl = $food->images ? $food->images->image : null; // Get the image URL
+                $foodData[] = [
+                    'id' => $food->id,
+                    'restaurant_id' => $food->restaurant_id,
+                    'price' => $food->price,
+                    'rating' => $rating->rating,
+                    'image' => $imageUrl,
+                    'name' => $food->name
+                ];
+            }
+
+            if (!$foodData) {
                 return finalResponse('success', 200, __('errors.no_ratings  '));
             }
-            return finalResponse('success', 200, $foodRatings);
+            return finalResponse('success', 200, $foodData);
         } catch (\Exception $e) {
             finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }

@@ -13,6 +13,6 @@ class UserAttendanceSeeder extends Seeder
      */
     public function run(): void
     {
-        UserAttendance::factory(1)->create();
+        UserAttendance::factory(20)->create();
     }
 }

@@ -53,6 +53,7 @@ return [
     'email_not_found' => 'email not found',
     'update_succeesfully' => 'update proflie succeesfully',
     'succees_notification_create' => 'succees notification create',
+    'you_make_reservation_in_another_place' => 'you make reservation in another place'
 
 
 ];

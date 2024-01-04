@@ -30,6 +30,12 @@ class NfcController extends Controller
                 throw new \Exception(__('errors.invalid_parameter' . ' chair_number'),405);
             }
             // finsh card check ====================================================================================
+            $checkReservationBefore = UserAttendance::where('user_id',$request->user()->id)
+                ->where('created_at', '>', now()->subHour())
+                ->first();
+            if ($checkReservationBefore) {
+                throw new \Exception(__('errors.you_make_reservation_in_another_place'), 405);
+            }
             $conflictingReservation = UserAttendance::
                 where('chair_id', $chair->id)
                 ->where('restaurant_id',$restaurant->id)

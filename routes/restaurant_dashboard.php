@@ -8,6 +8,7 @@ use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Tickets\TicketsController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\GetInfoController;
+use App\Http\Controllers\Dashboards\DashboardRestaurant\statistics\StatisticsController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LoginRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Notifications\NotificationController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LogoutRestaurantController;
@@ -51,5 +52,11 @@ Route::middleware('set_lang')->group(function () {
         Route::post('create', [TicketsController::class, 'create']); // finished
         Route::post('message/store', [TicketsController::class, 'storeMessage']); // finished
         Route::get('messages', [TicketsController::class, 'getMessagesForTicket']); // finished
+    });
+    Route::group(['middleware' => ['auth:restaurant']], function () {
+        Route::get('/review', [StatisticsController::class, 'restaurantReviewFromFive']);
+        Route::get('/clients', [StatisticsController::class, 'getRestaurantClients']);
+        Route::get('/review-count', [StatisticsController::class, 'getRestaurantReveiwCount']);
+        Route::get('/subscription-stats', [StatisticsController::class, 'subscription_statistics']);
     });
 });

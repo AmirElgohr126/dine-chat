@@ -70,7 +70,6 @@ class RestaurantRatingController extends Controller
             $restaurants = [];
             foreach ($restaurantIds as $id) {
                 $restaurant = Restaurant::select('id', 'images')->find($id);
-
                 // Calculate the average rating
                 $ratings = FoodRating::where('restaurant_id', $id)->pluck('rating');
                 $averageRating = $ratings->isNotEmpty() ? $ratings->avg() : 0;
@@ -79,12 +78,9 @@ class RestaurantRatingController extends Controller
                 $imageUrls = $restaurantFoods->flatMap(function ($food) {
                     return $food->images ? [$food->images->image] : [];
                 });
-
-                $restaurants[] = [
-                    "restaurant" => $restaurant,
-                    "images" => $imageUrls,
-                    "rating" => round($averageRating, 2)
-                ];
+                $restaurant->rating = round($averageRating, 2);
+                $restaurant->imagesFood = $imageUrls;
+                $restaurants[] = $restaurant;
             }
 
             return finalResponse('success', 200, $restaurants);

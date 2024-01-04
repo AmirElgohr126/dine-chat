@@ -25,11 +25,11 @@ class UserAttendanceFactory extends Factory
     public function definition(): array
     {
         return [
-            'restaurant_id' => 11,
+            'restaurant_id' => 1,
             'chair_id' => function () {
                 return Chair::factory()->create()->id;
             },
-            'user_id' => 12,
+            'user_id' => User::factory()->create()->id,
             'created_at' => now(),
             'updated_at' => now()
         ];

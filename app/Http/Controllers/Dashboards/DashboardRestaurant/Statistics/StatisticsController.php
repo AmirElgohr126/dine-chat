@@ -77,6 +77,7 @@ class StatisticsController extends Controller
         $user = $request->user('restaurant');
         $restaurant_id = $user->restaurant_id;
         $foods = Food::where('restaurant_id', $restaurant_id)->paginate($per_page);
+        $pagnation = pagnationResponse($foods);
         $foodRatingsDetails = [];
 
         foreach ($foods as $food) {
@@ -89,7 +90,7 @@ class StatisticsController extends Controller
             $foodRatingsDetails[] = $food;
         }
 
-        return finalResponse('success',200,$foodRatingsDetails);
+        return finalResponse('success',200,$foodRatingsDetails, $pagnation);
     }
     // public function recentTransitions(Request $request)
     // {

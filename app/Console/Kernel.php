@@ -14,6 +14,7 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('inspire')->hourly();
         $schedule->command('app:delete-old-chats')->daily();
+        $schedule->command('app:send-pending-notifications')->daily();
     }
 
     /**

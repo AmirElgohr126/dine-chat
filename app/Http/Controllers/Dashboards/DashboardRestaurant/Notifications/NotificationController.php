@@ -36,10 +36,13 @@ class NotificationController extends Controller
 
             if($notification->status == 'send_now')
             {
-                $this->sendNotify($notification, $user->restaurant_id);
-                $notification->last_sent_at = now();
-                $notification->status = 'sent';
-                $notification->save();
+                $result = $this->sendNotify($notification, $user->restaurant_id);
+                if ($result['successful'] > 0) {
+                    $notification->last_sent_at = now();
+                    $notification->status = 'sent';
+                    $notification->sent_at = now();
+                    $notification->save();
+                }
             }
 
 
@@ -105,6 +108,7 @@ class NotificationController extends Controller
                 // At least one notification was sent successfully
                 $Notification->last_sent_at = now();
                 $Notification->status = 'sent';
+                $Notification->sent_at = now();
                 $Notification->save();
                 return $this->finalResponse('success', 200, null, null, 'notifications sent');
             } else {
@@ -114,9 +118,6 @@ class NotificationController extends Controller
             return $this->finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
-
-
-
 
     private function sendNotify($Notification,$restaurantId)
     {

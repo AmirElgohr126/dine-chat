@@ -8,7 +8,7 @@ use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Tickets\TicketsController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\GetInfoController;
-use App\Http\Controllers\Dashboards\DashboardRestaurant\statistics\StatisticsController;
+use App\Http\Controllers\Dashboards\DashboardRestaurant\Statistics\StatisticsController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LoginRestaurantController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Notifications\NotificationController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LogoutRestaurantController;

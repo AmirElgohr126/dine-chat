@@ -35,9 +35,9 @@ class MessageSent implements ShouldBroadcast
             'message' => [
                 'id' => $this->message->id,
                 'conversation_id' => $this->message->conversation_id,
-                'sender_id' => $this->message->sender_id,
+                'sender_id' => (int) $this->message->sender_id,
                 'content' => $this->message->content,
-                'receiver_id' => $this->message->receiver_id,
+                'receiver_id' => (int) $this->message->receiver_id,
                 'replay_on' => $this->message->replay_on,
                 'attachment' => $this->message->attachment,
                 'created_at' => $this->message->created_at,

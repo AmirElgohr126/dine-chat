@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Broadcast;
 | used to check if an authenticated user can listen to the channel.
 |
 */
+Broadcast::routes(['middleware' => ['auth:api']]);
 
 Broadcast::channel('chat.{conversationId}', function ($user, $conversationId) {
     // Check if the user is authorized to access the conversation

@@ -56,8 +56,8 @@ class StatisticsController extends Controller
         }
 
         // Format remaining time and time spent for the response
-        $RemainingTimeToFinishSubscription = $remainingTime ? $remainingTime->format('%a days') : 'Expired';
-        $TimeSpentFromSubscription = $timeSpent ? $timeSpent->format('%a days') : 'Not started';
+        $RemainingTimeToFinishSubscription = $remainingTime ? $remainingTime->format('%a') : 0;
+        $TimeSpentFromSubscription = $timeSpent ? $timeSpent->format('%a') : 0;
 
         // Prepare the response data
         $subscriptionData = [

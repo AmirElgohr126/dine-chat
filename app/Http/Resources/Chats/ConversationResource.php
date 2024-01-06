@@ -4,9 +4,10 @@ namespace App\Http\Resources\Chats;
 
 use Illuminate\Http\Request;
 use App\Http\Resources\User\UserResources;
+use App\Http\Resources\Chats\MessageResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListRequestResource extends JsonResource
+class ConversationResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -24,8 +25,9 @@ class ListRequestResource extends JsonResource
             'deleted_at' => $this->deleted_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'receiver' => new UserResources($this->receiver), // assuming you have a UserResource
-            'sender' => new UserResources($this->sender), // assuming you have a UserResource
+            'receiver' => new UserResources($this->receiver),
+            'sender' => new UserResources($this->sender),
+            'messages' => MessageResource::collection($this->whenLoaded('messages'))
         ];
     }
 }

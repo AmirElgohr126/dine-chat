@@ -3,10 +3,9 @@
 namespace App\Http\Resources\Chats;
 
 use Illuminate\Http\Request;
-use App\Http\Resources\User\UserResources;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ListRequestResource extends JsonResource
+class MessageResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -17,15 +16,14 @@ class ListRequestResource extends JsonResource
     {
         return [
             'id' => $this->id,
+            'conversation_id' => $this->conversation_id,
             'sender_id' => $this->sender_id,
+            'content' => $this->content,
+            'attachment' => $this->attachment,
             'receiver_id' => $this->receiver_id,
-            'restaurant_id' => $this->restaurant_id,
-            'status' => $this->status,
-            'deleted_at' => $this->deleted_at,
+            'replay_on' => $this->replay_on,
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
-            'receiver' => new UserResources($this->receiver), // assuming you have a UserResource
-            'sender' => new UserResources($this->sender), // assuming you have a UserResource
+            'updated_at' => $this->updated_at
         ];
     }
 }

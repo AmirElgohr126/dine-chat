@@ -23,7 +23,9 @@ class UserResources extends JsonResource
             'photo'=> retriveMedia().$this->photo,
             'bio' => $this->bio ?? '',
             'phone' => (string) $this->phone,
-            'ghost_mood' => $this->ghost_mood
+            'ghost_mood' => $this->ghost_mood,
+            'created_at' => $this->created_at->toDateTimeString(),
+            'updated_at' => $this->updated_at->toDateTimeString(),
         ];
     }
 }

@@ -2,14 +2,16 @@
 namespace App\Http\Controllers\App\Chat;
 
 use Exception;
+use App\Models\Message;
 use App\Models\Restaurant;
 use App\Models\Conversation;
+use App\Models\UserFollower;
 use Illuminate\Http\Request;
 use App\Models\UserAttendance;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\RequestNewChatRequest;
 use App\Http\Resources\Chats\ListRequestResource;
-use App\Models\UserFollower;
+use App\Http\Resources\Chats\ConversationResource;
 
 class ChatController extends Controller
 {
@@ -27,6 +29,7 @@ class ChatController extends Controller
      */
     public function getChats(Request $request)
     {
+        $per_page = $request->per_page ?? 9;
         try {
             $user = $request->user();
             // 2 - get conversation of his reastaurant based on reservation
@@ -47,9 +50,11 @@ class ChatController extends Controller
                     },
                 ])
                 ->get();
+            $conversations = ConversationResource::collection($conversations);
+
             return finalResponse('success', 200, $conversations);
         } catch (Exception $e) {
-            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
+            return finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
 
@@ -118,6 +123,15 @@ class ChatController extends Controller
                 'status' => 'invited',
                 'deleted_at' => $dataDeleted ?? now()->addHour()  // follow from restaurant will determain ?? if not will be hour
             ]);
+
+            $message = Message::create([
+                'conversation_id' => $request_reservation->id,
+                'sender_id' => $user->id,
+                'content' => $request->message,
+                'receiver_id' => getOtherUser($request_reservation, $user->id),
+                'replay_on' => null,
+                'attachment' => null,
+            ]);
             // fire events to receiver_id on private chanal to make him accept or reject
             // fire events for notification and so on ...
             return finalResponse('success', 200, __('errors.suucess_request'));
@@ -146,15 +160,18 @@ class ChatController extends Controller
                 ->where('restaurant_id', $request->restaurant_id)
                 ->where('status','invited')
                 ->where('deleted_at','>', now())
-                ->with('receiver:id,first_name,last_name,photo')
+                ->with(['receiver', 'sender',
+                    'messages' => function ($query) {
+                        $query->lastMessage();
+                    }])
                 ->withTrashed()
                 ->paginate($per_page);
             if (!$conversations->items()) {
                 throw new Exception(__('errors.No_conversation_found'), 204);
             }
-            $conversations = ListRequestResource::collection($conversations);
+            $conversations = ConversationResource::collection($conversations);
             $pagnateConversation = pagnationResponse($conversations);
-            return finalResponse('success', 200, $conversations->items(),$pagnateConversation);
+            return finalResponse('success', 200, $conversations->items(), $pagnateConversation);
         } catch (Exception $e) {
             return finalResponse('failed',$e->getCode(),null,null,$e->getMessage());
         }
@@ -216,16 +233,19 @@ class ChatController extends Controller
                 ->where('status', 'invited')
                 ->withTrashed()
                 ->where('deleted_at', '>', now())
-                ->with('sender:id,first_name,last_name,photo')
+                ->with(['sender', 'receiver',
+                    'messages' => function ($query) {
+                        $query->lastMessage();
+                    }])
                 ->paginate($per_page);
             if ($conversations->isEmpty()) {
                 throw new Exception(__('errors.No_conversation_found'), 204);
             }
 
-            $formattedConversations = ListRequestResource::collection($conversations);
-            $pagination = pagnationResponse($conversations);
+            $conversations = ConversationResource::collection($conversations);
+            $pagnateConversation = pagnationResponse($conversations);
 
-            return finalResponse('success', 200, $formattedConversations->items(), $pagination);
+            return finalResponse('success', 200, $conversations->items(), $pagnateConversation);
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }

@@ -1,10 +1,5 @@
 <?php
-namespace App\Services\ChatServices;
-
-use Illuminate\Http\Request;
-use App\Http\Requests\Contacts\ContactsRequest;
-use App\Http\Requests\Contacts\FollowContactRequest;
-use App\Http\Requests\Contacts\UnfollowContactRequest;
+namespace App\Service\ChatServices;
 
 interface ChatServiceInterface
 {

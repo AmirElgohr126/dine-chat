@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use App\Services\ChatServices\ChatService;
-use App\Services\ChatServices\ChatServiceInterface;
+use App\Service\ChatServices\ChatService;
+use App\Service\ChatServices\ChatServiceInterface;
 use Illuminate\Support\ServiceProvider;
 
 class ChatServiceProvider extends ServiceProvider

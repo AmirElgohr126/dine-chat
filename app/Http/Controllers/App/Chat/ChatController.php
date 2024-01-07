@@ -12,7 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\RequestNewChatRequest;
 use App\Http\Resources\Chats\ListRequestResource;
 use App\Http\Resources\Chats\ConversationResource;
-use App\Services\ChatServices\ChatServiceInterface;
+use App\Service\ChatServices\ChatServiceInterface;
 
 class ChatController extends Controller
 {

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\NewChatMessageRequest;
 use App\Http\Requests\Chat\UpdateChatMessageRequest;
+use App\Http\Resources\User\UserResources;
 
 class MessageController extends Controller
 {
@@ -26,17 +27,22 @@ class MessageController extends Controller
                 })
                 ->where('restaurant_id', $restaurant->id)
                 ->where('status', 'accept')
-                ->withTrashed()
                 ->where('deleted_at', '>', now())
+                ->withTrashed()
                 ->first();
             if (!$conversation) {
                 throw new Exception(__('errors.not_found'), 404);
             }
-            $messages = $conversation->messages()->paginate($per_page);
-            $pagnation = pagnationResponse($messages); // Generate pagination response
-            return finalResponse('success', 200, $messages->items(), $pagnation);
+            $messages = Message::where('conversation_id', '=', $conversation->id)->orderBy('created_at', 'desc')
+                ->paginate($per_page);
+            foreach ($messages as $message) {
+                $message->sender_photo = retriveMedia() . $message->sender->photo;
+                $message->receiver_photo = retriveMedia() . $message->receiver->photo;
+                unset($message->sender, $message->receiver);
+            }
+            return finalResponse('success', 200, $messages->items());
         } catch (\Throwable $e) {
-            return finalResponse('failed', $e->getCode(), null, $e->getMessage());
+            return finalResponse('failed', 500, null, $e->getMessage());
         }
     }
     public function sendMessage(NewChatMessageRequest $request)
@@ -78,7 +84,7 @@ class MessageController extends Controller
             // event(new MessageSent($conversation->id, $message));
             return finalResponse('success', 200, $message);
         } catch (Exception $e) {
-            return finalResponse('failed', $e->getCode(), null, $e->getMessage());
+            return finalResponse('failed', 500, null, $e->getMessage());
         }
     }
 

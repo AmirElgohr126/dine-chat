@@ -22,7 +22,7 @@ class NewChatMessageRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'message' => 'nullable|string',
+            'message' => 'nullable|string|min:0|max:500',
             'replay_on' => 'nullable|exists:message,id',
             'attachment' => 'nullable|file|max:6048|mimes:jpeg,png,gif,mp4,pdf',
         ];

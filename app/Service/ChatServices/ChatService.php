@@ -1,11 +1,12 @@
 <?php
-namespace App\Services\ChatServices;
+namespace App\Service\ChatServices;
 
 use Exception;
 use App\Models\Conversation;
 use App\Models\UserFollower;
 use App\Models\UserAttendance;
-use App\Services\ChatServices\ChatServiceInterface;
+use App\Service\ChatServices\ChatServiceInterface;
+
 
 
 class ChatService implements ChatServiceInterface

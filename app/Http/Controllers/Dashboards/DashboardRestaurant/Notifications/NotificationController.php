@@ -116,12 +116,12 @@ class NotificationController extends Controller
                 $Notification->status = 'sent';
                 $Notification->sent_at = now();
                 $Notification->save();
-                return $this->finalResponse('success', 200, null, null, 'notifications sent');
+                return finalResponse('success', 200, null, null, 'notifications sent');
             } else {
-                return $this->finalResponse('failed', 500, null, null, 'Notification sending failed');
+                return finalResponse('failed', 500, null, null, 'Notification sending failed');
             }
         } catch (Exception $e) {
-            return $this->finalResponse('failed', 500, null, null, $e->getMessage());
+            return finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
 

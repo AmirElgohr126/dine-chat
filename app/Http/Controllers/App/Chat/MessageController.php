@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\NewChatMessageRequest;
 use App\Http\Requests\Chat\UpdateChatMessageRequest;
+use App\Http\Resources\Chats\MessageResource;
 
 class MessageController extends Controller
 {
@@ -73,6 +74,7 @@ class MessageController extends Controller
                 'replay_on' => $check,
                 'attachment' => isset($pathmedia) ? $pathmedia : null,
             ]);
+            $message = new MessageResource($message);
             MessageSent::dispatch($conversation->id, $message);
             // event(new MessageSent($conversation->id, $message));
             return finalResponse('success', 200, $message);

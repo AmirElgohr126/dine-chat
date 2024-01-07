@@ -175,6 +175,7 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
         App\Providers\ContactListServiceProvider::class,
+        App\Providers\ChatServiceProvider::class,
         App\Providers\FirebaseServiceProvider::class,
     ])->toArray(),
 

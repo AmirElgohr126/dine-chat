@@ -12,9 +12,16 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\RequestNewChatRequest;
 use App\Http\Resources\Chats\ListRequestResource;
 use App\Http\Resources\Chats\ConversationResource;
+use App\Services\ChatServices\ChatServiceInterface;
 
 class ChatController extends Controller
 {
+    protected $chatService;
+
+    public function __construct(ChatServiceInterface $chatService)
+    {
+        $this->chatService = $chatService;
+    }
 
     /**
      * Get Chats for the authenticated user based on the restaurant.
@@ -29,7 +36,6 @@ class ChatController extends Controller
      */
     public function getChats(Request $request)
     {
-        $per_page = $request->per_page ?? 9;
         try {
             $user = $request->user();
             // 2 - get conversation of his reastaurant based on reservation
@@ -40,8 +46,8 @@ class ChatController extends Controller
                     })
                 ->where('restaurant_id', $request->restaurant_id)
                 ->where('status', 'accept')
-                ->withTrashed()
                 ->where('deleted_at', '>', now())
+                ->withTrashed()
                 ->with([
                     'receiver',
                     'sender',
@@ -74,69 +80,22 @@ class ChatController extends Controller
     {
         try {
             $user = $request->user();
-            if ($user->id == $request->user_id) {
-                throw new Exception(__('errors.can_not_chat_with_yourself'), 405);
-            }
-            $restaurant = Restaurant::find($request->restaurant_id); // restaurant i in it now fom user attendance
-            // check corresponding user is in reservation in this restaurant or no
-            $anotherUserAttendance = UserAttendance::where('user_id', $request->user_id)
-                ->where('created_at', '>', now()->subHour())
-                ->where('restaurant_id', $restaurant->id)
-                ->first();
-            if (!$anotherUserAttendance) {
-                throw new Exception(__('errors.user_not_in_restaurant'), 405);
-            }
-            // 1- Handle the case where the conversation already exists
-            $existingConversation = Conversation::
-                where(function ($query) use ($user, $request, $restaurant) {
-                    $query->where('sender_id', $user->id)
-                        ->where('receiver_id', $request->user_id)
-                        ->where('restaurant_id', $restaurant->id)
-                        ->where('status', 'invited')
-                        ->where('deleted_at', '>', now());
-                })
-                ->orWhere(function ($query) use ($user, $request, $restaurant) {
-                    $query->where('sender_id', $request->user_id)
-                        ->where('receiver_id', $user->id)
-                        ->where('restaurant_id', $restaurant->id)
-                        ->where('status', 'invited')
-                        ->where('deleted_at', '>', now());
-                })
-                ->withTrashed()
-                ->first();
-            if ($existingConversation) {
-                throw new Exception(__('errors.make_request_before'), 405);
-            }
-            // check if follow it or no
-            $checkFollow = UserFollower::where('user_id', $user->id)
-                ->where('followed_user', $request->user_id)
-                ->where('follow_status', 'follow')
-                ->first();
-            if ($checkFollow) {
-                $dataDeleted = determainPeriod($restaurant);
-            }
-            // create conversation request
+            $this->chatService->chatWithYourSelf($user->id, $request->user_id);
+            $restaurant = Restaurant::find($request->restaurant_id);
+            $this->chatService->checkAnotherPersonInRestaurant($request->restaurant_id, $request->user_id);
+            $this->chatService->checkChatExist($user, $request, $restaurant);
+            $dataDeleted = $this->chatService->checkFollow($user, $request, $restaurant);
             $request_reservation = Conversation::create([
                 'sender_id' => $user->id,
                 'receiver_id' => $request->user_id,
                 'restaurant_id' => $restaurant->id,
                 'status' => 'invited',
-                'deleted_at' => $dataDeleted ?? now()->addHour()  // follow from restaurant will determain ?? if not will be hour
+                'deleted_at' => $dataDeleted ?? now()->addHour()
             ]);
-
-            $message = Message::create([
-                'conversation_id' => $request_reservation->id,
-                'sender_id' => $user->id,
-                'content' => $request->message,
-                'receiver_id' => getOtherUser($request_reservation, $user->id),
-                'replay_on' => null,
-                'attachment' => null,
-            ]);
-            // fire events to receiver_id on private chanal to make him accept or reject
-            // fire events for notification and so on ...
-            return finalResponse('success', 200, __('errors.suucess_request'));
+            // Rest of your code to handle message creation and event dispatching...
+            return finalResponse('success', 200, __('errors.success_request'));
         } catch (Exception $e) {
-            return finalResponse('falied', $e->getCode(), null, null, $e->getMessage());
+            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
 

@@ -33,15 +33,14 @@ class MessageController extends Controller
             if (!$conversation) {
                 throw new Exception(__('errors.not_found'), 404);
             }
-
-            $messages = Message::where('conversation_id',$conversation->id)->lastMessage()
-            ->paginate($per_page);
+            $messages = Message::where('conversation_id', '=', $conversation->id)->orderBy('created_at', 'desc')
+                ->paginate($per_page);
             foreach ($messages as $message) {
-                $message->sender_photo = retriveMedia().$message->sender->photo;
-                $message->receiver_photo = retriveMedia().$message->receiver->photo;
+                $message->sender_photo = retriveMedia() . $message->sender->photo;
+                $message->receiver_photo = retriveMedia() . $message->receiver->photo;
                 unset($message->sender, $message->receiver);
             }
-            return finalResponse('success', 200,$messages->items());
+            return finalResponse('success', 200, $messages->items());
         } catch (\Throwable $e) {
             return finalResponse('failed', 500, null, $e->getMessage());
         }

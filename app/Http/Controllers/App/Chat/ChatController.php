@@ -57,7 +57,6 @@ class ChatController extends Controller
                 ])
                 ->get();
             $conversations = ConversationResource::collection($conversations);
-
             return finalResponse('success', 200, $conversations);
         } catch (Exception $e) {
             return finalResponse('failed', 500, null, null, $e->getMessage());
@@ -91,6 +90,14 @@ class ChatController extends Controller
                 'restaurant_id' => $restaurant->id,
                 'status' => 'invited',
                 'deleted_at' => $dataDeleted ?? now()->addHour()
+            ]);
+            $message = Message::create([
+                'conversation_id' => $request_reservation->id,
+                'sender_id' => $user->id,
+                'content' => $request->message,
+                'receiver_id' => getOtherUser($request_reservation, $user->id),
+                'replay_on' => null,
+                'attachment' => null,
             ]);
             // Rest of your code to handle message creation and event dispatching...
             return finalResponse('success', 200, __('errors.success_request'));

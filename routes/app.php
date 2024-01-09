@@ -35,7 +35,7 @@ Route::middleware('set_lang')->group(function () {
     Route::group(['prefix' => 'user/auth'], function () {
         Route::post('/register', [RegisterController::class, 'register']); // finished
         Route::post('/login', [LoginController::class, 'login']); // finished
-        Route::delete('/logout', [LogoutController::class, 'logout'])->middleware('verified'); // finished
+        Route::delete('/logout', [LogoutController::class, 'logout']); // finished
     });
     // =====================================================================================
     Route::prefix('email')->group(function () {
@@ -62,9 +62,12 @@ Route::middleware('set_lang')->group(function () {
             Route::get('map', [GetMapsOfRestaurantController::class, 'closestRestaurants']); // finished
             Route::get('user', [RestaurantController::class, 'usersInRestaurant']); // finished
             Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // finished
+
         });
         // =====================================================================================
         Route::group(['prefix' => 'rating'],function (){
+            Route::get('/', [FoodRatingController::class, 'getFoodOfrestaurant'])->middleware('check_reservation'); // finished
+            Route::post('add', [FoodRatingController::class, 'makeRatingForFood'])->middleware('check_reservation');
             Route::get('restaurant',[RestaurantRatingController::class,'restaurantsRating']); // finished
             Route::get('food',[FoodRatingController::class,'foodsRating']); // finished
         });
@@ -98,8 +101,8 @@ Route::middleware('set_lang')->group(function () {
             Route::post('request/cancel',[ChatController::class,'cancelRequestChat']); // finished
             Route::get('request/list',[ChatController::class,'listRequestsChat']); // finished
             // ==========================
-            Route::post('inbox/accept',[ChatController::class,'inboxAcceptChat']); // finished
-            Route::delete('inbox/reject',[ChatController::class,'inboxRejectChat']); // finished
+            Route::post('inbox/accept',[ChatController::class,'AcceptinboxChat']); // finished
+            Route::delete('inbox/reject',[ChatController::class,'RejectinboxChat']); // finished
             Route::get('inbox/list',[ChatController::class,'listInboxChat']); // finished
             // ===========================
             Route::get('/{id}', [MessageController::class, 'getMessages'])

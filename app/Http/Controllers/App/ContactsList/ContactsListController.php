@@ -28,8 +28,7 @@ class ContactsListController extends Controller
         // get all contacts list by user_id
         try{
             $result = $this->repo->getContactList($request);
-            return response()->json(["message"=> 'success','data' => $result[0],"pagnation" => $result[1]],200);
-            // return finalResponse('success',200,$result[0],$result[1]);
+            return finalResponse1('success',200,$result);
         }catch(Exception $th){
             return finalResponse('failed',$th->getCode(),null,null,$th->getMessage());
         }

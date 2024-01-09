@@ -18,3 +18,7 @@ Broadcast::channel('chat.{conversationId}', function ($user, $conversationId) {
     // Check if the user is authorized to access the conversation
     return $user->canAccessConversation($conversationId);
 });
+Broadcast::channel('restaurant.{restaurantId}', function ($user, $restaurantId) {
+    // Check if the user is authorized to access the conversation
+    return $user->canAccessRestaurant($restaurantId);
+});

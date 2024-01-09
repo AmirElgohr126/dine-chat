@@ -13,14 +13,16 @@ use App\Http\Requests\Chat\RequestNewChatRequest;
 use App\Http\Resources\Chats\ListRequestResource;
 use App\Http\Resources\Chats\ConversationResource;
 use App\Service\ChatServices\ChatServiceInterface;
+use App\Service\Notifications\NotificationInterface;
 
 class ChatController extends Controller
 {
     protected $chatService;
-
-    public function __construct(ChatServiceInterface $chatService)
+    protected $notification;
+    public function __construct(ChatServiceInterface $chatService, NotificationInterface $notificationServices)
     {
         $this->chatService = $chatService;
+        $this->notification = $notificationServices;
     }
 
     /**
@@ -99,6 +101,14 @@ class ChatController extends Controller
                 'replay_on' => null,
                 'attachment' => null,
             ]);
+
+            $receiverToken = $message->receiver->device_token;
+
+            $this->notification->sendOneNotifyOneDevice([
+                'title' => 'you have new request Chat',
+                'message' => $message->content,
+                'photo' => $message->attachment
+            ], $receiverToken);
             // Rest of your code to handle message creation and event dispatching...
             return finalResponse('success', 200, __('errors.success_request'));
         } catch (Exception $e) {
@@ -228,7 +238,7 @@ class ChatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function inboxAcceptChat(Request $request)
+    public function AcceptinboxChat(Request $request)
     {
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],
@@ -243,11 +253,19 @@ class ChatController extends Controller
                 ->where('deleted_at', '>', now()->subHour())
                 ->withTrashed()
                 ->first();
-                if($conversations)
+                if(!$conversations)
                 {
-                    $conversations->update(['status' => 'accept']);
                     return finalResponse('success', 200, $conversations);
                 }
+            $conversations->update(['status' => 'accept']);
+            $receiverToken = $conversations->sender->device_token;
+
+            $this->notification->sendOneNotifyOneDevice([
+                'title' => 'your request Chat is accepted',
+                'message' => '',
+                'photo' => ''
+            ], $receiverToken);
+            
             throw new Exception(__('errors.No_matching_conversation'), 405);
         } catch (Exception $e) {
             // Handle other exceptions
@@ -266,7 +284,7 @@ class ChatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function inboxRejectChat(Request $request)
+    public function RejectinboxChat(Request $request)
     {
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],

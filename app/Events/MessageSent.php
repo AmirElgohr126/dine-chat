@@ -16,11 +16,15 @@ class MessageSent implements ShouldBroadcast
 
     public $conversationId;
     public $message;
+    public $receiver_photo;
+    public $sender_photo;
 
-    public function __construct($conversationId, $message)
+    public function __construct($conversationId, $message, $sender_photo, $receiver_photo)
     {
         $this->conversationId = $conversationId;
         $this->message = $message;
+        $this->sender_photo = $sender_photo;
+        $this->receiver_photo = $receiver_photo;
     }
 
     public function broadcastOn()
@@ -42,6 +46,8 @@ class MessageSent implements ShouldBroadcast
                 'attachment' => $this->message->attachment,
                 'created_at' => $this->message->created_at,
                 'updated_at' => $this->message->updated_at,
+                'receiver_photo' => $this->receiver_photo,
+                'sender_photo' => $this->sender_photo
             ],
         ];
     }

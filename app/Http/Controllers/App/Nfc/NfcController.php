@@ -4,6 +4,7 @@ namespace App\Http\Controllers\App\Nfc;
 
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
+use App\Events\UpdateUserHall;
 use App\Models\UserAttendance;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nfc\NfcRequest;
@@ -33,8 +34,9 @@ class NfcController extends Controller
             $checkReservationBefore = UserAttendance::where('user_id',$request->user()->id)
                 ->where('created_at', '>', now()->subHour())
                 ->first();
+
             if ($checkReservationBefore) {
-                throw new \Exception(__('errors.you_make_reservation_in_another_place'), 405);
+                return finalResponse('success', 200, __('errors.success_reservation'));
             }
             $conflictingReservation = UserAttendance::
                 where('chair_id', $chair->id)
@@ -52,11 +54,13 @@ class NfcController extends Controller
                 'created_at' => now(),
                 'updated_at' => now()
             ]);
+
+            UpdateUserHall::dispatch($reserve, $reserve->restaurant_id);
             if ($reserve) {
                 return finalResponse('success', 200,__('errors.success_reservation'));
             }
         } catch (\Exception $e) {
-            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
+            return finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
 }

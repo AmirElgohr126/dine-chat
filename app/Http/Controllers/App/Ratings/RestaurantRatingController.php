@@ -59,6 +59,7 @@ class RestaurantRatingController extends Controller
         // }
     public function restaurantsRating(Request $request)
     {
+
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],
             'restaurant_id' => ['required', 'exists:restaurants,id']

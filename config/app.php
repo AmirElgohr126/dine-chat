@@ -19,7 +19,6 @@ return [
     'name' => env('APP_NAME', 'Laravel'),
 
     'delete_unfollower' => env(now()->addHour()),
-
     /*
     |--------------------------------------------------------------------------
     | Application Environment
@@ -192,7 +191,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'Example' => App\Facades\Example::class,
-        'Firebase' => App\Facades\FirebaseFacade::class,
+        // 'Firebase' => App\Facades\FirebaseFacade::class,
 
     ])->toArray(),
 

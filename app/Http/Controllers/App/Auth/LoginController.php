@@ -6,6 +6,7 @@ use Exception;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\loginRequest;
 use App\Http\Resources\User\UserResources;
+use App\Models\UserGhost;
 
 /**
  * Class LoginController
@@ -36,7 +37,15 @@ class LoginController extends Controller
             if (!$user->email_verified_at) {
                 throw new Exception(__('errors.email_not_verified'),405);
             }
-
+            if($user->ghost_mood == 1)
+            {
+                $realUserInfo = UserGhost::where('user_id',$user->id)->first();
+                $user->last_name = $realUserInfo->last_name;
+                $user->first_name = $realUserInfo->first_name;
+                $user->photo = $realUserInfo->photo;
+                $user->bio = $realUserInfo->bio ?? '';
+                $user-> phone = (string) $realUserInfo->phone;
+            }
             // Return a successful response with the token and user information
             return finalResponse('success',200,["token"=>$token,"user"=> new UserResources($user)]);
         } catch (Exception $e) {

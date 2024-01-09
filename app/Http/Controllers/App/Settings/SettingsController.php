@@ -22,11 +22,11 @@ class SettingsController extends Controller
             }
             $user->update([
                 'email' => $request->email,
-                'email_verified_at' => null,
             ]);
+            $user->email_verified_at = null;
+            $user->save();
             $user->sendEmailVerificationNotification();
-            auth('api')->logout();
-            return finalResponse('success', 200, __('errors.logout_success'));
+            return finalResponse('success', 200, 'success change email');
         } catch (Exception $e) {
             return finalResponse('faild', 500, null, null, $e->getMessage());
         }

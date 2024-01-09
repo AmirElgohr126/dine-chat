@@ -15,7 +15,7 @@ class UserResources extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'id' =>  $this->id,
+            'id' => (int) $this->id,
             'last_name'=> $this->last_name,
             'first_name'=> $this->first_name,
             'user_name'=> $this->user_name,
@@ -23,7 +23,7 @@ class UserResources extends JsonResource
             'photo'=> retriveMedia().$this->photo,
             'bio' => $this->bio ?? '',
             'phone' => (string) $this->phone,
-            'ghost_mood' => $this->ghost_mood,
+            'ghost_mood' => (int) $this->ghost_mood,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\App\Profile;
 
 use Exception;
+use App\Models\UserGhost;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UserResources;
@@ -73,6 +74,14 @@ class ProfileController extends Controller
     {
         try {
             $user = $request->user('api');
+            if ($user->ghost_mood == 1) {
+                $realUserInfo = UserGhost::where('user_id', $user->id)->first();
+                $user->last_name = $realUserInfo->last_name;
+                $user->first_name = $realUserInfo->first_name;
+                $user->photo = $realUserInfo->photo;
+                $user->bio = $realUserInfo->bio ?? '';
+                $user->phone = (string) $realUserInfo->phone;
+            }
             return finalResponse('success', 200, new UserResources($user));
         } catch (Exception $e) {
             return finalResponse('faield', 400, null, null, $e->getMessage());

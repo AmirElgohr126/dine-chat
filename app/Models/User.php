@@ -5,6 +5,7 @@ use App\Models\Contact;
 use App\Models\Message;
 use App\Models\UserGhost;
 use App\Models\Conversation;
+use App\Models\UserAttendance;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Notifications\Notifiable;
@@ -30,7 +31,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'photo',
         'phone',
         'ghost_mood',
-        'device_token'
+        'device_token',
     ];
 
     /**
@@ -107,7 +108,6 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return $this->hasMany(Message::class, 'sender_id');
     }
-
     public function receivedMessages()
     {
         return $this->hasMany(Message::class, 'receiver_id');
@@ -130,22 +130,36 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->hasMany(Conversation::class, 'sender_id','id');
     }
 
-    // =================================  ============================================
+
     public function canAccessConversation($conversationId)
     {
         // Check if the user is authenticated
         if (!auth('api')->check()) {
             return false;
         }
-
         // Check if the user is part of the conversation
         $conversation = Conversation::find($conversationId);
         if (!$conversation) {
             return false;
         }
-
         // Check if the user is either the sender or receiver of the conversation
         return $this->id == $conversation->sender_id || $this->id == $conversation->receiver_id;
+    }
+
+
+    public function canAccessRestaurant($restaurantId)
+    {
+        if (!auth('api')->check()) {
+            return false;
+        }
+        // Check if the user is make reservation
+        $reservation = UserAttendance::where('user_id', $this->id)->where('restaurant_id',$restaurantId)
+            ->where('created_at', '>=', now()->subHour())
+            ->first();
+        if (!$reservation) {
+            return false;
+        }
+        return true;
     }
 
     public function notifications()

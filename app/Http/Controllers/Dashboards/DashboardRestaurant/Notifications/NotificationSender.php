@@ -22,7 +22,7 @@ class NotificationSender
             'Content-Type' => 'application/json',
         ];
     }
-    
+
     private function getAccessToken()
     {
         return FcmGoogleHelper::configureClient();
@@ -71,7 +71,6 @@ class NotificationSender
                 $failed++;
             },
         ]);
-
         $promise = $pool->promise();
         $promise->wait();
         return ['successful' => $successful, 'failed' => $failed];

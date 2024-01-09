@@ -8,12 +8,21 @@ use App\Events\MessageSent;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\User\UserResources;
 use App\Http\Requests\Chat\NewChatMessageRequest;
 use App\Http\Requests\Chat\UpdateChatMessageRequest;
-use App\Http\Resources\User\UserResources;
+use App\Service\Notifications\NotificationInterface;
 
 class MessageController extends Controller
 {
+
+    protected $notification;
+
+    public function __construct(NotificationInterface $notificationServices)
+    {
+        $this->notification = $notificationServices;
+    }
+
     public function getMessages(Request $request)
     {
         try {
@@ -52,8 +61,7 @@ class MessageController extends Controller
             $id_replay = $request->replay_on;
             $restaurant = Restaurant::find($request->restaurant_id);
             $conversation = Conversation::
-                where('id', $request->id)
-                ->where(function ($query) use ($user) {
+                where('id', $request->id)->where(function ($query) use ($user) {
                     $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
                 })
                 ->where('restaurant_id', $restaurant->id)
@@ -70,6 +78,7 @@ class MessageController extends Controller
                 $pathmedia = storeFile($media, 'Chats/chat' . $conversation->id, 'public');
             }
             $check = $conversation->messages()->find($id_replay) ?? null;
+
             // Create a new message
             $message = Message::create([
                 'conversation_id' => $conversation->id,
@@ -79,9 +88,20 @@ class MessageController extends Controller
                 'replay_on' => $check,
                 'attachment' => isset($pathmedia) ? $pathmedia : null,
             ]);
+            $sender_photo = retriveMedia() . $message->sender->photo;
+            $receiver_photo = retriveMedia() . $message->receiver->photo;
             // $message = new MessageResource($message);
-            MessageSent::dispatch($conversation->id, $message);
-            // event(new MessageSent($conversation->id, $message));
+            MessageSent::dispatch($conversation->id, $message, $sender_photo, $receiver_photo);
+            // send notification to reviver
+            $receiverToken = $message->receiver->device_token;
+
+            $this->notification->sendOneNotifyOneDevice([
+                'title' => 'you have new message ',
+                'message' => $message->content,
+                'photo' => $message->attachment
+            ],$receiverToken);
+            unset($message->receiver);
+            unset($message->sender);
             return finalResponse('success', 200, $message);
         } catch (Exception $e) {
             return finalResponse('failed', 500, null, $e->getMessage());
@@ -109,7 +129,7 @@ class MessageController extends Controller
             if (!$conversation) {
                 throw new Exception(__('errors.No_conversation_found'), 404);
             }
-            $message = $conversation->messages()->where('id',$id_message)->where('sender_id',$user->id)->first();
+            $message = $conversation->messages()->where('id', $id_message)->where('sender_id', $user->id)->first();
             if (!$message) {
                 throw new Exception(__('errors.No_message_found'), 404);
             }
@@ -158,31 +178,31 @@ class MessageController extends Controller
     public function deleteAttachment(Request $request)
     {
         try {
-        $user = $request->user();
-        $id_chat = $request->id;
-        $id_message = $request->id_message;
-        // ================================================================
-        $restaurant = Restaurant::find($request->restaurant_id);
-        $conversation = Conversation::where('id', $id_chat)
-            ->where(function ($query) use ($user) {
-                $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
-            })
-            ->where('restaurant_id', $restaurant->id)
-            ->where('status', 'accept')
-            ->withTrashed()
-            ->where('deleted_at', '>', now())
-            ->first();
-        // ================================================================
-        if (!$conversation) {
-            throw new Exception(__('errors.No_conversation_found'), 404);
-        }
-        $message = $conversation->messages()->where('id', $id_message)->where('sender_id', $user->id)->first();
-        if (!$message) {
-            throw new Exception(__('errors.No_message_found'), 404);
-        }
-        $message->update([
-            'attachment' => '',
-        ]);
+            $user = $request->user();
+            $id_chat = $request->id;
+            $id_message = $request->id_message;
+            // ================================================================
+            $restaurant = Restaurant::find($request->restaurant_id);
+            $conversation = Conversation::where('id', $id_chat)
+                ->where(function ($query) use ($user) {
+                    $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
+                })
+                ->where('restaurant_id', $restaurant->id)
+                ->where('status', 'accept')
+                ->withTrashed()
+                ->where('deleted_at', '>', now())
+                ->first();
+            // ================================================================
+            if (!$conversation) {
+                throw new Exception(__('errors.No_conversation_found'), 404);
+            }
+            $message = $conversation->messages()->where('id', $id_message)->where('sender_id', $user->id)->first();
+            if (!$message) {
+                throw new Exception(__('errors.No_message_found'), 404);
+            }
+            $message->update([
+                'attachment' => '',
+            ]);
             return finalResponse('success', 200, __('errors.message_was_deleted'));
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, $e->getMessage());

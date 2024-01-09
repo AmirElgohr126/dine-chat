@@ -15,6 +15,19 @@ function finalResponse($message = "success", // success or failed
             'errors' => $errors
         ],$statusCode, [], JSON_NUMERIC_CHECK);
     }
+function finalResponse1($message = "success", // success or failed
+                                $statusCode = 200,
+                                $data = null,
+                                $pagnation = null,
+                                $errors = null) : JsonResponse
+    {
+        return response()->json([
+            "message" => $message,
+            "data" => $data,
+            'pagination' => $pagnation,
+            'errors' => $errors
+        ],$statusCode);
+    }
 
 
 function pagnationResponse($model) : array

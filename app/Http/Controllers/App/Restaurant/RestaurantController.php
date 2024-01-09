@@ -18,13 +18,12 @@ class RestaurantController extends Controller
     {
         try {
             $restaurant = Restaurant::find($request->restaurant_id);
-            if (!$restaurant) {
+            if (!$restaurant)
+            {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-
             $oneHourAgo = Carbon::now()->subHour();
             $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', $oneHourAgo)->get();
-
             if (isset($userAttendance) == null) {
                 return finalResponse('success', 204);
             }

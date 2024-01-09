@@ -23,14 +23,8 @@ Class ContactsListRepository implements ContactsListInterface{
      */
     public function getContactList(Request $request)
     {
-        $per_page = $request->per_page ?? 5;
-        $contacts = Contact::select(["id","user_id","name","photo","phone","status_on_app"])->orderBy('user_id')->paginate($per_page);
-        $pagnation = pagnationResponse($contacts);
-        return
-        [
-                0 => $contacts->items(),
-                1 => $pagnation
-        ];
+        $contacts = Contact::where('user_id',$request->user()->id)->select(["id","name","photo","phone","status_on_app"])->get();
+        return $contacts;
     }
     /**
      * Save new contacts to the database.
@@ -47,7 +41,6 @@ Class ContactsListRepository implements ContactsListInterface{
         $phones = Contact::pluck('phone')->all();
         $phonesUser = User::pluck('phone')->all();
         $savedContacts = []; // Initialize an array to store saved contacts
-
         foreach ($contacts['contact'] as $contact) // Loop through each contact from the request
         {
             if (in_array($contact['phone'], $phones)) {
@@ -59,21 +52,16 @@ Class ContactsListRepository implements ContactsListInterface{
             } else {
                 $contact['status_on_app'] = 'not_subscrib'; // Set status to 'not_subscribed' if the phone is not in users
             }
-
             // Handle photo if set
             if (isset($contact['photo'])) {
                 $contact['photo'] = storeFile($contact['photo'], 'contacts', 'public');
             } else {
                 $contact['photo'] = 'Dafaults\Contacts\avatar.png';
             }
-
             $contact['user_id'] = $request->user()->id;
-
-            // Use insert method for each contact separately
             Contact::create($contact);
             $savedContacts[] = $contact;
         }
-
         return $savedContacts;
     }
 

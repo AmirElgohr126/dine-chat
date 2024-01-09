@@ -21,20 +21,19 @@ class GenerateUrlController extends Controller
 
     public function ChairsBasedOnRestaurant(Request $request)
     {
-        $chairs = Chair::where('restaurant_id',$request->restaurant_id)->get();
+        $chairs = Chair::where('restaurant_id', $request->restaurant_id)->get();
         $restaurant = Restaurant::find($request->restaurant_id);
 
         $urls = [];
         foreach ($chairs as $chair) {
             $url = $this->generateURL($restaurant, $chair);
-            $qrCodeLink = $this->generateQRCode($restaurant->id,$url,$chair->nfcNumber);
-            dd($qrCodeLink);
+            $qrCodeLink = $this->generateQRCode($restaurant->id, $url, $chair->nfc_number);
             $urls[$chair->nfc_number] = [
                 'url' => $url,
                 'qr_codeLink' => $qrCodeLink
             ];
         }
-        return finalResponse('success',200,$urls);
+        return finalResponse('success', 200, $urls);
     }
 
 
@@ -49,16 +48,17 @@ class GenerateUrlController extends Controller
             ->size(300)
             ->margin(10)
             ->roundBlockSizeMode(RoundBlockSizeMode::Margin)
-            ->logoPath(__DIR__ . '/assets/symfony.png') // Make sure this path is correct
+            ->logoPath(public_path('storage/Dafaults/Logo/logo.png')) // Make sure this path is correct
             ->logoResizeToWidth(50)
             ->logoPunchoutBackground(true)
-            ->labelText('NFC: ' . $nfcNumber) // Example label
+            ->labelText("NFC : $nfcNumber") // Example label
             ->labelFont(new NotoSans(20))
             ->labelAlignment(LabelAlignment::Center)
             ->build();
 
         // Define the path where the QR code will be saved
-        $folderPath = public_path('qr_codes/'); // Adjust the folder path as needed
+
+        $folderPath = storage_path("app/public/restaurant_$restaurantId/Qr_codes/");
         if (!file_exists($folderPath)) {
             mkdir($folderPath, 0777, true);
         }
@@ -70,12 +70,14 @@ class GenerateUrlController extends Controller
         // Save the QR code image to the specified path
         $qrCode->saveToFile($filePath);
 
+        $publicPath = asset("storage/restaurant_$restaurantId/Qr_codes/" . $fileName);
+
         // Return the file path or URL to access the QR code image
-        return $filePath; // Or return a URL if needed
+        return $publicPath; // Or return a URL if needed
     }
 
 
-    public function generateURL($restaurant,$chair)
+    public function generateURL($restaurant, $chair)
     {
         $data = [
             'latitude' => $restaurant->latitude,

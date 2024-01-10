@@ -76,6 +76,7 @@ Route::middleware('set_lang')->group(function () {
             Route::post('email', [SettingsController::class, 'changeEmail']); // finished
             Route::post('password', [SettingsController::class, 'changePassword']); // finished
             Route::post('ghost', [SettingsController::class, 'changeToGhost']); // finished
+            Route::post('notification/mute', [SettingsController::class, 'muteNotifications']); // finished
         });
         // =====================================================================================
         Route::group(['prefix' => 'profile'], function () {

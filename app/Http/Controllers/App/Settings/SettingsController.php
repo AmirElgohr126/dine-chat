@@ -82,7 +82,7 @@ class SettingsController extends Controller
                 ]);
                 $user->update([
                     'ghost_mood' => 1,
-                    'photo' => "Ghost/ghost.jpg",
+                    'photo' => "Ghost/ghost.png",
                     'first_name' => 'Spectra',
                     'last_name' => 'Shadowvale',
                     'phone' => '00000000000',
@@ -103,6 +103,21 @@ class SettingsController extends Controller
         } catch (Exception $e) {
             return finalResponse('failed', 500, null, null, 'internal server error' . $e->getMessage());
         }
+    }
+
+    public function muteNotifications(Request $request)
+    {
+        $user = $request->user();
+        switch ($user->notification_status) {
+            case 0:
+                $user->notification_status == 1;
+                break;
+            case 1:
+                $user->notification_status == 0;
+                break;
+        }
+        $user->save();
+        return finalResponse('success',200,$user->notification_status);
     }
 }
 

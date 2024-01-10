@@ -43,7 +43,7 @@ class FoodRatingController extends Controller
                 ];
             }
 
-            if (isEmpty($foodData)) {
+            if (empty($foodData)) {
                 return finalResponse('success', 200, __('errors.no_ratings'));
             }
             return finalResponse('success', 200, $foodData);

@@ -110,10 +110,10 @@ class SettingsController extends Controller
         $user = $request->user();
         switch ($user->notification_status) {
             case 0:
-                $user->notification_status == 1;
+                $user->notification_status = 1;
                 break;
             case 1:
-                $user->notification_status == 0;
+                $user->notification_status = 0;
                 break;
         }
         $user->save();

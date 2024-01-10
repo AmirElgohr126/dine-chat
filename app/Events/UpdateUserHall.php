@@ -26,9 +26,12 @@ class UpdateUserHall implements ShouldBroadcast
     public function customizeUser()
     {
             $userData = $this->reservation->users->toArray();
-            $userData['x'] = $this->reservation->chairs->x;
-            $userData['y'] = $this->reservation->chairs->y;
-            $userData['photo'] = retriveMedia() . $userData['photo'];
+            $userData['ghost_mood'] = (int) $this->reservation->users->ghost_mood;
+            $userData['phone'] = (int) $this->reservation->users->phone;
+            $userData['notification_status'] = (int) $this->reservation->users->notification_status;
+            $userData['x'] = (float) $this->reservation->chairs->x;
+            $userData['y'] = (float) $this->reservation->chairs->y;
+            $userData['photo'] =  retriveMedia() . $userData['photo'];
             return $userData;
     }
 

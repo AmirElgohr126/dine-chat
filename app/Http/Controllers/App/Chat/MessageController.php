@@ -102,6 +102,7 @@ class MessageController extends Controller
                     'message' => $message->content,
                     'photo' => $message->attachment
                 ],$receiverToken);
+                // have message 
             }
             unset($message->receiver);
             unset($message->sender);

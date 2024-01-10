@@ -110,6 +110,8 @@ class ChatController extends Controller
                     'message' => $message->content,
                     'photo' => $message->attachment
                 ], $receiverToken);
+                
+                // have message
             }
             // Rest of your code to handle message creation and event dispatching...
             return finalResponse('success', 200, __('errors.success_request'));
@@ -269,6 +271,7 @@ class ChatController extends Controller
                         'message' => '',
                         'photo' => ''
                     ], $receiverToken);
+                    // have message
                 }
                 return finalResponse('success', 200, $conversations);
         } catch (Exception $e) {

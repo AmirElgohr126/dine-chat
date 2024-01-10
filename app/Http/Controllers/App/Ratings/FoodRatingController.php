@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\App\Ratings;
 
+use App\Models\Food;
+use App\Models\FoodRating;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
-use App\Models\Food;
-use App\Models\FoodRating;
 
 use function PHPUnit\Framework\isEmpty;
+use App\Http\Resources\Food\FoodResource;
 
 class FoodRatingController extends Controller
 {
@@ -43,7 +44,7 @@ class FoodRatingController extends Controller
             }
 
             if (isEmpty($foodData)) {
-                return finalResponse('success', 200, __('errors.no_ratings  '));
+                return finalResponse('success', 200, __('errors.no_ratings'));
             }
             return finalResponse('success', 200, $foodData);
         } catch (\Exception $e) {
@@ -104,7 +105,8 @@ class FoodRatingController extends Controller
         $user = $request->user();
         $restaurantId = $request->restaurant_id;
         $foods = Food::getFoodsWithUserRatings($restaurantId);
-        return finalResponse('success', 200, $foods);
+
+        return FoodResource::collection($foods);
     }
 
 

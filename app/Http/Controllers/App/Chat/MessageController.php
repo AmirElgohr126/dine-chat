@@ -93,13 +93,16 @@ class MessageController extends Controller
             // $message = new MessageResource($message);
             MessageSent::dispatch($conversation->id, $message, $sender_photo, $receiver_photo);
             // send notification to reviver
-            $receiverToken = $message->receiver->device_token;
 
-            $this->notification->sendOneNotifyOneDevice([
-                'title' => 'you have new message ',
-                'message' => $message->content,
-                'photo' => $message->attachment
-            ],$receiverToken);
+            if($message->receiver->notification_status==1)
+            {
+                $receiverToken = $message->receiver->device_token;
+                $this->notification->sendOneNotifyOneDevice([
+                    'title' => 'you have new message ',
+                    'message' => $message->content,
+                    'photo' => $message->attachment
+                ],$receiverToken);
+            }
             unset($message->receiver);
             unset($message->sender);
             return finalResponse('success', 200, $message);

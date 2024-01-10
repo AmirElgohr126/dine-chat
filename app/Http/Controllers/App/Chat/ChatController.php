@@ -103,12 +103,14 @@ class ChatController extends Controller
             ]);
 
             $receiverToken = $message->receiver->device_token;
-
-            $this->notification->sendOneNotifyOneDevice([
-                'title' => 'you have new request Chat',
-                'message' => $message->content,
-                'photo' => $message->attachment
-            ], $receiverToken);
+            if($message->receiver->notification_status==1)
+            {
+                $this->notification->sendOneNotifyOneDevice([
+                    'title' => 'you have new request Chat',
+                    'message' => $message->content,
+                    'photo' => $message->attachment
+                ], $receiverToken);
+            }
             // Rest of your code to handle message creation and event dispatching...
             return finalResponse('success', 200, __('errors.success_request'));
         } catch (Exception $e) {
@@ -255,20 +257,21 @@ class ChatController extends Controller
                 ->first();
                 if(!$conversations)
                 {
-                    return finalResponse('success', 200, $conversations);
+                    throw new Exception(__('errors.No_matching_conversation'), 405);
                 }
-            $conversations->update(['status' => 'accept']);
-            $receiverToken = $conversations->sender->device_token;
+                $conversations->update(['status' => 'accept']);
 
-            $this->notification->sendOneNotifyOneDevice([
-                'title' => 'your request Chat is accepted',
-                'message' => '',
-                'photo' => ''
-            ], $receiverToken);
-            
-            throw new Exception(__('errors.No_matching_conversation'), 405);
+                if($conversations->sender->notification_status==1)
+                {
+                    $receiverToken = $conversations->sender->device_token;
+                    $this->notification->sendOneNotifyOneDevice([
+                        'title' => 'your request Chat is accepted',
+                        'message' => '',
+                        'photo' => ''
+                    ], $receiverToken);
+                }
+                return finalResponse('success', 200, $conversations);
         } catch (Exception $e) {
-            // Handle other exceptions
             return finalResponse('failed', $e->getCode(),null,null,$e->getMessage());
         }
     }

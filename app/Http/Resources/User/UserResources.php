@@ -24,6 +24,7 @@ class UserResources extends JsonResource
             'bio' => $this->bio ?? '',
             'phone' => (string) $this->phone,
             'ghost_mood' => (int) $this->ghost_mood,
+            'notification_status' => (int) $this->notification_status,
             'created_at' => $this->created_at->toDateTimeString(),
             'updated_at' => $this->updated_at->toDateTimeString(),
         ];

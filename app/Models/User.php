@@ -32,6 +32,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'phone',
         'ghost_mood',
         'device_token',
+        'notification_status'
     ];
 
     /**

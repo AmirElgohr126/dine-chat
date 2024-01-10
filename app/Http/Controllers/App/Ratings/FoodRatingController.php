@@ -29,7 +29,7 @@ class FoodRatingController extends Controller
             $targetUserId = $request->user_id;
             $restaurantId = $request->restaurant_id;
             $foodRatings = FoodRating::where('user_id', $targetUserId)->where('restaurant_id', $restaurantId)->get();
-            $data = [];
+            $foodData = [];
             foreach ($foodRatings as $rating) {
                 $food = $rating->food;
                 $imageUrl = $food->images ? $food->images->image : null; // Get the image URL

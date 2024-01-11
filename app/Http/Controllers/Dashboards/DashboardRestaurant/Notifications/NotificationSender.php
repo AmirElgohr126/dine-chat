@@ -60,20 +60,25 @@ class NotificationSender
                 yield new Request('POST', $url, $this->headers, json_encode($postData));
             }
         };
-        $successful = 0;
-        $failed = 0;
+        $successfulTokens = [];
+        $failedTokens = [];
         $pool = new Pool($this->client, $requests($deviceTokens), [
             'concurrency' => 500,
-            'fulfilled' => function ($response, $index) use (&$successful) {
-                $successful++;
+            'fulfilled' => function ($response, $index) use (&$successfulTokens, $deviceTokens) {
+                $successfulTokens[] = $deviceTokens[$index];
             },
-            'rejected' => function ($reason, $index) use (&$failed) {
-                $failed++;
+            'rejected' => function ($reason, $index) use (&$failedTokens, $deviceTokens) {
+                $failedTokens[] = $deviceTokens[$index];
             },
         ]);
         $promise = $pool->promise();
-        $promise->wait();
-        return ['successful' => $successful, 'failed' => $failed];
+        $promise->wait(); 
+        return [
+            'successful' => count($successfulTokens),
+            'failed' => count($failedTokens),
+            'successfulTokens' => $successfulTokens,
+            'failedTokens' => $failedTokens
+        ];
     }
 
 

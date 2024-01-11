@@ -8,15 +8,16 @@ use App\Http\Controllers\App\Chat\ChatController;
 use App\Http\Controllers\App\Auth\LoginController;
 use App\Http\Controllers\App\About\AboutController;
 use App\Http\Controllers\App\Auth\LogoutController;
+use App\Http\Controllers\App\Chat\MessageController;
 use App\Http\Controllers\App\Auth\RegisterController;
 use App\Http\Controllers\App\Profile\ProfileController;
 use App\Http\Controllers\App\Auth\VerificationController;
-use App\Http\Controllers\App\Chat\MessageController;
 use App\Http\Controllers\App\Settings\SettingsController;
 use App\Http\Controllers\App\Ratings\FoodRatingController;
 use App\Http\Controllers\App\Restaurant\RestaurantController;
 use App\Http\Controllers\App\Ratings\RestaurantRatingController;
 use App\Http\Controllers\App\ContactsList\ContactsListController;
+use App\Http\Controllers\App\Notifications\NotificationController;
 use App\Http\Controllers\App\Restaurant\GetMapsOfRestaurantController;
 
 /*
@@ -62,7 +63,11 @@ Route::middleware('set_lang')->group(function () {
             Route::get('map', [GetMapsOfRestaurantController::class, 'closestRestaurants']); // finished
             Route::get('user', [RestaurantController::class, 'usersInRestaurant']); // finished
             Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // finished
+            // =====================================================================================
 
+        });
+        Route::group(['prefix' => 'notification'], function () {
+            Route::get('/', [NotificationController::class, 'getNotifications']); // finished
         });
         // =====================================================================================
         Route::group(['prefix' => 'rating'],function (){

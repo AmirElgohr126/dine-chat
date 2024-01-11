@@ -7,6 +7,7 @@ use Google\Auth\OAuth2;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\UserAttendance;
+use App\Models\NotificationUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notifications\CreateNotificationRequest;
 use App\Http\Resources\Dashboard\Notifications\NotificationResource;
@@ -97,15 +98,15 @@ class NotificationController extends Controller
         }
     }
 
-
-
     public function sendNotificationNow(Request $request)
     {
         $user = $request->user('restaurant');
         $restaurantId = $user->restaurant_id;
         $Notification = Notification::where('restaurant_id', $restaurantId)->where('id', $request->id)->first();
+
         try {
-            $result = $this->sendNotify($Notification, $user->restaurant_id);
+            $result = $this->sendNotify($Notification, $user->restaurant_id); // return false if no participants
+            
             if (!$result) {
                 return finalResponse('failed', 400, null, null, 'no participants');
             }
@@ -134,10 +135,18 @@ class NotificationController extends Controller
         }
         $projectId = 'dine-chat';
         $notificationSender = new NotificationSender($projectId);
-        $resault =  $notificationSender->sendNotification($Notification, $deviceTokens);
-        return $resault;
+        $result =  $notificationSender->sendNotification($Notification, $deviceTokens);
 
-
+        if (!empty($result['successfulTokens'])) {
+            $successfulUserIds = User::whereIn('device_token', $result['successfulTokens'])->pluck('id');
+            foreach ($successfulUserIds as $userId) {
+                NotificationUser::create([
+                    'user_id' => $userId,
+                    'notification_id' => $Notification->id,
+                ]);
+            }
+        }
+        return $result;
     }
 }
 

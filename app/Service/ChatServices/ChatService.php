@@ -85,6 +85,7 @@ class ChatService implements ChatServiceInterface
             $dataDeleted = determainPeriod($restaurant);
         }
     }
+
 }
 
 ?>

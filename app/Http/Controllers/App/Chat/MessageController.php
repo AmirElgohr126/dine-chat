@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\User\UserResources;
 use App\Http\Requests\Chat\NewChatMessageRequest;
 use App\Http\Requests\Chat\UpdateChatMessageRequest;
+use App\Models\GeneralNotification;
 use App\Service\Notifications\NotificationInterface;
 
 class MessageController extends Controller
@@ -97,12 +98,12 @@ class MessageController extends Controller
             if($message->receiver->notification_status==1)
             {
                 $receiverToken = $message->receiver->device_token;
+                $sender_name = "$user->first_name"."$user->last_name";
                 $this->notification->sendOneNotifyOneDevice([
-                    'title' => 'you have new message ',
+                    'title' => $sender_name." send you new message ",
                     'message' => $message->content,
                     'photo' => $message->attachment
                 ],$receiverToken);
-                // have message 
             }
             unset($message->receiver);
             unset($message->sender);

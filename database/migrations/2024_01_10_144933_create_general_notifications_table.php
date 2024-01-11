@@ -13,6 +13,10 @@ return new class extends Migration
     {
         Schema::create('general_notifications', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
+            $table->string('title');
+            $table->text('content')->nullable();
+            $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }

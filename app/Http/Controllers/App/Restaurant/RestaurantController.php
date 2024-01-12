@@ -22,8 +22,8 @@ class RestaurantController extends Controller
             {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-            $oneHourAgo = Carbon::now()->subHour();
-            $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', $oneHourAgo)->get();
+            // $oneHourAgo = Carbon::now()->subHour();
+            $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', now())->get();
             if (isset($userAttendance) == null) {
                 return finalResponse('success', 204);
             }
@@ -33,6 +33,11 @@ class RestaurantController extends Controller
                 $userData['x'] = $attendance->chairs->x;
                 $userData['y'] = $attendance->chairs->y;
                 $userData['photo'] = retriveMedia() . $userData['photo']; // Update this line
+                $follow = UserFollower::where([
+                    'user_id' => $request->user()->id,
+                    'followed_user' => $request->user_id])->first();
+                $userData['is_following'] = $follow->follow_status ?? 'not_follow' ; // Update this line
+
                 $data[] = $userData; // Append the user data to the data array
             }
             // $userAttendance = UserAttendanceResource::collection($userAttendance);

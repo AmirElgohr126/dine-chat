@@ -5,7 +5,7 @@ namespace App\Http\Resources\Food;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class FoodResource extends JsonResource
+class FoodRatingResource extends JsonResource
 {
     /**
      * Transform the resource into an array.

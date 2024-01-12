@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\RequestNewChatRequest;
 use App\Http\Resources\Chats\ListRequestResource;
 use App\Http\Resources\Chats\ConversationResource;
+use App\Models\GeneralNotification;
 use App\Service\ChatServices\ChatServiceInterface;
 use App\Service\Notifications\NotificationInterface;
 
@@ -105,18 +106,18 @@ class ChatController extends Controller
             $receiverToken = $message->receiver->device_token;
             if($message->receiver->notification_status==1)
             {
+                $sender_name = "$user->first_name" .' '. "$user->last_name";
                 $this->notification->sendOneNotifyOneDevice([
-                    'title' => 'you have new request Chat',
+                    'title' => "$sender_name" . 'send you new request Chat',
                     'message' => $message->content,
-                    'photo' => $message->attachment
+                    'photo' => $message->attachment ?? null
                 ], $receiverToken);
-                
-                // have message
+                GeneralNotification::requestChat($message->receiver,$sender_name,$message);
             }
             // Rest of your code to handle message creation and event dispatching...
             return finalResponse('success', 200, __('errors.success_request'));
         } catch (Exception $e) {
-            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
+            return finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
 
@@ -268,14 +269,17 @@ class ChatController extends Controller
                     $receiverToken = $conversations->sender->device_token;
                     $this->notification->sendOneNotifyOneDevice([
                         'title' => 'your request Chat is accepted',
-                        'message' => '',
+                        'message' => 'you can chat now',
                         'photo' => ''
                     ], $receiverToken);
                     // have message
-                }
+                    $name = $conversations->receiver->first_name .' '. $conversations->receiver->last_name;
+                GeneralNotification::acceptChat($conversations->sender, $name);
+
+            }
                 return finalResponse('success', 200, $conversations);
         } catch (Exception $e) {
-            return finalResponse('failed', $e->getCode(),null,null,$e->getMessage());
+            return finalResponse('failed', 500,null,null,$e->getMessage());
         }
     }
     /**

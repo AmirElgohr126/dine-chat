@@ -29,7 +29,7 @@ class ChatService implements ChatServiceInterface
      */
     public function checkAnotherPersonInRestaurant($restaurantId, $IdChatWith) {
         $anotherUserAttendance = UserAttendance::where('user_id', $IdChatWith)
-            ->where('created_at', '>', now()->subHour())
+            ->where('created_at', '>', now())
             ->where('restaurant_id', $restaurantId)
             ->first();
         if (!$anotherUserAttendance) {
@@ -85,6 +85,7 @@ class ChatService implements ChatServiceInterface
             $dataDeleted = determainPeriod($restaurant);
         }
     }
+
 }
 
 ?>

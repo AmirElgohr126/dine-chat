@@ -8,8 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 
-use function PHPUnit\Framework\isEmpty;
-use App\Http\Resources\Food\FoodResource;
+use App\Http\Resources\Food\FoodRatingResource;
 
 class FoodRatingController extends Controller
 {
@@ -102,22 +101,35 @@ class FoodRatingController extends Controller
     // }
     public function getFoodOfrestaurant(Request $request)
     {
-        $user = $request->user();
         $restaurantId = $request->restaurant_id;
         $foods = Food::getFoodsWithUserRatings($restaurantId);
+        $data = [];
 
-        return FoodResource::collection($foods);
+        foreach ($foods as $food) {
+            $foodData = [
+                'id' => (int) $food->id,
+                'name' => (string) $food->name,
+                'restaurant_id' => (int) $food->restaurant_id,
+                'price' => (float) $food->price,
+                'status' => $food->status,
+                'image' => $food->images ? (string) $food->images->image : "", // Check if images exist
+                'rating' => $food->userRating ? (float) $food->userRating->rating : 0, // Check if userRating exists
+            ];
+            $data[] = $foodData; // Add each food item to the array
+        }
+
+        return finalResponse('success', 200, $data);
     }
 
 
     public function makeRatingForFood(Request $request)
     {
         $request->validate([
-            'food_id' => ['required','exists:foods,id'],
-            'rating' => ['required','digits_between:0,5'],
+            'food_id' => ['required', 'exists:foods,id'],
+            'rating' => ['required', 'digits_between:0,5'],
         ]);
         $userId = $request->user()->id;
-        $food = Food::findFoodById($request->food_id,$request->restaurant_id);
+        $food = Food::findFoodById($request->food_id, $request->restaurant_id);
         $rate = FoodRating::updateOrCreate(
             [
                 'user_id' => $userId,
@@ -128,8 +140,9 @@ class FoodRatingController extends Controller
                 'restaurant_id' => $food->restaurant_id,
             ]
         );
-        return finalResponse('success',200, $rate);
+        return finalResponse('success', 200, $rate);
     }
 }
+
 
 

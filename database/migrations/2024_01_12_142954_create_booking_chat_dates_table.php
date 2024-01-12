@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('general_notifications', function (Blueprint $table) {
+        Schema::create('booking_chat_dates', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->string('title');
-            $table->text('content')->nullable();
-            $table->string('attachment')->nullable();
             $table->timestamps();
         });
     }
@@ -26,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('general_notifications');
+        Schema::dropIfExists('booking_chat_dates');
     }
 };

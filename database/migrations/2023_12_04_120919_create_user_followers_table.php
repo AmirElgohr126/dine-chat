@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->references('id')->on('users')->cascadeOnDelete()->cascadeOnUpdate();
             $table->foreignId('contact_id')->nullable()->references('id')->on('contacts')->cascadeOnDelete()->cascadeOnUpdate();
-            $table->enum('follow_status',['follow','invited'])->default('follow');
+            $table->enum('follow_status',['follow','invited','not_follow'])->default('not_follow');
             $table->unique(['user_id','contact_id']);
             $table->timestamps();
         });

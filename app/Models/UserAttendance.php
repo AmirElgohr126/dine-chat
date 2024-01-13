@@ -2,13 +2,10 @@
 
 namespace App\Models;
 
-use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Chair;
-use App\Models\Table;
 use App\Models\Restaurant;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 
@@ -19,6 +16,8 @@ class UserAttendance extends Model
         'restaurant_id',
         'chair_id',
         'user_id',
+        'created_at',
+        'updated_at'
     ];
 
 

@@ -18,18 +18,15 @@ class NfcController extends Controller
             $restaurant = Restaurant::find($data['restaurant_id']);
             $chair = $this->checkCard($restaurant,$data);
             // ================================== finsh card check ==================================
-            $periodCheckReservation = BookingDates::firstRow();
-            // $formattedDate = $periodCheckReservation->format('Y-m-d h:i A');
+
             $checkReservationBefore = UserAttendance::where('user_id',$request->user()->id)
                 ->where('created_at', '>=', now())
                 ->first();
             // ----------------------------------------------------------------------------
             if ($checkReservationBefore) {
-                $userId = $checkReservationBefore->user_id ;
                 $restaurantId = $checkReservationBefore->restaurant_id ;
                 UpdateUserHall::dispatch($checkReservationBefore, $restaurantId);
                 $checkReservationBefore->delete();
-                // return finalResponse('success', 200, __('errors.success_reservation'));
             }
             $conflictingReservation = UserAttendance::
                 where('chair_id', $chair->id)
@@ -37,19 +34,19 @@ class NfcController extends Controller
                 ->where('created_at', '>=', now())
                 ->first();
             if ($conflictingReservation) {
-                $userId = $conflictingReservation->user_id;
                 $restaurantId = $conflictingReservation->restaurant_id;
-                $conflictingReservation->delete();
                 UpdateUserHall::dispatch($conflictingReservation, $conflictingReservation->restaurant_id);
-                // throw new \Exception(__('errors.this_place_is_reservstion_now'), 405);
+                $conflictingReservation->delete();
             }
             // there is no reservation
+            $periodCheckReservation = BookingDates::firstRow();
+            $formattedDate = $periodCheckReservation->format('Y-m-d H:i:s');
             $reserve = UserAttendance::create([
                 'user_id' => $request->user()->id,
                 'chair_id' => $chair->id,
                 'restaurant_id' => $restaurant->id,
-                'created_at' => $periodCheckReservation,
-                'updated_at' => $periodCheckReservation
+                'created_at' => $formattedDate,
+                'updated_at' => $formattedDate
             ]);
 
             UpdateUserHall::dispatch($reserve, $reserve->restaurant_id);

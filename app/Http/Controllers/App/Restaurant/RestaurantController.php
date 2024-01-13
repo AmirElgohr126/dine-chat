@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Restaurant;
 use App\Models\UserFollower;
 use Illuminate\Http\Request;
+use App\Models\UserAttendance;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
 
@@ -54,18 +55,26 @@ class RestaurantController extends Controller
             if (!$restaurant) {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-            $oneHourAgo = Carbon::now()->subHour();
-            $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', $oneHourAgo)->get();
+            $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', now())->get();
 
             if (isset($userAttendance) == null) {
                 return finalResponse('success', 204);
             }
             $users = [];
             foreach ($userAttendance as $attendance) {
+                if($attendance->users->id == $request->user()->id)
+                {
+                    continue;
+                }
                 $userData = $attendance->users->toArray();
                 $userData['x'] = $attendance->chairs->x;
                 $userData['y'] = $attendance->chairs->y;
                 $userData['photo'] = retriveMedia() . $userData['photo']; // Update this line
+                $follow = UserFollower::where([
+                    'user_id' => $request->user()->id,
+                    'followed_user' => $request->user_id
+                ])->first();
+                $userData['is_following'] = $follow->follow_status ?? 'not_follow';
                 $users[] = $userData; // Append the user data to the data array
             }
             $tables = $restaurant->tables()->get();
@@ -103,6 +112,17 @@ class RestaurantController extends Controller
             }
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
+        }
+    }
+
+    public function DeleteReservation(Request $request)
+    {
+        $checkReservation = UserAttendance::where('user_id', $request->user()->id)
+            ->where('created_at', '>=', now())
+            ->first();
+        if($checkReservation)
+        {
+            $checkReservation->delete();
         }
     }
 }

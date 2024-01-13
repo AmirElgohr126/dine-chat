@@ -2,13 +2,14 @@
 
 namespace App\Events;
 
+use App\Models\UserFollower;
 use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
-use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\PresenceChannel;
+use Illuminate\Foundation\Events\Dispatchable;
+use Illuminate\Broadcasting\InteractsWithSockets;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class UpdateUserHall implements ShouldBroadcast
 {
@@ -17,7 +18,7 @@ class UpdateUserHall implements ShouldBroadcast
     public $reservation;
     public $restaurantId;
 
-    public function __construct($reservation,$restaurantId)
+    public function __construct($reservation,$restaurantId,)
     {
         $this->reservation = $reservation;
         $this->restaurantId = $restaurantId;
@@ -32,6 +33,10 @@ class UpdateUserHall implements ShouldBroadcast
             $userData['x'] = (float) $this->reservation->chairs->x;
             $userData['y'] = (float) $this->reservation->chairs->y;
             $userData['photo'] =  retriveMedia() . $userData['photo'];
+            // $follow = UserFollower::where([
+            // 'user_id' => $request->user()->id,
+            // 'followed_user' => $request->user_id])->first();
+            // $userData['is_following'] = $follow->follow_status ?? 'not_follow';
             return $userData;
     }
 

@@ -49,3 +49,8 @@ Route::get('/terms', function () {
 //   const app = initializeApp(firebaseConfig);
 //   const analytics = getAnalytics(app);
 // </script>
+
+// Route::post('testserver', function () {
+//     $response = sendEvent('my-channel', 'UpdateUserHall', );
+//     return $response;
+// });

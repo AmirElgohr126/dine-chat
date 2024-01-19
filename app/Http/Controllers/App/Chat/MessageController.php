@@ -55,6 +55,7 @@ class MessageController extends Controller
             return finalResponse('failed', 500, null, $e->getMessage());
         }
     }
+
     public function sendMessage(NewChatMessageRequest $request)
     {
         try {

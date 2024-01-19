@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resend Email Verification</title>
     <!-- Add your CSS stylesheets or link to a CDN here -->
-       <style>
+        <style>
         body {
             font-family: 'Arial', sans-serif;
             background-color: #f4f4f4;
@@ -53,7 +53,7 @@
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: #000ce6;
         }
     </style>
 </head>

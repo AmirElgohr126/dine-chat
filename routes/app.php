@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\App\XOgame\GameController;
 use Illuminate\Http\Request;
 
 use Illuminate\Support\Facades\Route;
@@ -63,6 +64,7 @@ Route::middleware('set_lang')->group(function () {
             Route::get('map', [GetMapsOfRestaurantController::class, 'closestRestaurants']); // finished
             Route::get('user', [RestaurantController::class, 'usersInRestaurant']); // finished
             Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // finished
+            Route::post('/delete', [RestaurantController::class, 'DeleteReservation']); // finished
             // =====================================================================================
 
         });
@@ -120,6 +122,12 @@ Route::middleware('set_lang')->group(function () {
             Route::delete('{id}/message/{id_message}/delete', [MessageController::class, 'deleteMessage'])
                 ->where('id', '[0-9]+')->where('id_message', '[0-9]+');
         });
+
+        Route::group(['prefix' => 'game'], function () {
+            Route::post('/xo/start', [GameController::class, 'start']);
+            Route::post('/xo/{game}/move', [GameController::class,'move']);
+        });
+
 
     });
 });

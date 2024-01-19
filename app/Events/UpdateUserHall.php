@@ -18,7 +18,7 @@ class UpdateUserHall implements ShouldBroadcast
     public $reservation;
     public $restaurantId;
 
-    public function __construct($reservation,$restaurantId,)
+    public function __construct($reservation,$restaurantId)
     {
         $this->reservation = $reservation;
         $this->restaurantId = $restaurantId;

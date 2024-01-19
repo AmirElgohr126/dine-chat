@@ -63,10 +63,6 @@ class RestaurantController extends Controller
             }
             $users = [];
             foreach ($userAttendance as $attendance) {
-                if($attendance->users->id == $request->user()->id)
-                {
-                    continue;
-                }
                 $userData = $attendance->users->toArray();
                 $userData['x'] = $attendance->chairs->x;
                 $userData['y'] = $attendance->chairs->y;

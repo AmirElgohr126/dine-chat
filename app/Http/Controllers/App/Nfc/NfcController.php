@@ -6,6 +6,8 @@ use App\Models\Restaurant;
 use App\Models\BookingDates;
 use App\Events\UpdateUserHall;
 use App\Models\UserAttendance;
+use App\Events\DeleteReservation;
+use App\Models\HistoryAttendances;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Nfc\NfcRequest;
 
@@ -25,9 +27,10 @@ class NfcController extends Controller
             // ----------------------------------------------------------------------------
             if ($checkReservationBefore) {
                 $restaurantId = $checkReservationBefore->restaurant_id ;
-                UpdateUserHall::dispatch($checkReservationBefore, $restaurantId);
+                DeleteReservation::dispatch($restaurantId, $request->user()->id);
                 $checkReservationBefore->delete();
             }
+
             $conflictingReservation = UserAttendance::
                 where('chair_id', $chair->id)
                 ->where('restaurant_id',$restaurant->id)
@@ -35,9 +38,10 @@ class NfcController extends Controller
                 ->first();
             if ($conflictingReservation) {
                 $restaurantId = $conflictingReservation->restaurant_id;
-                UpdateUserHall::dispatch($conflictingReservation, $conflictingReservation->restaurant_id);
+                DeleteReservation::dispatch($restaurantId, $request->user()->id);
                 $conflictingReservation->delete();
             }
+            
             // there is no reservation
             $periodCheckReservation = BookingDates::firstRow();
             $formattedDate = $periodCheckReservation->format('Y-m-d H:i:s');
@@ -49,6 +53,18 @@ class NfcController extends Controller
                 'updated_at' => $formattedDate
             ]);
 
+            // store history on HistoryAttendance
+            $userHistory = HistoryAttendances::where('restaurant_id', $restaurant->id)->where('user_id', $request->user()->id)->first();
+            if(!$userHistory)
+            {
+                HistoryAttendances::create([
+                    'user_id' =>$request->user()->id,
+                    'restaurant_id' => $restaurant->id
+                ]);
+            }
+
+            // $event = new UpdateUserHall($reserve, $reserve->restaurant_id);
+            //$response = sendEvent('restaurant1', 'UpdateUserHall', $event->broadcastWith(),$request->bearerToken());
             UpdateUserHall::dispatch($reserve, $reserve->restaurant_id);
             if ($reserve) {
                 return finalResponse('success', 200,__('errors.success_reservation'));

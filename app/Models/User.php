@@ -8,6 +8,7 @@ use App\Models\Conversation;
 use App\Models\UserAttendance;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
+use App\Notifications\CustomVerifyEmail;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -82,7 +83,9 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         // Event for decrypting the content after a Post is retrieved
         static::created(function ($user) {
-            $user->sendEmailVerificationNotification();
+            $user->notify(new CustomVerifyEmail);
+
+            // $user->sendEmailVerificationNotification();
         });
     }
 

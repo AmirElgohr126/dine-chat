@@ -10,7 +10,7 @@
         "endroid/qr-code": "^5.0",
         "google/apiclient": "^2.15",
         "google/auth": "^1.33",
-        "guzzlehttp/guzzle": "^7.8.1",
+        "guzzlehttp/guzzle": "^7.8",
         "laravel/framework": "^10.35",
         "laravel/sanctum": "^3.3.2",
         "laravel/tinker": "^2.8.2",

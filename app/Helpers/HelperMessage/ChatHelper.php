@@ -2,6 +2,7 @@
 
 use App\Models\Conversation;
 use App\Models\Restaurant;
+use Illuminate\Support\Facades\Http;
 
 function determainPeriod(Restaurant $model)
 {
@@ -36,4 +37,16 @@ function getOtherUser(Conversation $chat, $authId)
 }
 
 
-?>
+function sendEvent($channel, $event, $data, $userToken)
+{
+    $url = 'http://localhost:3000/broadcast';
+
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . $userToken
+    ])->post($url, [
+                'channel' => $channel,
+                'event' => $event,
+                'data' => $data,
+            ]);
+    return $response->json();
+}

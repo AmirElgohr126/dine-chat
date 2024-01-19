@@ -8,6 +8,7 @@ use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Models\UserAttendance;
 use App\Models\NotificationUser;
+use App\Models\HistoryAttendances;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notifications\CreateNotificationRequest;
 use App\Http\Resources\Dashboard\Notifications\NotificationResource;
@@ -106,7 +107,7 @@ class NotificationController extends Controller
 
         try {
             $result = $this->sendNotify($Notification, $user->restaurant_id); // return false if no participants
-            
+
             if (!$result) {
                 return finalResponse('failed', 400, null, null, 'no participants');
             }
@@ -127,7 +128,7 @@ class NotificationController extends Controller
 
     private function sendNotify($Notification,$restaurantId)
     {
-        $uniqueUserIds = UserAttendance::where('restaurant_id', $restaurantId)->distinct()->pluck('user_id'); // users id .
+        $uniqueUserIds = HistoryAttendances::where('restaurant_id', $restaurantId)->pluck('user_id'); // users id .
         $deviceTokens = User::whereIn('id', $uniqueUserIds)->pluck('device_token'); // tokens of restaurant
         $deviceTokens = array_filter($deviceTokens->toArray()); // empty invailed tokens
         if (empty($deviceTokens)) {

@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use App\Models\Restaurant;
 use App\Models\UserFollower;
 use Illuminate\Http\Request;
+use App\Events\UpdateUserHall;
 use App\Models\UserAttendance;
 use Illuminate\Validation\Rule;
 use App\Http\Controllers\Controller;
@@ -122,8 +123,12 @@ class RestaurantController extends Controller
             ->first();
         if($checkReservation)
         {
+            UpdateUserHall::dispatch($checkReservation, $checkReservation->restaurant_id);
             $checkReservation->delete();
+            return finalResponse('success', 200, 'success logout form hall');
         }
+
+        return finalResponse('error',500,'error in delete reservation');
     }
 }
 

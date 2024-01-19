@@ -3,8 +3,6 @@
 namespace App\Http\Controllers\App\ContactsList;
 
 use Exception;
-use App\Models\User;
-use App\Models\Contact;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Contacts\UnfollowContactRequest;

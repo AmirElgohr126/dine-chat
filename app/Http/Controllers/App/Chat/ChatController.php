@@ -263,7 +263,6 @@ class ChatController extends Controller
                     throw new Exception(__('errors.No_matching_conversation'), 405);
                 }
                 $conversations->update(['status' => 'accept']);
-
                 if($conversations->sender->notification_status==1)
                 {
                     $receiverToken = $conversations->sender->device_token;

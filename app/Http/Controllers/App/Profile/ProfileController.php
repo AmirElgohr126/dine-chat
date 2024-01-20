@@ -79,7 +79,7 @@ class ProfileController extends Controller
                 $user->last_name = $realUserInfo->last_name;
                 $user->first_name = $realUserInfo->first_name;
                 $user->photo = $realUserInfo->photo;
-                $user->bio = $realUserInfo->bio ?? '';
+                $user->bio = $user->bio ?? '';
                 $user->phone = (string) $realUserInfo->phone;
             }
             return finalResponse('success', 200, new UserResources($user));

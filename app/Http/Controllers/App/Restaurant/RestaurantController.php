@@ -2,13 +2,13 @@
 namespace App\Http\Controllers\App\Restaurant;
 
 use Exception;
-use Carbon\Carbon;
+
 use App\Models\Restaurant;
 use App\Models\UserFollower;
 use Illuminate\Http\Request;
-use App\Events\UpdateUserHall;
 use App\Models\UserAttendance;
 use Illuminate\Validation\Rule;
+use App\Events\DeleteReservation;
 use App\Http\Controllers\Controller;
 
 
@@ -119,7 +119,8 @@ class RestaurantController extends Controller
             ->first();
         if($checkReservation)
         {
-            UpdateUserHall::dispatch($checkReservation, $checkReservation->restaurant_id);
+            // UpdateUserHall::dispatch($checkReservation, $checkReservation->restaurant_id);
+            DeleteReservation::dispatch($checkReservation->restaurant_id, $request->user()->id);
             $checkReservation->delete();
             return finalResponse('success', 200, 'success logout form hall');
         }
@@ -128,4 +129,3 @@ class RestaurantController extends Controller
     }
 }
 
-?>

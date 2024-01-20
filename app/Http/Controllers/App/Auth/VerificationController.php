@@ -29,7 +29,7 @@ class VerificationController extends Controller
             $user->markEmailAsVerified();
         }
         // Redirect the user to the home page after successful verification.
-        return redirect()->to('/');
+        return redirect()->to('/welcome');
     }
 
     /**

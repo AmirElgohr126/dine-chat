@@ -31,6 +31,6 @@ class DeleteReservation implements ShouldBroadcast
 
     public function broadcastOn()
     {
-        return new PrivateChannel('chat.' . $this->restaurantId);
+        return new PrivateChannel('restaurant.' . $this->restaurantId);
     }
 }

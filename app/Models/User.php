@@ -84,8 +84,6 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         // Event for decrypting the content after a Post is retrieved
         static::created(function ($user) {
             $user->notify(new CustomVerifyEmail);
-
-            // $user->sendEmailVerificationNotification();
         });
     }
 
@@ -123,17 +121,23 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
             ->where('conversation_id', $conversationId)
             ->latest('created_at');
     }
+
     public function receivedMessagesFromConversation($conversationId)
     {
         return $this->hasMany(Message::class, 'receiver_id')
             ->where('conversation_id', $conversationId)
             ->latest('created_at');
     }
+
     public function conversations()
     {
         return $this->hasMany(Conversation::class, 'sender_id','id');
     }
 
+    public function notifications()
+    {
+        return $this->belongsToMany(Notification::class, 'notification_user');
+    }
 
     public function canAccessConversation($conversationId)
     {
@@ -165,9 +169,32 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         }
         return true;
     }
-
-    public function notifications()
+    public function canAccessRoom($roomId)
     {
-        return $this->belongsToMany(Notification::class, 'notification_user');
+        if (!auth('api')->check()) {
+            return false;
+        }
+        // Check if the user is make room
+        $room = Room::find($roomId);
+        if (!$room) {
+            return false;
+        }
+        // Check if the user is either the sender or receiver of the room
+        return $this->id == $room->sender_id || $this->id == $room->receiver_id;
     }
+    public function canAccessGame($gameId)
+    {
+        if (!auth('api')->check()) {
+            return false;
+        }
+        // Check if the user is make room
+        $game = Room::find($gameId);
+        if (!$game) {
+            return false;
+        }
+        // Check if the user is either the sender or receiver of the game
+        return $this->id == $game->player_x_id || $this->id == $game->player_o_id;
+    }
+
+
 }

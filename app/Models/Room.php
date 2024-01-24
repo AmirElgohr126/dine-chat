@@ -5,19 +5,23 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class XOGame extends Model
+class Room extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['board', 'current_player', 'status', 'player_x_id', 'player_o_id','room_id'];
-
-    protected $casts = [
-        'board' => 'array'
+    protected $fillable = [
+        'sender_id',
+        'receiver_id',
+        'status',
+        'restaurant_id',
+        'type_room'
     ];
 
-    public function playerX()
+
+
+    public function receiver()
     {
-        return $this->belongsTo(User::class, 'player_x_id', 'id')->select(
+        return $this->belongsTo(User::class, 'receiver_id', 'id')->select(
             [
                 'id',
                 'first_name',
@@ -26,9 +30,9 @@ class XOGame extends Model
             ]
         );
     }
-    public function playerO()
+    public function sender()
     {
-        return $this->belongsTo(User::class, 'player_o_id', 'id')->select(
+        return $this->belongsTo(User::class, 'sender_id', 'id')->select(
             [
                 'id',
                 'first_name',
@@ -37,6 +41,4 @@ class XOGame extends Model
             ]
         );
     }
-
-
 }

@@ -1,16 +1,16 @@
 <?php
 
-use App\Http\Controllers\App\XOgame\GameController;
 use Illuminate\Http\Request;
-
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\App\Nfc\NfcController;
 use App\Http\Controllers\App\Chat\ChatController;
 use App\Http\Controllers\App\Auth\LoginController;
+use App\Http\Controllers\App\Games\GameController;
 use App\Http\Controllers\App\About\AboutController;
 use App\Http\Controllers\App\Auth\LogoutController;
 use App\Http\Controllers\App\Chat\MessageController;
 use App\Http\Controllers\App\Auth\RegisterController;
+use App\Http\Controllers\App\Games\XOgame\XoController;
 use App\Http\Controllers\App\Profile\ProfileController;
 use App\Http\Controllers\App\Auth\VerificationController;
 use App\Http\Controllers\App\Settings\SettingsController;
@@ -114,21 +114,29 @@ Route::middleware('set_lang')->group(function () {
             Route::get('inbox/list',[ChatController::class,'listInboxChat']); // finished
             // ===========================
             Route::get('/{id}', [MessageController::class, 'getMessages'])
-                ->where('id', '[0-9]+');
+                ->where('id', '[0-9]+'); // finished
             Route::post('{id}/send', [MessageController::class, 'sendMessage'])
-                ->where('id', '[0-9]+');
+                ->where('id', '[0-9]+'); // finished
             Route::post('{id}/message/{id_message}/update', [MessageController::class, 'updateMessage'])
-                ->where('id', '[0-9]+')->where('id_message','[0-9]+');
+                ->where('id', '[0-9]+')->where('id_message','[0-9]+'); // finished
             Route::delete('{id}/message/{id_message}/delete', [MessageController::class, 'deleteMessage'])
-                ->where('id', '[0-9]+')->where('id_message', '[0-9]+');
+                ->where('id', '[0-9]+')->where('id_message', '[0-9]+'); // finished
         });
+        Route::group(['prefix' => 'game','middleware'=>'check_reservation'], function () {
+                Route::post('request/send', [GameController::class, 'RequestToPlay']); // finished
+                Route::post('request/cancel', [GameController::class, 'cancelRequest']); // finished
+                // Route::get('request/list', [GameController::class, 'listRequests']); // finished
+                // ==========================
+                Route::post('inbox/accept', [GameController::class, 'AcceptInvite']); // finished
+                Route::delete('inbox/reject', [GameController::class, 'cancelInvite']); // finished
+                Route::get('inbox/list', [GameController::class, 'listInvites']); // finished
 
-        Route::group(['prefix' => 'game'], function () {
-            Route::post('/xo/start', [GameController::class, 'start']);
-            Route::post('/xo/{game}/move', [GameController::class,'move']);
+                // =========================== XO ==============================
+                Route::group(['prefix' => 'xo'], function () {
+                Route::post('{game}/move', [XoController::class, 'move'])
+                ->where('game', '[0-9]+'); // finished
+            });
         });
-
-
     });
 });
 

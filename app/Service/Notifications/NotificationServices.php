@@ -46,6 +46,16 @@ class NotificationServices implements NotificationInterface
     }
 
     /**
+     * return of Access Token
+     * @return mixed
+     */
+    public function getAccessToken()
+    {
+        return FcmGoogleHelper::configureClient();
+    }
+
+
+    /**
      * setNotification to array
      * @param mixed $notification
      * @return void
@@ -59,14 +69,7 @@ class NotificationServices implements NotificationInterface
         $this->notification = $notification;
     }
 
-    /**
-     * return of Access Token
-     * @return mixed
-     */
-    public function getAccessToken()
-    {
-        return FcmGoogleHelper::configureClient();
-    }
+
 
     /**
      * send one notify to one Device
@@ -83,7 +86,7 @@ class NotificationServices implements NotificationInterface
                 'notification' => [
                     'title' => $this->notification['title'],
                     'body' => $this->notification['message'],
-                    'image' => $this->notification['photo'] ? retriveMedia() . $this->notification['photo'] : ''
+                    'image' => $this->notification['image'] ? retriveMedia() . $this->notification['image'] : ''
                 ],
                 'android' => [
                     'notification' => [
@@ -130,7 +133,7 @@ class NotificationServices implements NotificationInterface
                         'notification' => [
                             'title' => $this->notification['title'],
                             'body' => $this->notification['message'],
-                            'image' => $this->notification['photo'] ? retriveMedia() . $this->notification['photo'] : '' ,
+                            'image' => $this->notification['image'] ? retriveMedia() . $this->notification['image'] : '' ,
                         ],
                         'android' => [
                             'notification' => [

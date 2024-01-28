@@ -41,7 +41,7 @@ class NfcController extends Controller
                 DeleteReservation::dispatch($restaurantId, $request->user()->id);
                 $conflictingReservation->delete();
             }
-            
+
             // there is no reservation
             $periodCheckReservation = BookingDates::firstRow();
             $formattedDate = $periodCheckReservation->format('Y-m-d H:i:s');
@@ -70,7 +70,7 @@ class NfcController extends Controller
                 return finalResponse('success', 200,__('errors.success_reservation'));
             }
         } catch (\Exception $e) {
-            return finalResponse('failed', 500, null, null, $e->getMessage());
+            return finalResponse('failed', 400, null, null, $e->getMessage());
         }
     }
 

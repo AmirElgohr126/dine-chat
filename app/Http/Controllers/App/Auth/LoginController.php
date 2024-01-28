@@ -37,6 +37,9 @@ class LoginController extends Controller
             if (!$user->email_verified_at) {
                 throw new Exception(__('errors.email_not_verified'),405);
             }
+            $user->update([
+                'device_token' => $request->device_token
+            ]);
             if($user->ghost_mood == 1)
             {
                 $realUserInfo = UserGhost::where('user_id',$user->id)->first();
@@ -50,7 +53,7 @@ class LoginController extends Controller
             return finalResponse('success',200,["token"=>$token,"user"=> new UserResources($user)]);
         } catch (Exception $e) {
             // Handle exceptions, and return a failed response with a 401 status code
-            return finalResponse('failed',$e->getCode(),null,null, 'opps '.$e->getMessage());
+            return finalResponse('failed',400,null,null, 'opps '.$e->getMessage());
         }
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace App\Http\Controllers\Dashboards\DashboardAdmin\GenerateUrlChairs;
+namespace App\Http\Controllers\Dashboards\DashboardAdmin\Resturants\GenerateUrlChairs;
 
 use App\Models\Chair;
 use App\Models\Restaurant;

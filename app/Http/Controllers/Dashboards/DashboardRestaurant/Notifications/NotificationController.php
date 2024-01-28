@@ -104,7 +104,10 @@ class NotificationController extends Controller
         $user = $request->user('restaurant');
         $restaurantId = $user->restaurant_id;
         $Notification = Notification::where('restaurant_id', $restaurantId)->where('id', $request->id)->first();
-
+        if(!$Notification)
+        {
+            return finalResponse('failed', 400, null, null, 'no notification with id '.$request->id);
+        }
         try {
             $result = $this->sendNotify($Notification, $user->restaurant_id); // return false if no participants
 
@@ -119,10 +122,10 @@ class NotificationController extends Controller
                 $Notification->save();
                 return finalResponse('success', 200, null, null, 'notifications sent');
             } else {
-                return finalResponse('failed', 500, null, null, 'Notification sending failed');
+                return finalResponse('failed', 400, null, null, 'Notification sending failed');
             }
         } catch (Exception $e) {
-            return finalResponse('failed', 500, null, null, $e->getMessage());
+            return finalResponse('failed', 400, null, null, $e->getMessage());
         }
     }
 

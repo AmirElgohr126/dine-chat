@@ -6,7 +6,6 @@ use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Assest\RestaurantAssest;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Foods\FoodMenuController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Tickets\TicketsController;
-use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\AddRestaurantOrder;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile\GetInfoController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\Statistics\StatisticsController;
 use App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth\LoginRestaurantController;
@@ -23,7 +22,6 @@ Route::middleware('set_lang')->group(function () {
         Route::post('/changepassword', [ResetPasswordRestaurantController::class, 'resetpassword']); // finished
         Route::delete('/logout', [LogoutRestaurantController::class, 'logoutRestaurant']); // finished
     });
-    Route::post('user/restaurant/add', [AddRestaurantOrder::class, 'OrderAddRestaurant']); // finished
     Route::group(['prefix' => 'food',    'middleware' => ['auth:restaurant']], function () {
         Route::get('get', [FoodMenuController::class, 'menu']); // finished
         Route::post('add', [FoodController::class, 'addFood']); // finished

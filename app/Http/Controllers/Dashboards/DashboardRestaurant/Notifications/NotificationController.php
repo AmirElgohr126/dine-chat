@@ -24,7 +24,8 @@ class NotificationController extends Controller
             $photo = $request->photo;
             if($photo)
             {
-                $path = storeFile($photo, "restaurant_$user->id/Notification", 'public');
+                $restaurantId = $user->restaurant_id;
+                $path = storeFile($photo, "restaurants/restaurant{$restaurantId}/notifications", 'public');
             }
             $notificationData = [
                 'restaurant_id' => $user->restaurant_id,

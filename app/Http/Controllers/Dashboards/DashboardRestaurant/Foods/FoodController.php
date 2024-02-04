@@ -20,7 +20,7 @@ class FoodController extends Controller
             $data = $request->validated();
             extract($data);
 
-            $pathImage = storeFile($photo, "restaurant_$restaurantId/food", 'public'); // helper in helper image file return path of file
+            $pathImage = storeFile($photo, "restaurants/restaurant{$restaurant->id}/food", 'public'); // helper in helper image file return path of file
             DB::beginTransaction();
             $food = Food::create([
                 'restaurant_id' => $restaurantId,
@@ -73,7 +73,7 @@ class FoodController extends Controller
             // Handle image update if needed
             if (isset($photo)) {
                 $modelImage = FoodImage::where('food_id', $food->id)->first();
-                $udpate = updateAndDeleteFile($photo, $modelImage, "image", "public", "restaurant_$restaurantId/food", "public");
+                $udpate = updateAndDeleteFile($photo, $modelImage, "image", "public", "restaurants/restaurant{$restaurant->id}/food", "public");
                 if (!$udpate) {
                     throw new Exception("error in storing photo", 400);
                 }
@@ -133,5 +133,3 @@ class FoodController extends Controller
         }
     }
 }
-
-?>

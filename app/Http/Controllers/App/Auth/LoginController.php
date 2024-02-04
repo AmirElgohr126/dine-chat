@@ -25,6 +25,10 @@ class LoginController extends Controller
         try {
             //  Validate user credentials from the incoming request
             $credentials = $request->validated();
+            $credentials = [
+                'user_name' => $credentials['user_name'],
+                'password' => $credentials['password'],
+            ];
             // Attempt to generate a JWT token with the provided credentials
             $token = auth('api')->setTTL(env('JWT_TTL'))->attempt($credentials);
             // If token generation fails, throw an exception

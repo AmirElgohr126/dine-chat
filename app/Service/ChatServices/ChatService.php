@@ -76,16 +76,16 @@ class ChatService implements ChatServiceInterface
      * @param mixed $user
      * @param mixed $request
      */
-    public function checkFollow($user, $request, $restaurant) {
+    public function checkFollow($user, $request, $setting) {
         $checkFollow = UserFollower::where('user_id', $user->id)
             ->where('followed_user', $request->user_id)
             ->where('follow_status', 'follow')
             ->first();
         if ($checkFollow) {
-            $dataDeleted = determainPeriod($restaurant);
+            $dataDeleted = determainPeriod($setting);
         }
+        return $dataDeleted;
     }
 
 }
 
-?>

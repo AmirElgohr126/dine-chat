@@ -4,12 +4,13 @@ namespace App\Http\Controllers\App\Chat;
 use Exception;
 use App\Models\Message;
 use App\Models\Restaurant;
+use App\Models\BookingDates;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
+use App\Models\GeneralNotification;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Chat\RequestNewChatRequest;
 use App\Http\Resources\Chats\ConversationResource;
-use App\Models\GeneralNotification;
 use App\Service\ChatServices\ChatServiceInterface;
 use App\Service\Notifications\NotificationInterface;
 
@@ -83,7 +84,8 @@ class ChatController extends Controller
             $restaurant = Restaurant::find($request->restaurant_id);
             $this->chatService->checkAnotherPersonInRestaurant($request->restaurant_id, $request->user_id);
             $this->chatService->checkChatExist($user, $request, $restaurant);
-            $dataDeleted = $this->chatService->checkFollow($user, $request, $restaurant);
+            $settings = BookingDates::find(1);
+            $dataDeleted = $this->chatService->checkFollow($user, $request, $settings);
             $request_reservation = Conversation::create([
                 'sender_id' => $user->id,
                 'receiver_id' => $request->user_id,

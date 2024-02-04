@@ -6,8 +6,8 @@ use Illuminate\Support\Facades\Http;
 
 function determainPeriod(Restaurant $model)
 {
-    $value = $model->period_deleted_after;
-    switch ($model->period_unit) {
+    $value = $model->period_reservation_deleted_after;
+    switch ($model->period_reservation_unit) {
         case 'year':
             return now()->addYears($value);
         case 'month':

@@ -14,5 +14,7 @@ class ApplcationForRestaurant extends Model
         'email',
         'restaurant_name',
         'order',
+        'phone',
+        'status',
     ];
 }

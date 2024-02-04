@@ -10,6 +10,6 @@ interface ChatServiceInterface
     // 1- Handle the case where the conversation already exists
     public function checkChatExist($user,$request,$restaurant);
     // 1- Handle the case if follow or no
-    public function checkFollow($user, $request, $restaurant);
+    public function checkFollow($user, $request, $setting);
 
 }

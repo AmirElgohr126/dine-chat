@@ -29,6 +29,17 @@ class RestrictionsController extends Controller
 
     }
 
+    
+    /**
+     * update Restricted Word
+     * @param \Illuminate\Http\Request $request
+     * @return void
+     */
+    public function updateRestrictedWords(Request $request)
+    {
+
+    }
+
     /**
      * delete Restricted Words
      * @param \Illuminate\Http\Request $request

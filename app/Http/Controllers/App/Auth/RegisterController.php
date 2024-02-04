@@ -24,6 +24,13 @@ class RegisterController extends Controller
         try {
             $data = $request->processedData();
             $user = User::create($data); // Create a new user
+            // Process and store the user's photo
+            if ($request->hasFile('photo')) {
+                $photo = $request->file('photo');
+                $path = storeFile($photo, "users/user{$user->id}/photo", 'public');
+                $user->photo = $path;
+                $user->save();
+            }
             return finalResponse('success',200,["message" => __('errors.email_send'), "user_id" => $user->id]);
         } catch (Exception $e) {
             // handle it appropriately

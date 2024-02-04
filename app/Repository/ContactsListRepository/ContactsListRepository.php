@@ -52,13 +52,15 @@ Class ContactsListRepository implements ContactsListInterface{
             } else {
                 $contact['status_on_app'] = 'not_subscrib'; // Set status to 'not_subscribed' if the phone is not in users
             }
+            $userId = $request->user()->id;
             // Handle photo if set
             if (isset($contact['photo'])) {
-                $contact['photo'] = storeFile($contact['photo'], 'contacts', 'public');
+                $contact['photo'] = storeFile($contact['photo'], "users/user$userId/contacts", 'public');
             } else {
+
                 $contact['photo'] = 'Dafaults\Contacts\avatar.png';
             }
-            $contact['user_id'] = $request->user()->id;
+            $contact['user_id'] = $userId;
             Contact::create($contact);
             $savedContacts[] = $contact;
         }

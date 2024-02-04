@@ -50,6 +50,10 @@ return [
             'driver' => 'jwt',
             'provider' => 'restaurant_users',
         ],
+        'admin' => [
+            'driver' => 'jwt',
+            'provider' => 'super_admins',
+        ],
     ],
 
     /*
@@ -79,6 +83,10 @@ return [
         'restaurant_users' => [
             'driver' => 'eloquent',
             'model' => App\Models\RestaurantUser::class,
+        ],
+        'super_admins' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\SuperAdmin::class,
         ],
     ],
 
@@ -110,6 +118,12 @@ return [
         ],
         'restaurant_users' => [
             'provider' => 'restaurant_users',
+            'table' => 'password_reset_tokens',
+            'expire' => 60,
+            'throttle' => 60,
+        ],
+        'super_admins' => [
+            'provider' => 'super_admins',
             'table' => 'password_reset_tokens',
             'expire' => 60,
             'throttle' => 60,

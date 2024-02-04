@@ -21,8 +21,6 @@ class Restaurant extends Model implements TranslatableContract
         'number_of_departments',
         'hall_hight',
         'hall_width',
-        'period_deleted_after',
-        'period_unit',
         'latitude',
         'longitude',
         'phone',
@@ -30,10 +28,6 @@ class Restaurant extends Model implements TranslatableContract
     ];
 
 
-    protected $hidden = [
-        'period_deleted_after',
-        'period_unit',
-    ];
 
 
     public $translatedAttributes = ['name'];

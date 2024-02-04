@@ -1,11 +1,11 @@
 <?php
-namespace App\Http\Controllers\Dashboards\DashboardAdmin\Resturants\GenerateUrlChairs;
+namespace App\Http\Controllers\Dashboards\DashboardAdmin\Resturants\QrCodeForRestaurant;
 
 use App\Models\Chair;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Endroid\QrCode\QrCode;
+
 use Endroid\QrCode\Writer\PngWriter;
 use Endroid\QrCode\Builder\Builder;
 use Endroid\QrCode\Encoding\Encoding;
@@ -15,10 +15,8 @@ use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode;
 
 
-class GenerateUrlController extends Controller
+class GenerateUrlAndQrController extends Controller
 {
-
-
     public function ChairsBasedOnRestaurant(Request $request)
     {
         $chairs = Chair::where('restaurant_id', $request->restaurant_id)->get();
@@ -92,4 +90,3 @@ class GenerateUrlController extends Controller
 
 
 }
-?>

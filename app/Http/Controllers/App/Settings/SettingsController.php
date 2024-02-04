@@ -82,7 +82,7 @@ class SettingsController extends Controller
                 ]);
                 $user->update([
                     'ghost_mood' => 1,
-                    'photo' => "Ghost/ghost.png",
+                    'photo' => "Dafaults/Ghost/ghost.png",
                     'first_name' => 'Spectra',
                     'last_name' => 'Shadowvale',
                     'phone' => '00000000000',

@@ -54,12 +54,12 @@ Route::middleware('set_lang')->group(function () {
             Route::post('/add', [PublicPlacesContoller::class, 'addPublicPlace']); //finished
 
             // Update a specific public place
-            Route::put('/{place}/update', [PublicPlacesContoller::class, 'updatePublicPlace']) //finished
-                ->where('place', '[0-9]+');
+            Route::put('/{id}/update', [PublicPlacesContoller::class, 'updatePublicPlace']) //finished
+                ->where('id', '[0-9]+');
 
                 // Delete a specific public place
-            Route::delete('/{place}', [PublicPlacesContoller::class, 'deletePublicPlace']) //finished
-                ->where('place', '[0-9]+');
+            Route::delete('{id}/delete', [PublicPlacesContoller::class, 'deletePublicPlace']) //finished
+                ->where('id', '[0-9]+');
         });
 
         Route::group(['prefix' => 'qr-places'], function () {
@@ -82,17 +82,17 @@ Route::middleware('set_lang')->group(function () {
             Route::post('/add', [ManageRestaurantsController::class, 'addRestaurant']); // finished
 
             // Update a restaurant
-            Route::put('/update/{restaurant}', [ManageRestaurantsController::class, 'updateRestaurant'])
-            ->where('restaurant', '[0-9]+'); // finished
+            Route::post('{id}/update', [ManageRestaurantsController::class, 'updateRestaurant'])
+            ->where('id', '[0-9]+'); // finished
 
             // Delete a restaurant
-            Route::delete('/delete/{restaurant}', [ManageRestaurantsController::class, 'deleteRestaurant'])
-            ->where('restaurant', '[0-9]+'); // finished
+            Route::delete('{id}/delete', [ManageRestaurantsController::class, 'deleteRestaurant'])
+            ->where('id', '[0-9]+'); // finished
         });
 
         Route::group(['prefix' => 'qr-restaurant'], function () {
             // Generate a QR code for restaurant chairs
-            Route::post('/generate', [GenerateUrlAndQrController::class, 'ChairsBasedOnRestaurant']); // finished
+            Route::get('/generate', [GenerateUrlAndQrController::class, 'ChairsBasedOnRestaurant']); // finished
 
             // // Update a QR code for restaurant chairs
             // Route::get('/{id}', [GenerateUrlAndQrController::class, 'getQrCode'])

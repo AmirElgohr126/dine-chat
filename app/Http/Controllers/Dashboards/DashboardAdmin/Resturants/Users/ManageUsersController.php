@@ -7,6 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use App\Http\Resources\User\UserRestaurantDashboardResources;
 
 class ManageUsersController extends Controller
 {
@@ -19,17 +20,17 @@ class ManageUsersController extends Controller
     public function listOneRestaurantUsers(Request $request)
     {
         $per_page = $request->per_page ?? 10;
-        $request->merge(['id'=>$request->id]);
+        $request->merge(['id' => $request->id]);
         $request->validate([
             'id' => 'exists:restaurants,id',
         ]);
         $id = $request->id;
         $users = RestaurantUser::where('restaurant_id', $id)->paginate($per_page);
-        ;
         if (!$users) {
             return finalResponse('failed', 400, null, null, 'no user found');
         }
         $pagnationResponse = pagnationResponse($users);
+        $users = UserRestaurantDashboardResources::collection($users);
         return finalResponse('success', 200, $users, $pagnationResponse);
 
     }
@@ -44,9 +45,10 @@ class ManageUsersController extends Controller
     {
         $validated = $request->validate([
             'user_name' => ['required', 'unique:restaurant_users,user_name'],
+            'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:restaurant_users,email'],
             'photo' => 'nullable|image|max:2048',
-            'phone' => ['required', 'numeric'],
+            'phone' => ['required', 'numeric','unique:restaurant_users,phone'],
             'password' => [
                 'required',
                 'string',
@@ -57,16 +59,21 @@ class ManageUsersController extends Controller
                 'regex:/^(?=.*[@$!%*?&])/'
             ], // At least one special character
             'status' => ['required', 'in:active,inactive'],
-            'restaurant_id' => ['required', 'numeric'],
+            'restaurant_id' => ['required', 'exists:restaurants,id'],
+            'start_subscription' => ['required', 'date'],
+            'expire_subscription' => ['required','date','after:' . now()->toDateTimeString()],
         ]);
 
         $restaurantUser = RestaurantUser::create([
+            'name' => $validated['name'],
             'user_name' => $validated['user_name'],
             'email' => $validated['email'],
             'phone' => $validated['phone'],
             'password' => Hash::make($validated['password']),
             'status' => $validated['status'],
             'restaurant_id' => $validated['restaurant_id'],
+            'start_subscription' => $validated['start_subscription'],
+            'expire_subscription' => $validated['expire_subscription'],
         ]);
 
         if ($request->hasFile('photo')) {
@@ -92,6 +99,7 @@ class ManageUsersController extends Controller
     {
         $validated = $request->validate([
             'user_id' => 'required|exists:restaurant_users,id',
+            'name' => ['required', 'string', 'max:255'],
             'user_name' => "required|unique:restaurant_users,user_name,$request->user_id",
             'email' => "required|email|unique:restaurant_users,email,$request->user_id",
             'photo' => 'nullable|image|max:2048',
@@ -99,15 +107,21 @@ class ManageUsersController extends Controller
             'password' => "nullable|string|min:8|regex:/^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])(?=.*[@$!%*?&]).*$/",
             'status' => 'required|in:active,inactive',
             'restaurant_id' => 'required|numeric|exists:restaurants,id',
+            'start_subscription' => ['required', 'date'],
+            'expire_subscription' => ['required', 'date', 'after:' . now()->toDateTimeString()],
         ]);
+
         $restaurantUser = RestaurantUser::findOrFail($validated['user_id']);
 
         $restaurantUser->update([
             "user_name" => $validated['user_name'],
+            "name" => $validated['name'],
             "email" => $validated['email'],
             "phone" => $validated['phone'],
             "status" => $validated['status'],
             "restaurant_id" => $validated['restaurant_id'],
+            'start_subscription' => $validated['start_subscription'],
+            'expire_subscription' => $validated['expire_subscription'],
         ]);
 
         if ($request->hasFile('photo')) {
@@ -136,7 +150,7 @@ class ManageUsersController extends Controller
             'restaurant_id' => 'required|numeric|exists:restaurants,id',
         ]);
 
-        $restaurantUser = RestaurantUser::where('user_id', $validated['user_id'])->where('restaurant_id', $validated['restaurant_id'])
+        $restaurantUser = RestaurantUser::where('id', $validated['user_id'])->where('restaurant_id', $validated['restaurant_id'])
             ->firstOrFail();
 
         if ($restaurantUser->photo) {

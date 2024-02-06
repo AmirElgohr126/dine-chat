@@ -16,13 +16,14 @@ class UserRestaurantDashboardResources extends JsonResource
     {
         return [
             'id' => $this->id,
+            "restaurant_id" => $this->restaurant_id,
             "name" => $this->name,
             "user_name" => $this->user_name,
             "email" => $this->email,
             "photo" => retriveMedia() . $this->photo,
             "phone" => $this->phone,
             "status" => $this->status,
-            "restaurant_id" => $this->restaurant_id,
+            "expire_subscription" => $this->expire_subscription,
         ];
     }
 }

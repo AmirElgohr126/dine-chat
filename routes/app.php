@@ -122,6 +122,8 @@ Route::middleware('set_lang')->group(function () {
             Route::delete('{id}/message/{id_message}/delete', [MessageController::class, 'deleteMessage'])
                 ->where('id', '[0-9]+')->where('id_message', '[0-9]+'); // finished
         });
+
+        
         Route::group(['prefix' => 'game','middleware'=>'check_reservation'], function () {
                 Route::post('request/send', [GameController::class, 'RequestToPlay']); // finished
                 Route::post('request/cancel', [GameController::class, 'cancelRequest']); // finished

@@ -1,11 +1,12 @@
 <?php
 namespace App\Http\Controllers\App\Games;
 
-use App\Events\XoRoom;
 use App\Models\User;
+use App\Events\XoRoom;
 use App\Models\XOGame;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Games\RoomResource;
 use App\Service\GamesServices\GameServices;
 use App\Http\Resources\Games\InvitationResource;
 use App\Service\Notifications\NotificationServices;
@@ -100,6 +101,8 @@ class GameController extends Controller
     {
         $userId = $request->user()->id; // Assuming user authentication
         $invites = $this->gameServices->listInvites($userId);
+        $invites->load('receiver');
+        $invites = RoomResource::collection($invites);
         return finalResponse('success', 200, $invites);
     }
 
@@ -111,4 +114,3 @@ class GameController extends Controller
     // }
 }
 
-?>

@@ -101,6 +101,7 @@ class ManageRestaurantsController extends Controller
      */
     public function updateRestaurant(Request $request)
     {
+        $request->merge(['id'=>$request->id]);
         $vaildated = $request->validate([
             'id' => ['required', 'exists:restaurants,id'],
             'ar.name' => ['required', 'string'],
@@ -111,35 +112,39 @@ class ManageRestaurantsController extends Controller
             'photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:6144',
         ]);
         $restaurant = Restaurant::find($request->id);
+        try{
 
-        $restaurant->update(
-            [
-                'latitude' => $vaildated['latitude'],
-                'longitude' => $vaildated['longitude'],
-                'phone' => $vaildated['phone'],
-                'en' => [
-                    'name' => $vaildated['en']['name']
-                ],
-                'ar' => [
-                    'name' => $vaildated['ar']['name']
-                ],
-                'hall_hight' => 800,
-                'hall_width' => 800,
-            ]
-        );
+            $restaurant->update(
+                [
+                    'latitude' => $vaildated['latitude'],
+                    'longitude' => $vaildated['longitude'],
+                    'phone' => $vaildated['phone'],
+                    'en' => [
+                        'name' => $vaildated['en']['name']
+                    ],
+                    'ar' => [
+                        'name' => $vaildated['ar']['name']
+                    ],
+                    'hall_hight' => 800,
+                    'hall_width' => 800,
+                    ]
+                );
 
-        if ($request->hasFile('photo')) {
-            $new = $request->file('photo');
-            $old = $restaurant->images;
-            $path = storeFile($new, "restaurants/restaurant{$restaurant->id}/image", 'public');
-            $restaurant->images = $path;
-            $restaurant->save();
-            if ($old) {
-                Storage::disk('public')->delete($old);
+                if ($request->hasFile('photo')) {
+                    $new = $request->file('photo');
+                    $old = $restaurant->images;
+                    $path = storeFile($new, "restaurants/restaurant{$restaurant->id}/image", 'public');
+                    $restaurant->images = $path;
+                    $restaurant->save();
+                    if ($old) {
+                        Storage::disk('public')->delete($old);
+                    }
+                }
+                return finalResponse('success', 200, $restaurant);
+            }catch(Exception $e)
+            {
+                return finalResponse('failed', 400, 'update failed contact backend');
             }
-        }
-
-        return finalResponse('success', 200, $restaurant);
     }
 
 
@@ -148,9 +153,9 @@ class ManageRestaurantsController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return JsonResponse
      */
-    public function deleteRestaurant(Request $request)
+    public function deleteRestaurant(Request $request,$id)
     {
-        $restaurant = Restaurant::find($request->id);
+        $restaurant = Restaurant::find($id);
         if (!$restaurant) {
             return finalResponse('failed', 404, null, null, 'restaurant not found.');
         }

@@ -29,13 +29,18 @@ class PublicPlacesContoller extends Controller
             'photo' => 'required|image|max:2048',
             'description' => 'nullable|string',
         ]);
-        $publicPlace = PublicPlace::create($validated);
-        $photo = $validated['photo'];
-        $pathImage = storeFile($photo, "public_places/place{$publicPlace->id}", 'public');
-        $publicPlace->photo = $pathImage; // Update the 'photo' field in the validated data with the stored path
-        $publicPlace->save();
-        return finalResponse('success', 200, 'data created successfully');
+        try{
 
+            $publicPlace = PublicPlace::create($validated);
+            $photo = $validated['photo'];
+            $pathImage = storeFile($photo, "public_places/place{$publicPlace->id}", 'public');
+            $publicPlace->photo = $pathImage; // Update the 'photo' field in the validated data with the stored path
+            $publicPlace->save();
+            return finalResponse('success', 200, 'data created successfully');
+        }catch(\Exception $e)
+        {
+            return finalResponse('failed', 400, null, null, 'another place is found in this location');
+        }
     }
 
 
@@ -64,7 +69,7 @@ class PublicPlacesContoller extends Controller
      */
     public function updatePublicPlace(Request $request)
     {
-        $request->merge(['id' => $request->place]);
+        $request->merge(['id' => $request->id]);
         $validated = $request->validate([
             'name' => 'string|max:255',
             'id' => 'exists:public_places,id',
@@ -73,19 +78,25 @@ class PublicPlacesContoller extends Controller
             'photo' => 'image|max:2048',
             'description' => 'nullable|string',
         ]);
-        $publicPlace = PublicPlace::find($request->id);
-        if ($request->hasFile('photo')) {
-            $photo = $request->file('photo');
-            $old = $publicPlace->photo;
-            $path = storeFile($photo, "public_places/place{$publicPlace->id}", 'public');
-            $publicPlace->update(['photo' => $path]);
-            if ($old) {
-                Storage::disk('public')->delete($old);
+        try{
+
+            $publicPlace = PublicPlace::find($request->id);
+            if ($request->hasFile('photo')) {
+                $photo = $request->file('photo');
+                $old = $publicPlace->photo;
+                $path = storeFile($photo, "public_places/place{$publicPlace->id}", 'public');
+                $publicPlace->update(['photo' => $path]);
+                if ($old) {
+                    Storage::disk('public')->delete($old);
+                }
             }
+            unset($validated['photo']);
+            $publicPlace->update($validated);
+            return finalResponse('success', 200, 'Public place updated successfully');
+        }catch(\Exception $e)
+        {
+            return finalResponse('failed', 400, null, null, 'another place is found in this location');
         }
-        unset($validated['photo']);
-        $publicPlace->update([$validated]);
-        return finalResponse('success', 200, 'Public place updated successfully');
     }
 
 
@@ -96,6 +107,7 @@ class PublicPlacesContoller extends Controller
      */
     public function deletePublicPlace(Request $request)
     {
+        $request->merge(['id'=> $request->id]);
         $publicPlace = PublicPlace::find($request->id);
         if (!$publicPlace) {
             return finalResponse('failed', 404, null, null, 'Public place not found.');

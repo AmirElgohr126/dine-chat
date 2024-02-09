@@ -121,49 +121,50 @@ Route::middleware('set_lang')->group(function () {
         Route::group(['prefix' => 'package-restaurants'], function () {
             // List all subscribed package restaurants
             Route::get('/', [SubscriptionPackageRestaurantsController::class, 'listSubscriptionPackageRestaurant']); // finished
+
             // Add a new subscription for a package restaurant
             Route::post('/add', [SubscriptionPackageRestaurantsController::class, 'addSubscriptionPackageRestaurant']); // finished
 
             // Update an existing subscription for a package restaurant
-            Route::put('/update', [SubscriptionPackageRestaurantsController::class, 'updateSubscriptionPackageRestaurant']); // finished
+            Route::post('/update', [SubscriptionPackageRestaurantsController::class, 'updateSubscriptionPackageRestaurant']); // finished
 
             // Delete a package restaurant's subscription
             Route::post('/delete', [SubscriptionPackageRestaurantsController::class, 'deleteSubscriptionPackageRestaurant']); // finished
 
             // archive a package restaurant's subscription
-            Route::post('/packages/archive', [SubscriptionPackageRestaurantsController::class, 'archiveSubscriptionPackageRestaurant']); // finished
+            Route::post('/archive', [SubscriptionPackageRestaurantsController::class, 'archiveSubscriptionPackageRestaurant']); // finished
 
             // list archive a package restaurant's subscription
-            Route::post('/packages/archive/list', [SubscriptionPackageRestaurantsController::class, 'listarchiveSubscriptionPackageRestaurant']); // finished
+            Route::get('/archive/list', [SubscriptionPackageRestaurantsController::class, 'listarchiveSubscriptionPackageRestaurant']); // finished
 
             // unarchive a package restaurant's subscription
-            Route::post('/packages/unarchive', [SubscriptionPackageRestaurantsController::class, 'unarchiveSubscriptionPackageRestaurant']); // finished
+            Route::post('/unarchive', [SubscriptionPackageRestaurantsController::class, 'unarchiveSubscriptionPackageRestaurant']); // finished
         });
 
         Route::group(['prefix' => 'packages-notifications'], function () {
+
             // List subscription notification packages
             Route::get('/', [SubscriptionNotificationsController::class, 'listSubscriptionNotificationsPackage']); // finished
 
             // Add a subscription notification package
-            Route::post('/packages/add', [SubscriptionNotificationsController::class, 'addSubscriptionNotificationsPackage']); // finished
+            Route::post('add', [SubscriptionNotificationsController::class, 'addSubscriptionNotificationsPackage']); // finished
 
             // Update a subscription notification package
-            Route::put('/packages/update', [SubscriptionNotificationsController::class, 'updateSubscriptionNotificationsPackage']); // finished
+            Route::post('update', [SubscriptionNotificationsController::class, 'updateSubscriptionNotificationsPackage']); // finished
 
             // Delete a subscription notification package
-            Route::post('/packages/delete', [SubscriptionNotificationsController::class, 'deleteSubscriptionNotificationsPackage']); // finished
+            Route::post('delete', [SubscriptionNotificationsController::class, 'deleteSubscriptionNotificationsPackage']); // finished
 
             // archive a subscription notification package
-            Route::post('/packages/archive', [SubscriptionNotificationsController::class, 'archiveSubscriptionNotificationsPackage']); // finished
+            Route::post('archive', [SubscriptionNotificationsController::class, 'archiveSubscriptionNotificationsPackage']); // finished
 
             // list archive a subscription notification package
-            Route::post('/packages/archive/list', [SubscriptionNotificationsController::class, 'listarchiveSubscriptionNotificationsPackage']); // finished
+            Route::get('archive/list', [SubscriptionNotificationsController::class, 'listarchiveSubscriptionNotificationsPackage']); // finished
 
             // unarchive a subscription notification package
-            Route::post('/packages/unarchive', [SubscriptionNotificationsController::class, 'unarchiveSubscriptionNotificationsPackage']); // finished
+            Route::post('unarchive', [SubscriptionNotificationsController::class, 'unarchiveSubscriptionNotificationsPackage']); // finished
         });
 
-        // ========================================================================================================
 
         Route::group(['prefix' => 'restaurant-subscription'], function () {
             // Add a new subscription to a restaurant
@@ -178,6 +179,8 @@ Route::middleware('set_lang')->group(function () {
             // View a restaurant's subscription
             Route::get('/view', [RestaurantSubscrptionController::class, 'viewSubscrptionOfRestaurant']);
         });
+
+        // ========================================================================================================
 
         Route::group(['prefix' => 'restaurant-notification-subscription'], function () {
             // Add a notification subscription to a restaurant

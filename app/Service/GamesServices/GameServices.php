@@ -44,7 +44,7 @@ class GameServices implements GameInterface
     public function cancelInvite($roomId, $receiverId)
     {
         // Find the invitation and update its status to 'rejected'
-        $room = Room::where('id', $roomId)->where('receiver_id', $receiverId);
+        $room = Room::where('id', $roomId)->where('receiver_id', $receiverId)->first();
         $room->status = 'reject';
         $room->save();
         return $room;

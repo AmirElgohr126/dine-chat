@@ -15,6 +15,7 @@ class XoController extends Controller
     {
         return self::intailBoard($room);
     }
+    
     public static function intailBoard($room)
     {
         $board = [
@@ -51,7 +52,7 @@ class XoController extends Controller
         $row = $validated['row'];
         $col = $validated['col'];
         $board = XOGame::find($request->game);
-        
+
         $moveResult = $this->makeMove($row, $col,$board); // return true or false
         if ($moveResult) {
             XoEvent::dispatch($moveResult);

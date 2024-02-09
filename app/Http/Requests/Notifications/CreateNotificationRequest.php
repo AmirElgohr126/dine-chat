@@ -23,5 +23,3 @@ class CreateNotificationRequest extends FormRequest
     }
 }
 
-
-?>

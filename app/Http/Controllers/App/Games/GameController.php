@@ -91,10 +91,10 @@ class GameController extends Controller
     public function cancelInvite(Request $request)
     {
         $validated = $request->validate([
-            'room_id' => 'required|integer',
-        ]);
-        $response = $this->gameServices->cancelInvite($validated['room_id'], $request->user()->id);
-        return finalResponse('success', 200, $response);
+            'room_id' => 'required|integer']);
+        $game = $this->gameServices->cancelInvite($validated['room_id'], $request->user()->id);
+        XoRoom::dispatch($game);
+        return finalResponse('success', 200, $game);
     }
 
     public function listInvites(Request $request)
@@ -102,6 +102,7 @@ class GameController extends Controller
         $userId = $request->user()->id; // Assuming user authentication
         $invites = $this->gameServices->listInvites($userId);
         $invites->load('receiver');
+        $invites->load('sender');
         $invites = RoomResource::collection($invites);
         return finalResponse('success', 200, $invites);
     }

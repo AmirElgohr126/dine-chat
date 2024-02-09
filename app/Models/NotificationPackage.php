@@ -25,14 +25,14 @@ class NotificationPackage extends Model
         'name',
         'photo',
         'description',
-        'notification_limit',
+        'limit_per_month',
+        'limit_per_year',
         'price_per_month',
         'price_per_year',
         'status',
         'period_finished_deleted_after',
         'period_finished_unit',
     ];
-
     /**
      * The attributes that should be mutated to dates.
      *

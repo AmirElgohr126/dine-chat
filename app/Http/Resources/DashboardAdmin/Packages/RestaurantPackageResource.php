@@ -17,7 +17,7 @@ class RestaurantPackageResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'photo' => retriveMedia() . $this->photo ?? '',
+            'photo' => $this->photo ? retriveMedia() . $this->photo : '',
             'description' => $this->description,
             'price_per_month' => $this->price,
             'price_per_year' => $this->price,

@@ -29,8 +29,7 @@ class RestaurantPackage extends Model
         'price_per_month',
         'price_per_year',
         'status',
-        'period_finished_deleted_after',
-        'period_finished_unit',
+        'period_finished_after',
         'features',
         'limitations',
     ];
@@ -51,4 +50,45 @@ class RestaurantPackage extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+
+
+/**
+     * Boot the model.
+     *
+     * @return void
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($package) {
+            // If price_per_year is not provided and price_per_month is provided, calculate price_per_year
+            if (empty($package->price_per_year) && !empty($package->price_per_month)) {
+                $package->price_per_year = $package->price_per_month * 12;
+            }
+        });
+    }
+
+    // /**
+    //  * Accessor for features attribute.
+    //  *
+    //  * @param  string  $value
+    //  * @return mixed
+    //  */
+    // public function getFeaturesAttribute($value)
+    // {
+    //     return is_array($value) ? json_encode($value) : $value;
+    // }
+
+    // /**
+    //  * Accessor for limitations attribute.
+    //  *
+    //  * @param  string  $value
+    //  * @return mixed
+    //  */
+    // public function getLimitationsAttribute($value)
+    // {
+    //     return is_array($value) ? json_encode($value) : $value;
+    // }
 }

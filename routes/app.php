@@ -123,14 +123,14 @@ Route::middleware('set_lang')->group(function () {
                 ->where('id', '[0-9]+')->where('id_message', '[0-9]+'); // finished
         });
 
-        
+
         Route::group(['prefix' => 'game','middleware'=>'check_reservation'], function () {
                 Route::post('request/send', [GameController::class, 'RequestToPlay']); // finished
                 Route::post('request/cancel', [GameController::class, 'cancelRequest']); // finished
-                // Route::get('request/list', [GameController::class, 'listRequests']); // finished
+                Route::get('request/list', [GameController::class, 'listRequests']); // finished
                 // ==========================
                 Route::post('inbox/accept', [GameController::class, 'AcceptInvite']); // finished
-                Route::delete('inbox/reject', [GameController::class, 'cancelInvite']); // finished
+                Route::post('inbox/reject', [GameController::class, 'cancelInvite']); // finished
                 Route::get('inbox/list', [GameController::class, 'listInvites']); // finished
 
                 // =========================== XO ==============================

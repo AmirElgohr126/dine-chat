@@ -44,9 +44,10 @@ class SubscriptionNotificationsController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'photo' => 'nullable|string|max:255',
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:6144'],
             'description' => 'required|string',
-            'notification_limit' => 'required|integer|min:1',
+            'limit_per_month' => 'required|integer|min:1',
+            'limit_per_year' => 'required|integer|min:1',
             'price_per_month' => 'required|numeric|min:0',
             'price_per_year' => 'required|numeric|min:0',
             'period_finished_deleted_after' => 'required|integer|min:0',
@@ -75,9 +76,10 @@ class SubscriptionNotificationsController extends Controller
         $validatedData = $request->validate([
             'package_id' => 'required|exists:notification_packages,id',
             'name' => 'required|string|max:255',
-            'photo' => 'nullable|string|max:255',
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:6144'],
             'description' => 'required|string',
-            'notification_limit' => 'required|integer|min:1',
+            'limit_per_month' => 'required|integer|min:1',
+            'limit_per_year' => 'required|integer|min:1',
             'price_per_month' => 'required|numeric|min:0',
             'price_per_year' => 'required|numeric|min:0',
             'period_finished_deleted_after' => 'required|integer|min:0',

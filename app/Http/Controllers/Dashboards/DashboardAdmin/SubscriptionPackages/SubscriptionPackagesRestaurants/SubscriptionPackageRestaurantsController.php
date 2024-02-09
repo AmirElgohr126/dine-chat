@@ -13,6 +13,8 @@ use App\Http\Resources\DashboardAdmin\Packages\RestaurantPackageResource;
  */
 class SubscriptionPackageRestaurantsController extends Controller
 {
+
+
     /**
      * List all subscribed Package restaurants.
      *
@@ -43,14 +45,15 @@ class SubscriptionPackageRestaurantsController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
-            'photo' => 'nullable|string|max:255',
+            'photo' => ['nullable','image','mimes:jpeg,png,jpg,gif,svg','max:6144'],
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price_per_month' => 'required|numeric|min:0',
+            'price_per_year' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
             'period_finished_deleted_after' => 'required|integer|min:0',
             'period_finished_unit' => 'required|in:hour,day,week,month,year',
-            'features' => 'required|json',
-            'limitations' => 'required|json',
+            'features.*' => 'required|string',
+            'limitations.*' => 'required|string',
         ]);
 
         if ($request->hasFile('photo')) {
@@ -64,7 +67,6 @@ class SubscriptionPackageRestaurantsController extends Controller
     }
 
 
-
     /**
      * Update an existing subscription for a Package restaurant.
      *
@@ -76,14 +78,15 @@ class SubscriptionPackageRestaurantsController extends Controller
         $validatedData = $request->validate([
             'package_id' => 'required|exists:restaurant_packages,id',
             'name' => 'required|string|max:255',
-            'photo' => 'nullable|string|max:255',
+            'photo' => ['nullable', 'image', 'mimes:jpeg,png,jpg,gif,svg', 'max:6144'],
             'description' => 'required|string',
-            'price' => 'required|numeric|min:0',
+            'price_per_month' => 'required|numeric|min:0',
+            'price_per_year' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
             'period_finished_deleted_after' => 'required|integer|min:0',
             'period_finished_unit' => 'required|in:hour,day,week,month,year',
-            'features' => 'required|json',
-            'limitations' => 'required|json',
+            'features.*' => 'required|string',
+            'limitations.*' => 'required|string',
         ]);
         $restaurantPackage = RestaurantPackage::findOrFail($validatedData['package_id']);
 
@@ -130,24 +133,6 @@ class SubscriptionPackageRestaurantsController extends Controller
 
 
     /**
-     * list archived a Package restaurant's subscription.
-     *
-     * @param \Illuminate\Http\Request $request The request object containing the ID of the subscription to delete.
-     * @return jsonResponse
-     */
-    public function listarchiveSubscriptionPackageRestaurant(Request $request)
-    {
-        $perPage = $request->input('per_page', 10); // Default to 10 items per page if not specified
-        $archivedPackages = RestaurantPackage::onlyTrashed()->orderByDesc('created_at')
-            ->paginate($perPage);
-
-        // Assuming you have a RestaurantPackageResource or similar to format the response
-        return finalResponse('success', 200, RestaurantPackageResource::collection($archivedPackages));
-    }
-
-
-
-    /**
      * archive a Package restaurant's subscription.
      *
      * @param \Illuminate\Http\Request $request The request object containing the ID of the subscription to delete.
@@ -167,6 +152,22 @@ class SubscriptionPackageRestaurantsController extends Controller
     }
 
 
+    /**
+     * list archived a Package restaurant's subscription.
+     *
+     * @param \Illuminate\Http\Request $request The request object containing the ID of the subscription to delete.
+     * @return jsonResponse
+     */
+    public function listarchiveSubscriptionPackageRestaurant(Request $request)
+    {
+        $perPage = $request->input('per_page', 10); // Default to 10 items per page if not specified
+        $archivedPackages = RestaurantPackage::onlyTrashed()->orderByDesc('created_at')
+            ->paginate($perPage);
+
+        // Assuming you have a RestaurantPackageResource or similar to format the response
+        return finalResponse('success', 200, RestaurantPackageResource::collection($archivedPackages));
+    }
+
 
     /**
      * unarchive a Package restaurant's subscription.
@@ -182,14 +183,15 @@ class SubscriptionPackageRestaurantsController extends Controller
 
         $package = RestaurantPackage::onlyTrashed()->where('id', $validated['package_id'])->first();
 
-        if (!$package) {
-            return response()->json(['message' => 'Package not found or not archived.'], 404);
+        if (!$package)
+        {
+            return finalResponse('success',200,'Package not found or not archived.');
         }
 
         $package->restore();
 
         // Return a success response
-        return response()->json(['message' => 'Package unarchived successfully.'], 200);
+        return finalResponse('success', 200, 'Package unarchived successfully.');
     }
 }
 

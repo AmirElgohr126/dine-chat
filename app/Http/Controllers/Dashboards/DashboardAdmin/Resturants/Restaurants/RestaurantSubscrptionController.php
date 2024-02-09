@@ -16,9 +16,10 @@ class RestaurantSubscrptionController extends Controller
      */
     public function addSubscrptionToRestaurant(Request $request)
     {
-        # code...
+        
     }
 
+    // ===========================================================
 
     /**
      * delete Subscrption To Restaurant
@@ -27,7 +28,7 @@ class RestaurantSubscrptionController extends Controller
      */
     public function deleteSubscrptionToRestaurant(Request $request)
     {
-        # code...
+
     }
 
 
@@ -38,7 +39,7 @@ class RestaurantSubscrptionController extends Controller
      */
     public function updateSubscrptionToRestaurant(Request $request)
     {
-        # code...
+
     }
 
 
@@ -49,10 +50,9 @@ class RestaurantSubscrptionController extends Controller
      */
     public function viewSubscrptionOfRestaurant(Request $request)
     {
-        # code...
+
     }
 
-    // ===========================================================
 
     /**
      * add Notification Subscrption To Restaurant
@@ -61,7 +61,7 @@ class RestaurantSubscrptionController extends Controller
      */
     public function addNotificationSubscrptionToRestaurant(Request $request)
     {
-        # code...
+
     }
 
 
@@ -72,7 +72,7 @@ class RestaurantSubscrptionController extends Controller
      */
     public function deleteNotificationSubscrptionToRestaurant(Request $request)
     {
-        # code...
+
     }
 
 
@@ -83,7 +83,7 @@ class RestaurantSubscrptionController extends Controller
      */
     public function updateNotificationSubscrptionToRestaurant(Request $request)
     {
-        # code...
+
     }
 
 
@@ -94,7 +94,7 @@ class RestaurantSubscrptionController extends Controller
      */
     public function viewNotificationSubscrptionOfRestaurant(Request $request)
     {
-        # code...
+
     }
 
 

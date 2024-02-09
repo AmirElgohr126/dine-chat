@@ -16,12 +16,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('photo')->default('')->nullable();
             $table->text('description')->nullable();
-            $table->unsignedBigInteger('notification_limit');
-            $table->decimal('price_per_month', 8, 2)->default(0.00);
-            $table->decimal('price_per_year', 8, 2)->default(0.00);
-            $table->enum('status', ['active', 'inactive'])->default('active'); // Package status
-            $table->integer('period_finished_deleted_after')->default(1)->nullable();
-            $table->enum('period_finished_unit', ['hour', 'day', 'week', 'month', 'year'])->default('hour')->nullable();
+            $table->unsignedBigInteger('limit_per_month')->nullable();
+            $table->unsignedBigInteger('limit_per_year')->nullable();
+            $table->decimal('price_per_month',10, 2)->default(0.00);
+            $table->decimal('price_per_year',10, 2)->default(0.00);
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->timestamp('period_finished_after');
             $table->timestamps();
             $table->softDeletes();
         });

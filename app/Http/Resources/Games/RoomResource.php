@@ -29,6 +29,12 @@ class RoomResource extends JsonResource
                 'last_name' => $this->receiver->last_name,
                 'photo' => retriveMedia(). $this->receiver->photo,
             ],
+            'sender' => [
+                'id' => $this->sender->id,
+                'first_name' => $this->sender->first_name,
+                'last_name' => $this->sender->last_name,
+                'photo' => retriveMedia(). $this->sender->photo,
+            ],
         ];
     }
 }

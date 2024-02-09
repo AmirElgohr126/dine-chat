@@ -16,11 +16,10 @@ return new class extends Migration
             $table->string('name');
             $table->string('photo')->default('')->nullable();
             $table->text('description')->nullable();
-            $table->decimal('price_per_month', 8, 2)->default(0.00);
-            $table->decimal('price_per_year', 8, 2)->default(0.00);
+            $table->decimal('price_per_month', 10, 2)->default(0.00);
+            $table->decimal('price_per_year', 10, 2)->default(0.00);
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->integer('period_finished_deleted_after')->default(1)->nullable();
-            $table->enum('period_finished_unit', ['hour', 'day', 'week', 'month', 'year'])->default('hour')->nullable();
+            $table->timestamp('period_finished_after');
             $table->json('features')->nullable();
             $table->json('limitations')->nullable();
             $table->timestamps();

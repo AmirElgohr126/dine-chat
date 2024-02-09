@@ -19,7 +19,7 @@ class NotificationPackageResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'photo' => retriveMedia(). $this->photo ?? '',
+            'photo' => $this->photo ? retriveMedia() . $this->photo :  '',
             'description' => $this->description,
             'notification_limit' => $this->notification_limit,
             'price_per_month' => $this->price_per_month,

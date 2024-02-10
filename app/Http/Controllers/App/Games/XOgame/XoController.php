@@ -2,10 +2,11 @@
 
 namespace App\Http\Controllers\App\Games\XOgame;
 
-use App\Events\XoGame as XoEvent;
 use App\Models\XOGame;
 use Illuminate\Http\Request;
+use App\Events\XoGame as XoEvent;
 use Illuminate\Routing\Controller;
+use App\Http\Resources\Games\GameStateResource;
 
 
 class XoController extends Controller
@@ -57,7 +58,8 @@ class XoController extends Controller
         if ($moveResult) {
             $moveResult->playerX;
             $moveResult->playerO;
-            XoEvent::dispatch($moveResult);
+            $game = new GameStateResource($moveResult);
+            XoEvent::dispatch($game);
             return finalResponse('success',200,$moveResult);
         } else {
             return finalResponse('failed', 400,"can't play ");

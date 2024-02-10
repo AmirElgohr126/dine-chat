@@ -3,11 +3,14 @@ namespace App\Http\Controllers\App\Games;
 
 use App\Models\User;
 use App\Events\XoRoom;
+
 use App\Models\XOGame;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Events\XoGame as EventsXoGame;
 use App\Http\Resources\Games\RoomResource;
 use App\Service\GamesServices\GameServices;
+use App\Http\Resources\Games\GameStateResource;
 use App\Http\Resources\Games\InvitationResource;
 use App\Service\Notifications\NotificationServices;
 use App\Http\Controllers\App\Games\XOgame\XoController;
@@ -21,6 +24,9 @@ class GameController extends Controller
     {
         $this->gameServices = $gameServices;
     }
+
+
+
     public function RequestToPlay(Request $request)
     {
         $request->validate([
@@ -28,14 +34,11 @@ class GameController extends Controller
             'type_room' => 'required|in:chess,xo',
         ]);
         $userId = $request->user()->id;
-        $room = $this->gameServices->RequestToPlay(
-            $userId,
-            $request->receiver_id,
-            $request->restaurant_id,
-            $request->type_room
-        );
-        $device_token = User::find($request->receiver_id)->device_token;
+        $room = $this->gameServices->RequestToPlay($userId, $request->receiver_id, $request->restaurant_id, $request->type_room);
+        $room->sender;
+        $room->receiver;
 
+        $device_token = User::find($request->receiver_id)->device_token;
         $notification = new NotificationServices;
         $notification->sendOneNotifyOneDevice([
             'title' => 'someone need to play with you ',
@@ -43,10 +46,8 @@ class GameController extends Controller
             'image' => ''
         ], $device_token);
 
-        $room->sender;
-        $room->receiver;
         $room = new InvitationResource($room);
-        return finalResponse('success', 200,$room);
+        return finalResponse('success', 200, $room);
     }
 
     public function cancelRequest(Request $request)
@@ -54,9 +55,10 @@ class GameController extends Controller
         $validated = $request->validate([
             'room_id' => 'required|integer',
         ]);
-        $response = $this->gameServices->cancelRequest($validated['room_id'], $request->user()->id);
-        return finalResponse('success', 200, $response);
+        $room = $this->gameServices->cancelRequest($validated['room_id'], $request->user()->id);
+        return finalResponse('success', 200, $room);
     }
+
 
     public function AcceptInvite(Request $request)
     {
@@ -66,8 +68,7 @@ class GameController extends Controller
 
         $room = $this->gameServices->AcceptInvite($validated['room_id'], $request->user()->id);
 
-        switch ($room->type_room)
-        {
+        switch ($room->type_room) {
             case 'chess':
                 $game = ChessController::start($room);
                 break;
@@ -75,9 +76,12 @@ class GameController extends Controller
                 $game = XoController::start($room);
                 $game->playerX;
                 $game->playerO;
-                XoRoom::dispatch($game);
+                XoRoom::dispatch($room, $game->id);
+                $game = new GameStateResource($game);
+                EventsXoGame::dispatch($game);
                 break;
         }
+
         $sender = User::find($room->sender_id);
         $notification = new NotificationServices;
         $notification->sendOneNotifyOneDevice([
@@ -85,16 +89,18 @@ class GameController extends Controller
             'message' => "request to " . $request->user()->name . 'accepted',
             'image' => ''
         ], $sender->device_token);
+
         return finalResponse('success', 200, $game);
     }
 
     public function cancelInvite(Request $request)
     {
         $validated = $request->validate([
-            'room_id' => 'required|integer']);
-        $game = $this->gameServices->cancelInvite($validated['room_id'], $request->user()->id);
-        XoRoom::dispatch($game);
-        return finalResponse('success', 200, $game);
+            'room_id' => 'required|integer'
+        ]);
+        $room = $this->gameServices->cancelInvite($validated['room_id'], $request->user()->id);
+        XoRoom::dispatch($room, 0);
+        return finalResponse('success', 200, $room);
     }
 
     public function listInvites(Request $request)
@@ -114,4 +120,3 @@ class GameController extends Controller
     //     return finalResponse('success', 200, $requests);
     // }
 }
-

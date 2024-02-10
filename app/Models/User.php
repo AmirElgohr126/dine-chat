@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+use App\Models\XOGame;
 use App\Models\Contact;
 use App\Models\Message;
 use App\Models\UserGhost;
@@ -188,7 +189,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
             return false;
         }
         // Check if the user is make room
-        $game = Room::find($gameId);
+        $game = XOGame::find($gameId);
         if (!$game) {
             return false;
         }

@@ -135,6 +135,7 @@ Route::middleware('set_lang')->group(function () {
 
                 // =========================== XO ==============================
                 Route::group(['prefix' => 'xo'], function () {
+                Route::get('/', [XoController::class, 'getBoard']);
                 Route::post('{game}/move', [XoController::class, 'move'])
                 ->where('game', '[0-9]+'); // finished
             });

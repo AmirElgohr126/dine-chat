@@ -15,7 +15,7 @@ class XoController extends Controller
     {
         return self::intailBoard($room);
     }
-    
+
     public static function intailBoard($room)
     {
         $board = [
@@ -128,7 +128,22 @@ class XoController extends Controller
 
 
 
+    public function getBoard(Request $request)
+    {
+        $request->validate([
+            'game_id' => ['required','exists:x_o_games,id'],
+        ]);
 
+        $user = $request->user();
+        $game = XOGame::find($request->game_id);
+        if($user->id == $game->player_x_id || $user->id == $game->player_o_id)
+        {
+            $game->playerX;
+            $game->playerO;
+            return finalResponse('success',200,$game);
+        }
+        return finalResponse('failed',400,'game not found');
+    }
 
 
 

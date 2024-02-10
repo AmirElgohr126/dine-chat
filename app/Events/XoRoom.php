@@ -17,7 +17,9 @@ class XoRoom implements ShouldBroadcast
     /**
      * Create a new event instance.
      */
-    public function __construct(public $room){}
+    public function __construct(public $room, public $idGame)
+    {
+    }
 
     /**
      * Get the channels the event should broadcast on.
@@ -27,14 +29,15 @@ class XoRoom implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('room'.$this->room->id),
+            new PrivateChannel('room.' . $this->room->id),
         ];
     }
 
-public function broadcastWith(): array
+    public function broadcastWith(): array
     {
         return [
-            $this->room
+            "room" => $this->room,
+            'id_game' => $this->idGame
         ];
     }
 }

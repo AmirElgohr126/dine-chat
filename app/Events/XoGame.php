@@ -27,7 +27,7 @@ class XoGame implements ShouldBroadcast
     public function broadcastOn(): array
     {
         return [
-            new PrivateChannel('game'.$this->moveResult->id),
+            new PrivateChannel('game.'.$this->moveResult->id),
         ];
     }
     public function broadcastWith(): array

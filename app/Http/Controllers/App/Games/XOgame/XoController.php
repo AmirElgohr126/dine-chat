@@ -55,6 +55,8 @@ class XoController extends Controller
 
         $moveResult = $this->makeMove($row, $col,$board); // return true or false
         if ($moveResult) {
+            $moveResult->playerX;
+            $moveResult->playerO;
             XoEvent::dispatch($moveResult);
             return finalResponse('success',200,$moveResult);
         } else {

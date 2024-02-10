@@ -33,7 +33,7 @@ class XoGame implements ShouldBroadcast
     public function broadcastWith(): array
     {
         return [
-            $this->moveResult
+            "game" => $this->moveResult
         ];
     }
 }

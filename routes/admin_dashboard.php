@@ -169,6 +169,7 @@ Route::middleware('set_lang')->group(function () {
         Route::group(['prefix' => 'restaurant-subscription'], function () {
             // Add a new subscription to a restaurant
             Route::post('/add', [RestaurantSubscrptionController::class, 'addSubscrptionToRestaurant']);
+            // ========================================================================================================
 
             // Delete a subscription from a restaurant
             Route::delete('/delete', [RestaurantSubscrptionController::class, 'deleteSubscrptionToRestaurant']);
@@ -180,7 +181,6 @@ Route::middleware('set_lang')->group(function () {
             Route::get('/view', [RestaurantSubscrptionController::class, 'viewSubscrptionOfRestaurant']);
         });
 
-        // ========================================================================================================
 
         Route::group(['prefix' => 'restaurant-notification-subscription'], function () {
             // Add a notification subscription to a restaurant

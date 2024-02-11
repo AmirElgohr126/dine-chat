@@ -69,26 +69,4 @@ class RestaurantPackage extends Model
             }
         });
     }
-
-    // /**
-    //  * Accessor for features attribute.
-    //  *
-    //  * @param  string  $value
-    //  * @return mixed
-    //  */
-    // public function getFeaturesAttribute($value)
-    // {
-    //     return is_array($value) ? json_encode($value) : $value;
-    // }
-
-    // /**
-    //  * Accessor for limitations attribute.
-    //  *
-    //  * @param  string  $value
-    //  * @return mixed
-    //  */
-    // public function getLimitationsAttribute($value)
-    // {
-    //     return is_array($value) ? json_encode($value) : $value;
-    // }
 }

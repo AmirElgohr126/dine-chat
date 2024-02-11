@@ -30,7 +30,7 @@ class NotificationPackage extends Model
         'price_per_month',
         'price_per_year',
         'status',
-        'period_finished_deleted_after',
+        'period_finished_after',
         'period_finished_unit',
     ];
     /**
@@ -39,4 +39,8 @@ class NotificationPackage extends Model
      * @var array
      */
     protected $dates = ['deleted_at'];
+
+    protected $casts = [
+        'period_finished_after' => 'datetime',
+    ];
 }

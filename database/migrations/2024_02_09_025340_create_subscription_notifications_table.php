@@ -11,13 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('subscrption_restaurants', function (Blueprint $table) {
+        Schema::create('subscription_notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('restaurant_id')->references('id')->on('restaurants')->onDelete('cascade');
-            $table->foreignId('packages_id')->references('id')->on('restaurant_packages')->onDelete('cascade');
+            $table->foreignId('packages_id')->references('id')->on('notification_packages')->onDelete('cascade');
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();
-            $table->enum('is_active',[true,false])->default(true);
+            $table->enum('is_active', [true, false])->default(true);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('subscrption_restaurants');
+        Schema::dropIfExists('subscrption_notifications');
     }
 };

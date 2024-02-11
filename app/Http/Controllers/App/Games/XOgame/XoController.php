@@ -55,12 +55,14 @@ class XoController extends Controller
         $board = XOGame::find($request->game);
 
         $moveResult = $this->makeMove($row, $col,$board); // return true or false
+
+
         if ($moveResult) {
             $moveResult->playerX;
             $moveResult->playerO;
             $game = new GameStateResource($moveResult);
             XoEvent::dispatch($game);
-            return finalResponse('success',200,$moveResult);
+            return finalResponse('success',200, $game);
         } else {
             return finalResponse('failed', 400,"can't play ");
         }
@@ -78,7 +80,11 @@ class XoController extends Controller
             $boardPlayOn[$row][$col] = $current_player;
 
             $board->board = $boardPlayOn;
-            $board->status = $this->checkWinner($board->board);
+            $result = $this->checkWinner($board->board);
+            $board->status = $result['status'];
+            if ($result['status'] === 'finished') {
+                $board->winner = $result['winner'];
+            }
             $board->current_player = $this->switchTurn($current_player);
             $board->save();
             return $board;
@@ -91,28 +97,32 @@ class XoController extends Controller
 
     private function checkWinner($board)
     {
-        // Checking rows and columns
+        // Checking rows and columns for a win
         for ($i = 0; $i < 3; $i++) {
-            if ($board[$i][0] === $board[$i][1] && $board[$i][1] === $board[$i][2] && $board[$i][0] != '') {
-                return $status = 'finished';
+            if ($board[$i][0] != '' && $board[$i][0] === $board[$i][1] && $board[$i][1] === $board[$i][2]) {
+                return ['status' => 'finished', 'winner' => $board[$i][0]];
             }
 
-            if ($board[0][$i] === $board[1][$i] && $board[1][$i] === $board[2][$i] && $board[0][$i] != '') {
-                return $status = 'finished';
+            if ($board[0][$i] != '' && $board[0][$i] === $board[1][$i] && $board[1][$i] === $board[2][$i]) {
+                return ['status' => 'finished', 'winner' => $board[0][$i]];
             }
         }
 
-        // Checking diagonals
-        if ($board[0][0] === $board[1][1] && $board[1][1] === $board[2][2] && $board[0][0] != '' ||
-            $board[0][2] === $board[1][1] && $board[1][1] === $board[2][0] && $board[0][2] != '')
-        {
-            return $status = 'finished';
+        // Checking diagonals for a win
+        if ($board[0][0] != '' && $board[0][0] === $board[1][1] && $board[1][1] === $board[2][2]) {
+            return ['status' => 'finished', 'winner' => $board[0][0]];
         }
+        if ($board[0][2] != '' && $board[0][2] === $board[1][1] && $board[1][1] === $board[2][0]) {
+            return ['status' => 'finished', 'winner' => $board[0][2]];
+        }
+
         // Checking for a draw
         if ($this->isBoardFull($board)) {
-            return $status = 'draw';
+            return ['status' => 'draw', 'winner' => ''];
         }
-        return $status = 'active';
+
+        // Game is still active
+        return ['status' => 'active', 'winner' => ''];
     }
 
     private function isBoardFull($board)
@@ -144,6 +154,8 @@ class XoController extends Controller
         {
             $game->playerX;
             $game->playerO;
+            $game = new GameStateResource($game);
+
             return finalResponse('success',200,$game);
         }
         return finalResponse('failed',400,'game not found');

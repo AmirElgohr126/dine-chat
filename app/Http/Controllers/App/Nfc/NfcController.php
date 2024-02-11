@@ -67,7 +67,7 @@ class NfcController extends Controller
             //$response = sendEvent('restaurant1', 'UpdateUserHall', $event->broadcastWith(),$request->bearerToken());
             UpdateUserHall::dispatch($reserve, $reserve->restaurant_id);
             if ($reserve) {
-                return finalResponse('success', 200,__('errors.success_reservation'));
+                return finalResponse('success', 200,$reserve);
             }
         } catch (\Exception $e) {
             return finalResponse('failed', 400, null, null, $e->getMessage());

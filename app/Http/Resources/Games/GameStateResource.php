@@ -19,6 +19,7 @@ class GameStateResource extends JsonResource
             'board' => $this->board,
             'current_player' => $this->current_player,
             'status' => $this->status,
+            'winner' => $this->winner,
             'player_x' => [
                 'id' => (int) $this->playerX->id,
                 'first_name' => $this->playerX->first_name,

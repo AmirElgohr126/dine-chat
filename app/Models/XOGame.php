@@ -9,7 +9,7 @@ class XOGame extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['board', 'current_player', 'status', 'player_x_id', 'player_o_id','room_id'];
+    protected $fillable = ['board', 'current_player', 'status', 'player_x_id', 'player_o_id','room_id','winner'];
 
     protected $casts = [
         'board' => 'array'

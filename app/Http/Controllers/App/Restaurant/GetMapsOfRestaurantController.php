@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers\App\Restaurant;
 
+use Exception;
 use App\Models\Restaurant;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Restaurant\GetMapRestaurantRequest;
-use Exception;
+use App\Http\Requests\App\Restaurant\GetMapRestaurantRequest;
 
 
 class GetMapsOfRestaurantController extends Controller

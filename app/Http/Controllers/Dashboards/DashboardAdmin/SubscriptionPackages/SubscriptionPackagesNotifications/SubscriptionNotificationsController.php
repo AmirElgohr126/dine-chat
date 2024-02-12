@@ -50,8 +50,7 @@ class SubscriptionNotificationsController extends Controller
             'limit_per_year' => 'required|integer|min:1',
             'price_per_month' => 'required|numeric|min:0',
             'price_per_year' => 'required|numeric|min:0',
-            'period_finished_deleted_after' => 'required|integer|min:0',
-            'period_finished_unit' => 'required|in:hour,day,week,month,year',
+            'period_finished_after' => 'required|date',
             'status' => 'required|in:active,inactive',
         ]);
 
@@ -82,8 +81,7 @@ class SubscriptionNotificationsController extends Controller
             'limit_per_year' => 'required|integer|min:1',
             'price_per_month' => 'required|numeric|min:0',
             'price_per_year' => 'required|numeric|min:0',
-            'period_finished_deleted_after' => 'required|integer|min:0',
-            'period_finished_unit' => 'required|in:hour,day,week,month,year',
+            'period_finished_after' => 'required|date',
             'status' => 'required|in:active,inactive',
         ]);
 

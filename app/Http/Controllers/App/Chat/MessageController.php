@@ -8,11 +8,10 @@ use App\Events\MessageSent;
 use App\Models\Conversation;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\User\UserResources;
-use App\Http\Requests\Chat\NewChatMessageRequest;
-use App\Http\Requests\Chat\UpdateChatMessageRequest;
-use App\Models\GeneralNotification;
+
 use App\Service\Notifications\NotificationInterface;
+use App\Http\Requests\App\Chat\NewChatMessageRequest;
+use App\Http\Requests\App\Chat\UpdateChatMessageRequest;
 
 class MessageController extends Controller
 {
@@ -217,4 +216,3 @@ class MessageController extends Controller
 }
 
 
-?>

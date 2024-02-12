@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('subscription_notifications', function (Blueprint $table) {
             $table->id();
             $table->foreignId('restaurant_id')->references('id')->on('restaurants')->onDelete('cascade');
-            $table->foreignId('packages_id')->references('id')->on('notification_packages')->onDelete('cascade');
+            $table->foreignId('package_id')->references('id')->on('notification_packages')->onDelete('cascade');
             $table->timestamp('starts_at')->nullable();
             $table->timestamp('ends_at')->nullable();
-            $table->enum('is_active', [true, false])->default(true);
+            $table->boolean('is_active');
             $table->softDeletes();
             $table->timestamps();
         });

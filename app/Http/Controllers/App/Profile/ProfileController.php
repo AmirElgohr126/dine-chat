@@ -5,7 +5,7 @@ use Exception;
 use App\Models\UserGhost;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\User\UserResources;
+use App\Http\Resources\App\User\UserResources;
 
 class ProfileController extends Controller
 {
@@ -89,4 +89,3 @@ class ProfileController extends Controller
     }
 }
 
-?>

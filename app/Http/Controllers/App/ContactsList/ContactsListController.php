@@ -5,9 +5,9 @@ namespace App\Http\Controllers\App\ContactsList;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Contacts\UnfollowContactRequest;
-use App\Http\Requests\Contacts\ContactsRequest;
-use App\Http\Requests\Contacts\FollowContactRequest;
+use App\Http\Requests\App\Contacts\ContactsRequest;
+use App\Http\Requests\App\Contacts\FollowContactRequest;
+use App\Http\Requests\App\Contacts\UnfollowContactRequest;
 use App\Repository\ContactsListRepository\ContactsListInterface;
 
 class ContactsListController extends Controller

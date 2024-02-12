@@ -31,7 +31,6 @@ class NotificationPackage extends Model
         'price_per_year',
         'status',
         'period_finished_after',
-        'period_finished_unit',
     ];
     /**
      * The attributes that should be mutated to dates.

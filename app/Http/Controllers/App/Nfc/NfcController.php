@@ -9,7 +9,7 @@ use App\Models\UserAttendance;
 use App\Events\DeleteReservation;
 use App\Models\HistoryAttendances;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Nfc\NfcRequest;
+use App\Http\Requests\App\Nfc\NfcRequest;
 
 class NfcController extends Controller
 {

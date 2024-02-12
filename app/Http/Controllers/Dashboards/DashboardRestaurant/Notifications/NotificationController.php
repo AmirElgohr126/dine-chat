@@ -10,8 +10,8 @@ use App\Models\UserAttendance;
 use App\Models\NotificationUser;
 use App\Models\HistoryAttendances;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Notifications\CreateNotificationRequest;
-use App\Http\Resources\Dashboard\Notifications\NotificationResource;
+use App\Http\Requests\Dashboard\Notifications\CreateNotificationRequest;
+use App\Http\Resources\DashboardRestaurant\Notifications\NotificationResource;
 
 class NotificationController extends Controller
 {
@@ -154,5 +154,3 @@ class NotificationController extends Controller
         return $result;
     }
 }
-
-?>

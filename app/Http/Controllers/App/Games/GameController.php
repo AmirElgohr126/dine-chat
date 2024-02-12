@@ -3,16 +3,14 @@ namespace App\Http\Controllers\App\Games;
 
 use App\Models\User;
 use App\Events\XoRoom;
-
-use App\Models\XOGame;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Events\XoGame as EventsXoGame;
-use App\Http\Resources\Games\RoomResource;
 use App\Service\GamesServices\GameServices;
-use App\Http\Resources\Games\GameStateResource;
-use App\Http\Resources\Games\InvitationResource;
+use App\Http\Resources\App\Games\RoomResource;
+use App\Http\Resources\App\Games\GameStateResource;
 use App\Service\Notifications\NotificationServices;
+use App\Http\Resources\App\Games\InvitationResource;
 use App\Http\Controllers\App\Games\XOgame\XoController;
 use App\Http\Controllers\App\Games\CheesGame\ChessController;
 

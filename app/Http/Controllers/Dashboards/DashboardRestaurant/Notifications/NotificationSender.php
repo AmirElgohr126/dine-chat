@@ -72,7 +72,7 @@ class NotificationSender
             },
         ]);
         $promise = $pool->promise();
-        $promise->wait(); 
+        $promise->wait();
         return [
             'successful' => count($successfulTokens),
             'failed' => count($failedTokens),
@@ -83,5 +83,3 @@ class NotificationSender
 
 
 }
-
-?>

@@ -3,10 +3,11 @@ namespace App\Http\Controllers\Dashboards\DashboardRestaurant\User\Auth;
 
 use Exception;
 use Illuminate\Http\Request;
+use App\Models\RestaurantUser;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Dashboard\Auth\LoginRestaurantRequest;
-use App\Models\RestaurantUser;
-use App\Http\Resources\User\UserRestaurantDashboardResources;
+use App\Http\Resources\DashboardAdmin\Auth\UserRestaurantDashboardResources;
+
 class LoginRestaurantController extends Controller
 {
     public function loginRestaurant(LoginRestaurantRequest $request)

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\App\Auth;
 
 use Exception;
-use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\loginRequest;
-use App\Http\Resources\User\UserResources;
 use App\Models\UserGhost;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\App\Auth\loginRequest;
+use App\Http\Resources\App\User\UserResources;
 
 /**
  * Class LoginController

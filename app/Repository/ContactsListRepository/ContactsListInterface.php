@@ -2,9 +2,10 @@
 namespace App\Repository\ContactsListRepository;
 
 use Illuminate\Http\Request;
-use App\Http\Requests\Contacts\ContactsRequest;
-use App\Http\Requests\Contacts\FollowContactRequest;
-use App\Http\Requests\Contacts\UnfollowContactRequest;
+use App\Http\Requests\App\Contacts\ContactsRequest;
+use App\Http\Requests\App\Contacts\FollowContactRequest;
+use App\Http\Requests\App\Contacts\UnfollowContactRequest;
+
 
 interface ContactsListInterface
 {
@@ -14,7 +15,7 @@ interface ContactsListInterface
         public function followContact (FollowContactRequest $request);
 
         public function unfollowContact (UnfollowContactRequest $request);
+        
         public function inviteContact(UnfollowContactRequest $request);
 }
 
-?>

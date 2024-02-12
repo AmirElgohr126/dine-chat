@@ -91,5 +91,3 @@ class RestaurantRatingController extends Controller
     }
 
 }
-
-?>

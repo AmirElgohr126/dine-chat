@@ -69,4 +69,3 @@ class ProfileRestaurantController extends Controller
 
 }
 
-?>

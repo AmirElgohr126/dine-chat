@@ -7,7 +7,7 @@ use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-use App\Http\Resources\User\UserRestaurantDashboardResources;
+use App\Http\Resources\DashboardAdmin\Auth\UserRestaurantDashboardResources;
 
 class ManageUsersController extends Controller
 {

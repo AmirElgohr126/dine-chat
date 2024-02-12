@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Dashboards\DashboardRestaurant\User\Profile;
 use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\User\UserRestaurantDashboardResources;
+use App\Http\Resources\DashboardAdmin\Auth\UserRestaurantDashboardResources;
 
 class GetInfoController extends Controller
 {
@@ -18,5 +18,3 @@ class GetInfoController extends Controller
         }
     }
 }
-
-?>

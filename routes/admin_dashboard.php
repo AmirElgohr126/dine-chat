@@ -167,9 +167,12 @@ Route::middleware('set_lang')->group(function () {
 
 
         Route::group(['prefix' => 'restaurant-subscription'], function () {
+
+            // View a restaurant's subscription
+            Route::get('/', [RestaurantSubscrptionController::class, 'viewSubscrptionOfRestaurant']);
+
             // Add a new subscription to a restaurant
             Route::post('/add', [RestaurantSubscrptionController::class, 'addSubscrptionToRestaurant']);
-            // ========================================================================================================
 
             // Delete a subscription from a restaurant
             Route::delete('/delete', [RestaurantSubscrptionController::class, 'deleteSubscrptionToRestaurant']);
@@ -177,28 +180,31 @@ Route::middleware('set_lang')->group(function () {
             // Update a restaurant's subscription
             Route::put('/update', [RestaurantSubscrptionController::class, 'updateSubscrptionToRestaurant']);
 
-            // View a restaurant's subscription
-            Route::get('/view', [RestaurantSubscrptionController::class, 'viewSubscrptionOfRestaurant']);
         });
 
 
-        Route::group(['prefix' => 'restaurant-notification-subscription'], function () {
+        Route::group(['prefix' => 'notification-subscription'], function () {
+            // View a restaurant's notification subscription
+            Route::get('/', [RestaurantSubscrptionController::class, 'viewNotificationSubscrptionOfRestaurant']);
+
             // Add a notification subscription to a restaurant
             Route::post('/add', [RestaurantSubscrptionController::class, 'addNotificationSubscrptionToRestaurant']);
+
             // Delete a notification subscription from a restaurant
             Route::delete('/delete', [RestaurantSubscrptionController::class, 'deleteNotificationSubscrptionToRestaurant']);
+
             // Update a restaurant's notification subscription
             Route::put('/update', [RestaurantSubscrptionController::class, 'updateNotificationSubscrptionToRestaurant']);
-            // View a restaurant's notification subscription
-            Route::get('/view', [RestaurantSubscrptionController::class, 'viewNotificationSubscrptionOfRestaurant']);
         });
 
 
-        Route::group(['prefix' => 'about-settings'], function () {
+        Route::group(['prefix' => 'settings'], function () {
             Route::put('/about/update', [AboutController::class, 'updateAboutUs']);
             Route::put('/terms/update', [AboutController::class, 'updateTerms']);
+            Route::put('/privacy-policy/update', [AboutController::class, 'updateTerms']);
         });
 
+        // ========================================================================================================
 
         Route::group(['prefix' => 'questionable-chat'], function () {
             // Get questionable chats

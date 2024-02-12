@@ -60,5 +60,4 @@ class ResetPasswordRestaurantController extends Controller
     }
 }
 
-?>
 

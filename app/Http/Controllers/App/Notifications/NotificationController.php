@@ -4,7 +4,7 @@ namespace App\Http\Controllers\App\Notifications;
 use App\Models\Notification;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\Notifications\AppNotifications;
+use App\Http\Resources\App\Notifications\NotificationsResources;
 
 class NotificationController extends Controller
 {
@@ -21,9 +21,8 @@ class NotificationController extends Controller
             ->select(['notification_user.id', 'notifications.photo', 'notifications.message', 'notifications.sent_at']) // Select specific fields
             ->paginate($perPage);
         $pagnations = pagnationResponse($notifications);
-        $notificationsResponse = AppNotifications::collection($notifications);
+        $notificationsResponse = NotificationsResources::collection($notifications);
         return finalResponse('success',200,$notificationsResponse,$pagnations);
     }
 }
 
-?>

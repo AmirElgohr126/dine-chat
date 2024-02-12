@@ -81,4 +81,3 @@ class TicketsController extends Controller
         return finalResponse('success', 200, $messages);
     }
 }
-?>

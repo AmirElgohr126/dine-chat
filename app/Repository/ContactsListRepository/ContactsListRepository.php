@@ -6,9 +6,10 @@ use App\Models\Contact;
 use App\Models\UserFollower;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use App\Http\Requests\Contacts\ContactsRequest;
-use App\Http\Requests\Contacts\FollowContactRequest;
-use App\Http\Requests\Contacts\UnfollowContactRequest;
+
+use App\Http\Requests\App\Contacts\ContactsRequest;
+use App\Http\Requests\App\Contacts\FollowContactRequest;
+use App\Http\Requests\App\Contacts\UnfollowContactRequest;
 use App\Repository\ContactsListRepository\ContactsListInterface;
 
 Class ContactsListRepository implements ContactsListInterface{
@@ -29,7 +30,7 @@ Class ContactsListRepository implements ContactsListInterface{
     /**
      * Save new contacts to the database.
      *
-     * @param \App\Http\Requests\Contacts\ContactsRequest $request
+     * @param ContactsRequest $request
      * @return mixed
      * @throws \Exception
      */
@@ -70,7 +71,7 @@ Class ContactsListRepository implements ContactsListInterface{
     /**
      * Follow a contact.
      *
-     * @param \App\Http\Requests\Contacts\FollowContactRequest $request
+     * @param FollowContactRequest $request
      * @return mixed
      * @throws \Exception
      */
@@ -105,7 +106,7 @@ Class ContactsListRepository implements ContactsListInterface{
     /**
      * Unfollow a contact.
      *
-     * @param \App\Http\Requests\Contacts\UnfollowContactRequest $request
+     * @param UnfollowContactRequest $request
      */
     public function unfollowContact(UnfollowContactRequest $request)
     {
@@ -119,7 +120,7 @@ Class ContactsListRepository implements ContactsListInterface{
     /**
      * Invite a contact to the app.
      *
-     * @param \App\Http\Requests\Contacts\UnfollowContactRequest $request
+     * @param UnfollowContactRequest $request
      * @return mixed
      * @throws \Exception
      */

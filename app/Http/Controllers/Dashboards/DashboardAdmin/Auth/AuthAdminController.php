@@ -80,7 +80,7 @@ class AuthAdminController extends Controller
 
         $user = SuperAdmin::create($data); // Create a new user
 
-        return finalResponse('success', 200, ["message" => __('errors.email_send'), "user_id" => $user->id]);
+        return finalResponse('success', 200, 'register successfully');
 
     }
 

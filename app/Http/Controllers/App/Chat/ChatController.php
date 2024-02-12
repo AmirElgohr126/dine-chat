@@ -9,10 +9,10 @@ use App\Models\Conversation;
 use Illuminate\Http\Request;
 use App\Models\GeneralNotification;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Chat\RequestNewChatRequest;
-use App\Http\Resources\Chats\ConversationResource;
 use App\Service\ChatServices\ChatServiceInterface;
 use App\Service\Notifications\NotificationInterface;
+use App\Http\Requests\App\Chat\RequestNewChatRequest;
+use App\Http\Resources\App\Chats\ConversationResource;
 
 class ChatController extends Controller
 {
@@ -73,7 +73,7 @@ class ChatController extends Controller
      * it determines the deletion period. It then creates a new conversation request and handles necessary
      * events for the receiver, such as notifying them to accept or reject the request.
      *
-     * @param  \App\Http\Requests\Chat\RequestNewChatRequest  $request
+     * @param  RequestNewChatRequest  $request
      * @return \Illuminate\Http\JsonResponse
      */
     public function sendRequestChat(RequestNewChatRequest $request)

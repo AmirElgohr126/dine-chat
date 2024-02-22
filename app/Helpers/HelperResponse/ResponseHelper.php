@@ -39,4 +39,3 @@ function pagnationResponse($model) : array
             'per_page' => $model->perPage(),
         ];
     }
-?>

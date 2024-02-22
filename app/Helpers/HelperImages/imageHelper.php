@@ -53,4 +53,4 @@ function retriveMedia(): string
     }
     return $path;
 }
-?>
+

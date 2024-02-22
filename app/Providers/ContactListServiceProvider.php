@@ -3,8 +3,9 @@
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use App\Repository\ContactsListRepository\ContactsListInterface;
-use App\Repository\ContactsListRepository\ContactsListRepository;
+use App\Repository\V1\ContactsListRepository\ContactsListInterface;
+use App\Repository\V1\ContactsListRepository\ContactsListRepository;
+
 
 class ContactListServiceProvider extends ServiceProvider
 {

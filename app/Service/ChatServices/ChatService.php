@@ -20,7 +20,7 @@ class ChatService implements ChatServiceInterface
      */
     public function chatWithYourSelf($authId, $IdChatWith) {
         if ($authId == $IdChatWith) {
-            throw new Exception(__('errors.can_not_chat_with_yourself'), 405);
+            throw new Exception(__('errors.can_not_chat_with_yourself'), 201);
         }
     }
     /**
@@ -34,7 +34,7 @@ class ChatService implements ChatServiceInterface
             ->where('restaurant_id', $restaurantId)
             ->first();
         if (!$anotherUserAttendance) {
-            throw new Exception(__('errors.user_not_in_restaurant'), 405);
+            throw new Exception(__('errors.user_not_in_restaurant'), 201);
         }
     }
     /**
@@ -69,7 +69,7 @@ class ChatService implements ChatServiceInterface
             ->first();
 
         if ($existingConversation) {
-            throw new Exception(__('errors.make_request_before'), 405);
+            throw new Exception(__('errors.make_request_before'), 201);
         }
     }
     /**

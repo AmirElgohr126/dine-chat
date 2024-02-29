@@ -121,7 +121,7 @@ class ChatController extends Controller
             // Rest of your code to handle message creation and event dispatching...
             return finalResponse('success', 200, __('errors.success_request'));
         } catch (Exception $e) {
-            return finalResponse('failed', 500, null, null, $e->getMessage());
+            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
 

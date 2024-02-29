@@ -80,12 +80,17 @@ class ChatController extends Controller
     {
         try {
             $user = $request->user();
-            $this->chatService->chatWithYourSelf($user->id, $request->user_id);
-            $restaurant = Restaurant::find($request->restaurant_id);
-            $this->chatService->checkAnotherPersonInRestaurant($request->restaurant_id, $request->user_id);
-            $this->chatService->checkChatExist($user, $request, $restaurant);
             $settings = BookingDates::find(1);
+            $restaurant = Restaurant::find($request->restaurant_id);
+            // ====================================================================
+            $this->chatService->chatWithYourSelf($user->id, $request->user_id);
+            // ====================================================================
+            $this->chatService->checkAnotherPersonInRestaurant($request->restaurant_id, $request->user_id);
+            // ====================================================================
+            $this->chatService->checkChatExist($user, $request, $restaurant);
+            // ====================================================================
             $dataDeleted = $this->chatService->checkFollow($user, $request, $settings);
+            // ====================================================================
             $request_reservation = Conversation::create([
                 'sender_id' => $user->id,
                 'receiver_id' => $request->user_id,
@@ -109,7 +114,7 @@ class ChatController extends Controller
                 $this->notification->sendOneNotifyOneDevice([
                     'title' => "$sender_name" . 'send you new request Chat',
                     'message' => $message->content,
-                    'photo' => $message->attachment ?? null
+                    'image' => $message->attachment ?? null
                 ], $receiverToken);
                 GeneralNotification::requestChat($message->receiver,$sender_name,$message);
             }

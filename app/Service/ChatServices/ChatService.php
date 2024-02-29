@@ -2,6 +2,7 @@
 namespace App\Service\ChatServices;
 
 use Exception;
+use App\Models\BookingDates;
 use App\Models\Conversation;
 use App\Models\UserFollower;
 use App\Models\UserAttendance;
@@ -77,12 +78,13 @@ class ChatService implements ChatServiceInterface
      * @param mixed $request
      */
     public function checkFollow($user, $request, $setting) {
+        $dataDeleted = now()->addHour();
         $checkFollow = UserFollower::where('user_id', $user->id)
             ->where('followed_user', $request->user_id)
             ->where('follow_status', 'follow')
             ->first();
         if ($checkFollow) {
-            $dataDeleted = determainPeriod($setting);
+            $dataDeleted = BookingDates::determainPeriod($setting);
         }
         return $dataDeleted;
     }

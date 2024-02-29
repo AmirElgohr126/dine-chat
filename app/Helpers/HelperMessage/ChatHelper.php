@@ -4,7 +4,7 @@ use App\Models\Conversation;
 use App\Models\Restaurant;
 use Illuminate\Support\Facades\Http;
 
-function determainPeriod(Restaurant $model)
+function determainPeriod( $model)
 {
     $value = $model->period_reservation_deleted_after;
     switch ($model->period_reservation_unit) {

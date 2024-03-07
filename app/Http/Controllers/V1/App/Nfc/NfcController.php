@@ -32,8 +32,7 @@ class NfcController extends Controller
                 $checkReservationBefore->delete();
             }
 
-            $conflictingReservation = UserAttendance::
-                where('chair_id', $chair->id)
+            $conflictingReservation = UserAttendance::where('chair_id', $chair->id)
                 ->where('restaurant_id',$restaurant->id)
                 ->where('created_at', '>=', now())
                 ->first();
@@ -44,7 +43,7 @@ class NfcController extends Controller
             }
 
             // there is no reservation
-            $periodCheckReservation = BookingDates::firstRow();
+            $periodCheckReservation = BookingDates::firstRowRestaurant();
             $formattedDate = $periodCheckReservation->format('Y-m-d H:i:s');
             $reserve = UserAttendance::create([
                 'user_id' => $request->user()->id,

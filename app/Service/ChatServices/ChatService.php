@@ -6,6 +6,7 @@ use App\Models\BookingDates;
 use App\Models\Conversation;
 use App\Models\UserFollower;
 use App\Models\UserAttendance;
+use App\Models\ConversationDeleteAfter;
 use App\Service\ChatServices\ChatServiceInterface;
 
 
@@ -14,7 +15,7 @@ class ChatService implements ChatServiceInterface
 {
 
     /**
-     *
+     * check chat with your self
      * @param mixed $authId
      * @param mixed $IdChatWith
      */
@@ -23,8 +24,12 @@ class ChatService implements ChatServiceInterface
             throw new Exception(__('errors.can_not_chat_with_yourself'), 201);
         }
     }
+
+
+
+
     /**
-     *
+     * check corresponding user is in reservation in this restaurant or no
      * @param mixed $restaurantId
      * @param mixed $IdChatWith
      */
@@ -37,8 +42,12 @@ class ChatService implements ChatServiceInterface
             throw new Exception(__('errors.user_not_in_restaurant'), 201);
         }
     }
+
+
+
+
     /**
-     *
+     * Handle the case where the conversation already exists
      * @param mixed $user
      * @param mixed $request
      * @param mixed $restaurant
@@ -72,19 +81,22 @@ class ChatService implements ChatServiceInterface
             throw new Exception(__('errors.make_request_before'), 201);
         }
     }
+
+
+
     /**
-     *
+     * Handle the case if follow or no
      * @param mixed $user
      * @param mixed $request
      */
     public function checkFollow($user, $request, $setting) {
-        $dataDeleted = now()->addHour();
+        $dataDeleted = ConversationDeleteAfter::firstRowNormalCase();
         $checkFollow = UserFollower::where('user_id', $user->id)
             ->where('followed_user', $request->user_id)
             ->where('follow_status', 'follow')
             ->first();
         if ($checkFollow) {
-            $dataDeleted = BookingDates::determainPeriod($setting);
+            $dataDeleted = ConversationDeleteAfter::firstRowForFollower();
         }
         return $dataDeleted;
     }

@@ -18,5 +18,6 @@ class PublicPlace extends Model
         'qr_link',
         'qr_path',
         'description',
+        'status'
     ];
 }

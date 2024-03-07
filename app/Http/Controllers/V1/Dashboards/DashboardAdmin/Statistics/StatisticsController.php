@@ -1,7 +1,12 @@
 <?php
 namespace App\Http\Controllers\V1\Dashboards\DashboardAdmin\Statistics;
 
+use App\Models\Restaurant;
 use App\Http\Controllers\Controller;
+use App\Models\ApplcationForRestaurant;
+use App\Models\HistoryAttendances;
+use App\Models\SubscriptionRestaurant;
+use App\Models\Ticket;
 
 class StatisticsController extends Controller
 {
@@ -10,8 +15,8 @@ class StatisticsController extends Controller
      */
     public function getCountRestaurantThatSubscriptionExpired()
     {
-        // $expiredSubscriptions = Restaurant::where('subscription_end', '<', now())->count();
-        // return response()->json(['expired_subscriptions' => $expiredSubscriptions]);
+        $expiredSubscriptions = SubscriptionRestaurant::where('ends_at', '<', now())->count();
+        return finalResponse('success',200,$expiredSubscriptions);
     }
 
     /**
@@ -19,8 +24,8 @@ class StatisticsController extends Controller
      */
     public function getCountUnansweredSupportMessages()
     {
-        // $unansweredMessages = SupportMessage::where('answered', false)->where('status', '!=', 'waiting')->count();
-        // return response()->json(['unanswered_messages' => $unansweredMessages]);
+        $tickits = Ticket::where('status', 'no_reply')->count();
+        return finalResponse('success',200,$tickits);
     }
 
     /**
@@ -28,8 +33,8 @@ class StatisticsController extends Controller
      */
     public function getCountTotalSupportMessages()
     {
-        // $totalMessages = SupportMessage::count();
-        // return response()->json(['total_messages' => $totalMessages]);
+        $totalTickits = Ticket::count();
+        return finalResponse('success',200,$totalTickits);
     }
 
 
@@ -38,8 +43,8 @@ class StatisticsController extends Controller
      */
     public function getCountWaitingRestaurants()
     {
-        // $waitingRestaurants = Restaurant::where('status', 'waiting')->count();
-        // return response()->json(['waiting_restaurants' => $waitingRestaurants]);
+        $waitingRestaurants = ApplcationForRestaurant::where('status','pending')->count();
+        return finalResponse('success',200,$waitingRestaurants);
     }
 
     /**
@@ -47,8 +52,8 @@ class StatisticsController extends Controller
      */
     public function getCountofAllRestaurants()
     {
-        // $totalRestaurants = Restaurant::count();
-        // return response()->json(['total_restaurants' => $totalRestaurants]);
+        $totalRestaurants = Restaurant::count();
+        return finalResponse('success',200,$totalRestaurants);
     }
 
 
@@ -84,8 +89,8 @@ class StatisticsController extends Controller
      */
     public function getCountNewCustomersLastWeek()
     {
-        // $newCustomers = Customer::where('created_at', '>=', now()->subWeek())->count();
-        // return response()->json(['new_customers_last_week' => $newCustomers]);
+        $newCustomers = HistoryAttendances::where('created_at', '>=', now()->subWeek())->count();
+        return finalResponse('success',200,$newCustomers);
     }
 
     /**
@@ -93,8 +98,8 @@ class StatisticsController extends Controller
      */
     public function getTotalCustomers()
     {
-        // $totalCustomers = Customer::count();
-        // return response()->json(['total_customers' => $totalCustomers]);
+        $totalCustomers = HistoryAttendances::count();
+        return finalResponse('success',200,$totalCustomers);
     }
 
     // public function getRatedPlaces()

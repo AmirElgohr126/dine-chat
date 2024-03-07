@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('booking_chat_dates', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::table('booking_dates', function (Blueprint $table) {
+            $table->integer('period_logout_public_places')->default(0);
+            $table->enum('period_logout_unit_public_places',['hour', 'day', 'week', 'month', 'year'])->default('hour')->nullable();
         });
     }
 
@@ -22,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('booking_chat_dates');
+
     }
 };

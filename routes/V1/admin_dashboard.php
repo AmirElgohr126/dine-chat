@@ -101,6 +101,7 @@ Route::middleware('set_lang')->group(function () {
             // Route::post('/delete', [GenerateUrlAndQrController::class,'deleteQrCode']);
         });
 
+
         Route::group(['prefix' => 'restaurant-users'], function () {
             // List users of a specific restaurant
 
@@ -117,6 +118,7 @@ Route::middleware('set_lang')->group(function () {
             Route::post('/delete', [ManageUsersController::class, 'deleteRestaurantUsers']); // finished
         });
 
+        // ========================================================================================================
         Route::group(['prefix' => 'package-restaurants'], function () {
             // List all subscribed package restaurants
             Route::get('/', [SubscriptionPackageRestaurantsController::class, 'listSubscriptionPackageRestaurant']); // finished
@@ -163,103 +165,110 @@ Route::middleware('set_lang')->group(function () {
             // unarchive a subscription notification package
             Route::post('unarchive', [SubscriptionNotificationsController::class, 'unarchiveSubscriptionNotificationsPackage']); // finished
         });
+        // ========================================================================================================
+
+
+
 
 
         Route::group(['prefix' => 'restaurant-subscription'], function () {
 
             // View a restaurant's subscription
-            Route::get('/', [RestaurantSubscrptionController::class, 'viewSubscrptionOfRestaurant']);
+            Route::get('/', [RestaurantSubscrptionController::class, 'viewSubscrptionOfRestaurant']); // finished
 
             // Add a new subscription to a restaurant
-            Route::post('/add', [RestaurantSubscrptionController::class, 'addSubscrptionToRestaurant']);
+            Route::post('/add', [RestaurantSubscrptionController::class, 'addSubscrptionToRestaurant']); // finished
 
             // Delete a subscription from a restaurant
-            Route::delete('/delete', [RestaurantSubscrptionController::class, 'deleteSubscrptionToRestaurant']);
+            Route::delete('/delete', [RestaurantSubscrptionController::class, 'deleteSubscrptionToRestaurant']); // finished
 
             // Update a restaurant's subscription
-            Route::put('/update', [RestaurantSubscrptionController::class, 'updateSubscrptionToRestaurant']);
+            Route::put('/update', [RestaurantSubscrptionController::class, 'updateSubscrptionToRestaurant']); // finished
 
         });
-
 
         Route::group(['prefix' => 'notification-subscription'], function () {
             // View a restaurant's notification subscription
-            Route::get('/', [RestaurantSubscrptionController::class, 'viewNotificationSubscrptionOfRestaurant']);
+            Route::get('/', [RestaurantSubscrptionController::class, 'viewNotificationSubscrptionOfRestaurant']); // finished
 
             // Add a notification subscription to a restaurant
-            Route::post('/add', [RestaurantSubscrptionController::class, 'addNotificationSubscrptionToRestaurant']);
+            Route::post('/add', [RestaurantSubscrptionController::class, 'addNotificationSubscrptionToRestaurant']); // finished
 
             // Delete a notification subscription from a restaurant
-            Route::delete('/delete', [RestaurantSubscrptionController::class, 'deleteNotificationSubscrptionToRestaurant']);
+            Route::delete('/delete', [RestaurantSubscrptionController::class, 'deleteNotificationSubscrptionToRestaurant']); // finished
 
             // Update a restaurant's notification subscription
-            Route::put('/update', [RestaurantSubscrptionController::class, 'updateNotificationSubscrptionToRestaurant']);
-        });
-        Route::group(['prefix' => 'settings'], function () {
-            Route::put('/about/update', [AboutController::class, 'updateAboutUs']);
-            Route::put('/terms/update', [AboutController::class, 'updateTerms']);
-            Route::put('/privacy-policy/update', [AboutController::class, 'updateTerms']);
+            Route::put('/update', [RestaurantSubscrptionController::class, 'updateNotificationSubscrptionToRestaurant']); // finished
         });
 
-        // ========================================================================================================
+
+
+
+
+        Route::group(['prefix' => 'settings'], function () {
+            Route::put('/about/update', [AboutController::class, 'updateAboutUs']); // finished
+            Route::put('/terms/update', [AboutController::class, 'updateTerms']); // finished
+            Route::put('/privacy-policy/update', [AboutController::class, 'updateTerms']); // finished
+        });
+
 
         Route::group(['prefix' => 'questionable-chat'], function () {
             // Get questionable chats
-            Route::get('/', [QuestionableChatController::class, 'getQuestionableChat']);
+            Route::get('/', [QuestionableChatController::class, 'getQuestionableChat']);  // finished
             // Accept a questionable chat
-            Route::post('/accept', [QuestionableChatController::class, 'acceptQuestionableChat']);
+            Route::post('/accept', [QuestionableChatController::class, 'acceptQuestionableChat']); // finished
             // Reject a questionable chat
-            Route::post('/reject', [QuestionableChatController::class, 'rejectQuestionableChat']);
+            Route::post('/reject', [QuestionableChatController::class, 'rejectQuestionableChat']); // finished
         });
 
 
         Route::group(['prefix' => 'restrictions'], function () {
             // List restricted words
-            Route::get('/words', [RestrictionsController::class, 'listRestrictedWords']);
+            Route::get('/words', [RestrictionsController::class, 'listRestrictedWords']); // finished
             // Add a restricted word
-            Route::post('/words/add', [RestrictionsController::class, 'addRestrictedWords']);
+            Route::post('/words/add', [RestrictionsController::class, 'addRestrictedWords']); // finished
 
-            Route::post('/words/update', [RestrictionsController::class, 'updateRestrictedWords']);
+            Route::post('/words/update', [RestrictionsController::class, 'updateRestrictedWords']); // finished
             // Delete a restricted word
             // Assuming you pass the word or an identifier in the request
-            Route::delete('/words/delete', [RestrictionsController::class, 'deleteRestrictedWords']);
+            Route::delete('/words/delete', [RestrictionsController::class, 'deleteRestrictedWords']); // finished
         });
 
 
         Route::group(['prefix' => 'settings'], function () {
             // Update time settings for deleting messages
-            Route::put('/update-message-delete-time', [DashboardSettingsController::class, 'updateTimeToDeleteMessages']);
-            Route::put('/update-message-delete-time-followers', [DashboardSettingsController::class, 'updateTimeToDeleteMessagesForFollowers']);
+            Route::put('/update-message-delete-time', [DashboardSettingsController::class, 'updateTimeToDeleteMessages']); // finished
+            Route::put('/update-message-delete-time-followers', [DashboardSettingsController::class, 'updateTimeToDeleteMessagesForFollowers']); // finished
 
-            // Update logout time settings
-            Route::put('/update-logout-times', [DashboardSettingsController::class, 'updateLogoutTimes']);
-            Route::put('/update-logout-times-public', [DashboardSettingsController::class, 'updateLogoutTimesFromPublicPlaces']);
+            // Update logout time settings for restaurants and public places
+            Route::put('/update-logout-times', [DashboardSettingsController::class, 'updateLogoutTimes']); // finished
+            Route::put('/update-logout-times-public', [DashboardSettingsController::class, 'updateLogoutTimesFromPublicPlaces']); // finished
 
             // Stop application from a specific version
             Route::put('/stop-app-version', [DashboardSettingsController::class, 'stopApplicationFromVersion']);
 
             // Change user's profile details
-            Route::put('/change-password', [DashboardSettingsController::class, 'changePassword']);
-            Route::put('/change-email', [DashboardSettingsController::class, 'changeEmail']);
-            Route::put('/change-name', [DashboardSettingsController::class, 'changeName']);
-            Route::put('/change-photo', [DashboardSettingsController::class, 'changePhoto']);
+            Route::put('/change-password', [DashboardSettingsController::class, 'changePassword']); // finished
+            Route::put('/change-email', [DashboardSettingsController::class, 'changeEmail']);   // finished
+            Route::put('/change-name', [DashboardSettingsController::class, 'changeName']);  // finished
+            Route::put('/change-photo', [DashboardSettingsController::class, 'changePhoto']);   // finished
         });
 
         Route::group(['prefix' => 'statistics'], function () {
             // Get count of restaurants with expired subscriptions
-            Route::get('/expired-subscriptions', [StatisticsController::class, 'getCountRestaurantThatSubscriptionExpired']);
+            Route::get('/expired-subscriptions', [StatisticsController::class, 'getCountRestaurantThatSubscriptionExpired']);  // finished
 
             // Get count of unanswered support messages
-            Route::get('/unanswered-support-messages', [StatisticsController::class, 'getCountUnansweredSupportMessages']);
+            Route::get('/unanswered-support-messages', [StatisticsController::class, 'getCountUnansweredSupportMessages']); // finished
 
             // Get total count of support messages
-            Route::get('/total-support-messages', [StatisticsController::class, 'getCountTotalSupportMessages']);
+            Route::get('/total-support-messages', [StatisticsController::class, 'getCountTotalSupportMessages']); // finished
 
             // Get count of waiting restaurants
-            Route::get('/waiting-restaurants', [StatisticsController::class, 'getCountWaitingRestaurants']);
+            Route::get('/waiting-restaurants', [StatisticsController::class, 'getCountWaitingRestaurants']); // finished
 
             // Get total count of restaurants
-            Route::get('/total-restaurants', [StatisticsController::class, 'getCountofAllRestaurants']);
+            Route::get('/total-restaurants', [StatisticsController::class, 'getCountofAllRestaurants']); // finished
 
             // Get statistics for public place entries
             Route::get('/public-places-entries', [StatisticsController::class, 'getPublicPlacesEntries']);
@@ -268,10 +277,12 @@ Route::middleware('set_lang')->group(function () {
             Route::get('/restaurant-entries', [StatisticsController::class, 'getRestaurantEntries']);
 
             // Get count of new customers from the last week
-            Route::get('/new-customers-last-week', [StatisticsController::class, 'getCountNewCustomersLastWeek']);
+            Route::get('/new-customers-last-week', [StatisticsController::class, 'getCountNewCustomersLastWeek']); // finished
 
             // Get total number of customers
-            Route::get('/total-customers', [StatisticsController::class, 'getTotalCustomers']);
+            Route::get('/total-customers', [StatisticsController::class, 'getTotalCustomers']); // finished
         });
     });
 });
+
+// ========================================================================================================

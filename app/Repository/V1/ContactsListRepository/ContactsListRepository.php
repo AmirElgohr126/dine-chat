@@ -5,10 +5,7 @@ use App\Models\User;
 use App\Models\Contact;
 use App\Models\UserFollower;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-
-use Illuminate\Support\Facades\Mail;
 use App\Http\Requests\V1\App\Contacts\ContactsRequest;
 use App\Http\Requests\V1\App\Contacts\FollowContactRequest;
 use App\Http\Requests\V1\App\Contacts\UnfollowContactRequest;
@@ -40,9 +37,14 @@ Class ContactsListRepository implements ContactsListInterface{
     public function postContactList(ContactsRequest $request)
     {
         $contacts = $request->validated();
+        if (empty($contacts['contact'])) {
+            throw new Exception(__('errors.no_contacts_found'),200);
+        }
         // Retrieve all phones at once
         $phones = Contact::pluck('phone')->all();
+
         $phonesUser = User::pluck('phone')->all();
+
         $savedContacts = []; // Initialize an array to store saved contacts
         foreach ($contacts['contact'] as $contact) // Loop through each contact from the request
         {
@@ -60,7 +62,6 @@ Class ContactsListRepository implements ContactsListInterface{
             if (isset($contact['photo'])) {
                 $contact['photo'] = storeFile($contact['photo'], "users/user$userId/contacts", 'public');
             } else {
-
                 $contact['photo'] = 'Dafaults\Contacts\avatar.png';
             }
             $contact['user_id'] = $userId;

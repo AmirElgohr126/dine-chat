@@ -21,7 +21,6 @@ class ContactsRequest extends FormRequest
      */
     public function rules(): array
     {
-
         return [
             'contact.*.name' => 'required|string',
             'contact.*.phone' => 'required|string',

@@ -113,6 +113,8 @@ class AuthAdminController extends Controller
         return finalResponse('success', 200, 'please check your mail.');
     }
 
+
+    
     /**
      * reset password Dashboard
      * @param \Illuminate\Http\Request $request
@@ -154,6 +156,9 @@ class AuthAdminController extends Controller
         return finalResponse('password reset succesfully', 200, null, null);
 
     }
+
+
+
     /**
      * reset password Dashboard
      * @param \Illuminate\Http\Request $request

@@ -50,7 +50,7 @@ class SubscriptionPackageRestaurantsController extends Controller
             'price_per_month' => 'required|numeric|min:0',
             'price_per_year' => 'nullable|numeric|min:0',
             'status' => 'required|in:active,inactive',
-            'period_finished_after' => 'required|date',
+            'period_finished_after' => 'required|date|after:today',
             'features.*' => 'required|string',
             'limitations.*' => 'required|string',
         ]);

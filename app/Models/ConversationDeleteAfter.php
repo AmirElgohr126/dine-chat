@@ -5,36 +5,42 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class BookingDates extends Model
+class ConversationDeleteAfter extends Model
 {
     use HasFactory;
 
+    protected $table = 'conversation_delete_after';
+
     protected $fillable = [
-        'period_reservation_unit',
         'period_reservation_deleted_after',
-        'period_logout_public_places',
-        'period_logout_unit_public_places'
+        'period_reservation_unit',
+        // ==================================
+        'period_reservation_deleted_after_followers',
+        'period_reservation_unit_followers'
     ];
 
-    public static function firstRowRestaurant()
+
+    public static function determainPeriodForFollower($model)
     {
-        $model = self::find(1);
-        $period = self::determainPeriodForRestaurant($model);
-        return $period;
+        $value = $model->period_reservation_deleted_after_followers;
+        switch ($model->period_reservation_unit_followers) {
+            case 'year':
+                return now()->addYears($value);
+            case 'month':
+                return now()->addMonths($value);
+            case 'week':
+                return now()->addWeeks($value);
+            case 'day':
+                return now()->addDays($value);
+            case 'hour':
+                return now()->addHours($value);
+            default:
+                return now()->addHour();
+        }
     }
 
 
-    public static function firstRowForPublicPlaces()
-    {
-        $model = self::find(1);
-        $period = self::determainPeriodForPublicPlaces($model);
-        return $period;
-    }
-
-
-
-
-    public static function determainPeriodForRestaurant($model)
+    public static function determainPeriodInNormalCase($model)
     {
         $value = $model->period_reservation_deleted_after;
         switch ($model->period_reservation_unit) {
@@ -54,28 +60,19 @@ class BookingDates extends Model
     }
 
 
-
-
-
-    public static function determainPeriodForPublicPlaces($model)
+    public static function firstRowNormalCase()
     {
-        $value = $model->period_logout_public_places;
-        switch ($model->period_logout_unit_public_places) {
-            case 'year':
-                return now()->addYears($value);
-            case 'month':
-                return now()->addMonths($value);
-            case 'week':
-                return now()->addWeeks($value);
-            case 'day':
-                return now()->addDays($value);
-            case 'hour':
-                return now()->addHours($value);
-            default:
-                return now()->addHour();
-        }
+        $model = self::find(1);
+        $period = self::determainPeriodInNormalCase($model);
+        return $period;
     }
 
+    public static function firstRowForFollower()
+    {
+        $model = self::find(1);
+        $period = self::determainPeriodForFollower($model);
+        return $period;
+    }
 
 
 }

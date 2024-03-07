@@ -23,8 +23,8 @@ class NfcRequest extends FormRequest
     {
         return [
             'restaurant_id' => 'required',
-            'latitude' => 'required|numeric',
-            'longitude' => 'required|numeric',
+            'latitude' => 'required|numeric', // 'latitude' => 'required|numeric|between:-90,90'
+            'longitude' => 'required|numeric', // 'longitude' => 'required|numeric|between:-180,180'
             'nfc_number' => 'required|numeric',
         ];
     }

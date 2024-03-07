@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
+
 use App\Http\Requests\V1\App\Contacts\ContactsRequest;
 use App\Http\Requests\V1\App\Contacts\FollowContactRequest;
 use App\Http\Requests\V1\App\Contacts\UnfollowContactRequest;
@@ -40,10 +41,11 @@ class ContactsListController extends Controller
     {
         // post all contacts and check if duplcate by phone and make subscriped followed by user
         try{
+
             $savedContacts = $this->repo->postContactList($request);
             return finalResponse('success',200,$savedContacts);
         } catch (Exception $th) {
-            return finalResponse('failed',400,null,null, $th->getMessage());
+            return finalResponse('failed',$th->getCode(),null,null, $th->getMessage());
         }
     }
 

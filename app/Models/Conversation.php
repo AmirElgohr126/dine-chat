@@ -16,7 +16,7 @@ class Conversation extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'id','sender_id','receiver_id','restaurant_id','status','deleted_at'
+        'id','sender_id','receiver_id','restaurant_id','status','deleted_at','has_profanity'
     ];
 
 
@@ -57,4 +57,9 @@ class Conversation extends Model
         return $this->belongsTo(User::class,'sender_id','id');
     }
 
+
+    public function scopeprofanity(Builder $query)
+    {
+        return $query->where('has_profanity',1);
+    }
 }

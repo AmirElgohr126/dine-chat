@@ -16,6 +16,13 @@ use Endroid\QrCode\RoundBlockSizeMode;
 
 class GenerateUrlAndQrController extends Controller
 {
+
+
+    /**
+     * Generate URL and QR code for each chair based on restaurant
+     * @param \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function ChairsBasedOnRestaurant(Request $request)
     {
         $chairs = Chair::where('restaurant_id', $request->restaurant_id)->get();
@@ -34,6 +41,14 @@ class GenerateUrlAndQrController extends Controller
     }
 
 
+
+    /**
+     * Generate QR code for each chair
+     * @param int $restaurantId
+     * @param string $url
+     * @param string $nfcNumber
+     * @return string
+     */
     public function generateQRCode($restaurantId, $url, $nfcNumber)
     {
         $qrCode = Builder::create()
@@ -74,6 +89,12 @@ class GenerateUrlAndQrController extends Controller
     }
 
 
+    /**
+     * Generate URL for each chair
+     * @param \App\Models\Restaurant $restaurant
+     * @param \App\Models\Chair $chair
+     * @return string
+     */
     public function generateURL($restaurant, $chair)
     {
         $data = [

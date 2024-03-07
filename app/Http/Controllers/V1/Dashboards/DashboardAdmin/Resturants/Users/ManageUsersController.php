@@ -13,7 +13,7 @@ class ManageUsersController extends Controller
 {
 
     /**
-     * list One Restauran tUsers
+     * list One Restaurant Users
      * @param \Illuminate\Http\Request $request
      * @return jsonResponse
      */
@@ -37,7 +37,7 @@ class ManageUsersController extends Controller
 
 
     /**
-     * create RestaurantUsers
+     * create Restaurant Users
      * @param \Illuminate\Http\Request $request
      * @return JsonResponse
      */

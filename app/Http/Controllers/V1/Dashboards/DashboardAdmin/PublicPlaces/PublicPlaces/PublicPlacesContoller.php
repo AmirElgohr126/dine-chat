@@ -28,6 +28,7 @@ class PublicPlacesContoller extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'photo' => 'required|image|max:2048',
             'description' => 'nullable|string',
+            'status' => 'required|boolean'
         ]);
         try{
 
@@ -77,6 +78,7 @@ class PublicPlacesContoller extends Controller
             'latitude' => 'numeric|between:-90,90',
             'photo' => 'image|max:2048',
             'description' => 'nullable|string',
+            'status' => 'boolean'
         ]);
         try{
 

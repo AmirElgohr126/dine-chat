@@ -15,7 +15,7 @@ class AboutController extends Controller
 
 
     /**
-     * update AboutUs
+     * get About Us
      * @param Request $request
      * @return JsonResponse
      */
@@ -31,7 +31,7 @@ class AboutController extends Controller
         return finalResponse('success',200,'About Us updated successfully!');
     }
     /**
-     * update Terms
+     *  update Terms and Conditions
      * @param Request $request
      * @return JsonResponse
      */
@@ -50,7 +50,7 @@ class AboutController extends Controller
 
 
     /**
-     * privacy_policy
+     * update Privacy Policy
      * @param Request $request
      * @return JsonResponse
      */

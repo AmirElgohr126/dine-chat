@@ -5,7 +5,7 @@ use App\Http\Controllers\Controller;
 
 class TechnicalSupportController extends Controller
 {
-
+    
 }
 
 

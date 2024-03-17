@@ -122,7 +122,7 @@ class NotificationController extends Controller
                 $Notification->save();
                 return finalResponse('success', 200, null, null, 'notifications sent');
             } else {
-                return finalResponse('failed', 400, null, null, 'Notification sending failed');
+                return finalResponse('failed', 400, null, null, 'Notification sending but no participants found.');
             }
         } catch (Exception $e) {
             return finalResponse('failed', 400, null, null, $e->getMessage());

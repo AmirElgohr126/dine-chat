@@ -1,6 +1,7 @@
 <?php
 namespace App\Http\Controllers\V1\App\Chat;
 
+use App\Models\BanedChats;
 use Exception;
 use App\Models\Message;
 use App\Models\Restaurant;
@@ -23,6 +24,7 @@ class ChatController extends Controller
         $this->chatService = $chatService;
         $this->notification = $notificationServices;
     }
+
 
     /**
      * Get Chats for the authenticated user based on the restaurant.
@@ -63,6 +65,7 @@ class ChatController extends Controller
             return finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
+
 
     /**
      * Send a chat request to another user for a specific restaurant.
@@ -125,6 +128,7 @@ class ChatController extends Controller
         }
     }
 
+
     /**
      * List chat requests for the authenticated user in a specific restaurant.
      *
@@ -162,6 +166,8 @@ class ChatController extends Controller
         }
     }
 
+
+
     /**
      * Cancel a chat request for the authenticated user in a specific restaurant.
      *
@@ -197,6 +203,9 @@ class ChatController extends Controller
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
+
+
+
 
     /**
      * List incoming chat requests for the authenticated user.
@@ -235,6 +244,10 @@ class ChatController extends Controller
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
+
+
+
+
     /**
      * Accept an incoming chat request for the authenticated user.
      *
@@ -285,6 +298,8 @@ class ChatController extends Controller
             return finalResponse('failed', 500,null,null,$e->getMessage());
         }
     }
+
+
     /**
      * Reject an incoming chat request for the authenticated user.
      *
@@ -323,6 +338,93 @@ class ChatController extends Controller
     }
 
 
+    /**
+     * ban user and chat
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function banChat(Request $request)
+    {
+        $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'conversation_id' => ['required', 'exists:conversations,id']
+        ]);
+        $user = $request->user();
+        $userBaned = $request->user_id;
+        try {
+            // Retrieve a ban record for the user in the specified conversation with 'ban' status
+            $banRecord = BanedChats::firstOrCreate(
+                [
+                    'user_id' => $userBaned,
+                    'conversation_id' => $request->conversation_id,
+                    'status' => 'ban',
+                ]
+            );
+            if (!$banRecord->wasRecentlyCreated) {
+                throw new Exception(__('errors.User_already_baned'), 405);
+            }
+            throw new Exception(__('errors.No_matching_conversation'), 405);
+        } catch (Exception $e) {
+            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
+        }
+    }
+
+
+    /**
+     * unban user and chat
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function unBanChat(Request $request)
+    {
+        $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'conversation_id' => ['required', 'exists:conversations,id']
+        ]);
+        $user = $request->user();
+        $userBaned = $request->user_id;
+        try {
+            $banUser = BanedChats::where('user_id', $userBaned)
+                ->where('conversation_id', $request->conversation_id)
+                ->where('status', 'ban')
+                ->first();
+            if ($banUser) {
+                $banUser->delete();
+                return finalResponse('success', 200, $banUser);
+            }
+            throw new Exception(__('errors.No_matching_conversation'), 405);
+        } catch (Exception $e) {
+            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
+        }
+    }
+
+
+    /**
+     * report user and chat
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function reportChat(Request $request)
+    {
+        $request->validate([
+            'user_id' => ['required', 'exists:users,id'],
+            'conversation_id' => ['required', 'exists:conversations,id'],
+            'reson' => 'required|string'
+        ]);
+        $user = $request->user();
+        $userBaned = $request->user_id;
+        try {
+            $banUser = BanedChats::create([
+                'user_id' => $userBaned,
+                'conversation_id' => $request->conversation_id,
+                'status' => 'report',
+                'reason' => $request->reason
+            ]);
+            throw new Exception(__('errors.No_matching_conversation'), 405);
+        } catch (Exception $e) {
+            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
+        }
+    }
 
 
 }

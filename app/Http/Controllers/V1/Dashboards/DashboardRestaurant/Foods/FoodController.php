@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Dashboard\Foods\AddFoodRequest;
 use App\Http\Requests\V1\Dashboard\Foods\UpdateFoodRequest;
+use App\Models\Restaurant;
+
 
 class FoodController extends Controller
 {
@@ -19,7 +21,7 @@ class FoodController extends Controller
             $restaurantId = $user->restaurant_id;
             $data = $request->validated();
             extract($data);
-
+            $restaurant = Restaurant::find($restaurantId);
             $pathImage = storeFile($photo, "restaurants/restaurant{$restaurant->id}/food", 'public'); // helper in helper image file return path of file
             DB::beginTransaction();
             $food = Food::create([

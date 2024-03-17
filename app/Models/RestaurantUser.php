@@ -70,4 +70,5 @@ class RestaurantUser extends User implements ShouldQueue, JWTSubject
     {
         return $this->hasOne(Otp::class, 'restaurant_user_id','id');
     }
+
 }

@@ -278,7 +278,7 @@ Route::middleware('set_lang')->group(function () {
 
             // Get count of new customers from the last week
             Route::get('/new-customers-last-week', [StatisticsController::class, 'getCountNewCustomersLastWeek']); // finished
-
+            
             // Get total number of customers
             Route::get('/total-customers', [StatisticsController::class, 'getTotalCustomers']); // finished
         });

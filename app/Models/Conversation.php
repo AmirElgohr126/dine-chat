@@ -16,7 +16,7 @@ class Conversation extends Model
     use HasFactory,SoftDeletes;
 
     protected $fillable = [
-        'id','sender_id','receiver_id','restaurant_id','status','deleted_at','has_profanity'
+        'id','sender_id','receiver_id','restaurant_id','status','deleted_at','has_profanity','ban'
     ];
 
 
@@ -61,5 +61,14 @@ class Conversation extends Model
     public function scopeprofanity(Builder $query)
     {
         return $query->where('has_profanity',1);
+    }
+
+
+    /**
+     * get the baned conversation
+     */
+    public function scopeBan(Builder $query, $conversationId)
+    {
+        return $query->where('conversation_id',$conversationId)->where('ban',1);
     }
 }

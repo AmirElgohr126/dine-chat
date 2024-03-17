@@ -110,11 +110,16 @@ Route::middleware('set_lang')->group(function () {
             Route::get('/{id}', [MessageController::class, 'getMessages'])
                 ->where('id', '[0-9]+'); // finished
             Route::post('{id}/send', [MessageController::class, 'sendMessage'])
-                ->where('id', '[0-9]+'); // finished
+                ->where('id', '[0-9]+')->middleware('chat_baned'); // finished
             Route::post('{id}/message/{id_message}/update', [MessageController::class, 'updateMessage'])
                 ->where('id', '[0-9]+')->where('id_message','[0-9]+'); // finished
             Route::delete('{id}/message/{id_message}/delete', [MessageController::class, 'deleteMessage'])
                 ->where('id', '[0-9]+')->where('id_message', '[0-9]+'); // finished
+
+            // routes ban and unban
+            Route::post('ban', [ChatController::class, 'banChat']); // finished
+            Route::post('unban', [ChatController::class, 'unbanChat']); // finished
+            Route::post('report', [ChatController::class, 'reportChat']); // finished
         });
         // =====================================================================================
         Route::group(['prefix' => 'game','middleware'=>'check_reservation'], function () {

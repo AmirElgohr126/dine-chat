@@ -67,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'set_lang' => \App\Http\Middleware\SetLang::class,
         'check_reservation' => \App\Http\Middleware\CheckReservation::class,
+        'chat_baned' => \App\Http\Middleware\ChatBaned::class,
     ];
 }

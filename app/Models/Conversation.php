@@ -64,11 +64,9 @@ class Conversation extends Model
     }
 
 
-    /**
-     * get the baned conversation
-     */
-    public function scopeBan(Builder $query, $conversationId)
+
+    public function banChat($conversationId)
     {
-        return $query->where('conversation_id',$conversationId)->where('ban',1);
+        return $this->hasOne(BanedChats::class,'conversation_id','id')->where('conversation_id',$conversationId);
     }
 }

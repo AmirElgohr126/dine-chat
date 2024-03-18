@@ -16,9 +16,14 @@ class ChatBaned
      */
     public function handle(Request $request, Closure $next): Response
     {
+
+        // public function scopeBan(Builder $query, $conversationId)
+        // {
+        //     return $query->where('conversation_id',$conversationId)->where('ban',1);
+        // }
         $chat = Conversation::find($request->id);
-        if ($chat->ban) {
-            return finalResponse('failed', 403, null, 'chat is baned');
+        if($chat->banChat->status == 'ban'){
+            return response()->json(['message' => 'Chat is baned'], 403);
         }
         return $next($request);
     }

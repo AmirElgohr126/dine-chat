@@ -17,13 +17,16 @@ class ChatBaned
     public function handle(Request $request, Closure $next): Response
     {
 
-        // public function scopeBan(Builder $query, $conversationId)
-        // {
-        //     return $query->where('conversation_id',$conversationId)->where('ban',1);
-        // }
-        $chat = Conversation::find($request->id);
-        if($chat->banChat->status == 'ban'){
-            return response()->json(['message' => 'Chat is baned'], 403);
+        $chat = Conversation::withTrashed()->find($request->id);
+
+        // Ensure that the chat and its banChat relationship exist before accessing properties
+        if ($chat && $chat->banChat && $chat->banChat->status == 'ban') {
+            return finalResponse(403, 'You are banned from this chat');
+        }
+
+        // If the chat doesn't exist, you may want to handle it differently
+        if (!$chat) {
+            return finalResponse(404, 'Chat not found');
         }
         return $next($request);
     }

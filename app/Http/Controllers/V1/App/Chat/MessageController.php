@@ -23,6 +23,12 @@ class MessageController extends Controller
         $this->notification = $notificationServices;
     }
 
+
+    /**
+     * Get all messages for a specific conversation
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function getMessages(Request $request)
     {
         try {
@@ -55,6 +61,11 @@ class MessageController extends Controller
         }
     }
 
+    /**
+     * Send a new message
+     * @param NewChatMessageRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function sendMessage(NewChatMessageRequest $request)
     {
         try {
@@ -102,7 +113,7 @@ class MessageController extends Controller
                 $this->notification->sendOneNotifyOneDevice([
                     'title' => $sender_name." send you new message ",
                     'message' => $message->content,
-                    'photo' => $message->attachment
+                    'image' => $message->attachment
                 ],$receiverToken);
             }
             unset($message->receiver);
@@ -113,6 +124,12 @@ class MessageController extends Controller
         }
     }
 
+
+    /**
+     * Update a message
+     * @param UpdateChatMessageRequest $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function updateMessage(UpdateChatMessageRequest $request)
     {
         try {
@@ -147,6 +164,13 @@ class MessageController extends Controller
             return finalResponse('failed', $e->getCode(), null, $e->getMessage());
         }
     }
+
+
+    /**
+     * Delete a message
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteMessage(Request $request)
     {
         try {
@@ -180,6 +204,12 @@ class MessageController extends Controller
         }
     }
 
+
+    /**
+     * Delete a message
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function deleteAttachment(Request $request)
     {
         try {

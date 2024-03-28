@@ -17,8 +17,22 @@ use App\Http\Resources\V1\App\Chats\ConversationResource;
 
 class ChatController extends Controller
 {
+    /**
+     * Chat service instance.
+     *
+     * @var ChatServiceInterface
+     */
     protected $chatService;
+
+
+    /**
+     * Notification service instance.
+     *
+     * @var NotificationInterface
+     */
     protected $notification;
+
+
     public function __construct(ChatServiceInterface $chatService, NotificationInterface $notificationServices)
     {
         $this->chatService = $chatService;
@@ -43,21 +57,20 @@ class ChatController extends Controller
             $user = $request->user();
             // 2 - get conversation of his reastaurant based on reservation
             $conversations = Conversation::
-                where(function ($query) use ($user)
-                    {
-                        $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
-                    })
+                where(function ($query) use ($user) {
+                    $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
+                })
                 ->where('restaurant_id', $request->restaurant_id)
                 ->where('status', 'accept')
                 ->where('deleted_at', '>', now())
                 ->withTrashed()
                 ->with([
-                    'receiver',
-                    'sender',
-                    'messages' => function ($query) {
-                        $query->lastMessage();
-                    },
-                ])
+                        'receiver',
+                        'sender',
+                        'messages' => function ($query) {
+                            $query->lastMessage();
+                        },
+                    ])
                 ->get();
             $conversations = ConversationResource::collection($conversations);
             return finalResponse('success', 200, $conversations);
@@ -90,7 +103,7 @@ class ChatController extends Controller
             // ====================================================================
             $this->chatService->checkAnotherPersonInRestaurant($request->restaurant_id, $request->user_id);
             // ====================================================================
-            $this->chatService->checkChatExist($user, $request, $restaurant);
+            // $this->chatService->checkChatExist($user, $request, $restaurant);
             // ====================================================================
             $dataDeleted = $this->chatService->checkFollow($user, $request, $settings);
             // ====================================================================
@@ -111,15 +124,15 @@ class ChatController extends Controller
             ]);
 
             $receiverToken = $message->receiver->device_token;
-            if($message->receiver->notification_status==1)
-            {
-                $sender_name = "$user->first_name" .' '. "$user->last_name";
+            // if natification is 1 send notification else not
+            if ($message->receiver->notification_status == 1) {
+                $sender_name = "$user->first_name "." $user->last_name ";
                 $this->notification->sendOneNotifyOneDevice([
                     'title' => "$sender_name" . 'send you new request Chat',
                     'message' => $message->content,
                     'image' => $message->attachment ?? null
                 ], $receiverToken);
-                GeneralNotification::requestChat($message->receiver,$sender_name,$message);
+                GeneralNotification::requestChat($message->receiver, $sender_name, $message);
             }
             // Rest of your code to handle message creation and event dispatching...
             return finalResponse('success', 200, __('errors.success_request'));
@@ -143,16 +156,19 @@ class ChatController extends Controller
     public function listRequestsChat(Request $request)
     {
         try {
-            $per_page = $request->per_page ?? 10 ;
+            $per_page = $request->per_page ?? 10;
             $user = $request->user();
             $conversations = Conversation::where('sender_id', $user->id)
                 ->where('restaurant_id', $request->restaurant_id)
-                ->where('status','invited')
-                ->where('deleted_at','>', now())
-                ->with(['receiver', 'sender',
+                ->where('status', 'invited')
+                ->where('deleted_at', '>', now())
+                ->with([
+                    'receiver',
+                    'sender',
                     'messages' => function ($query) {
                         $query->lastMessage();
-                    }])
+                    }
+                ])
                 ->withTrashed()
                 ->paginate($per_page);
             if (!$conversations->items()) {
@@ -162,7 +178,7 @@ class ChatController extends Controller
             $pagnateConversation = pagnationResponse($conversations);
             return finalResponse('success', 200, $conversations->items(), $pagnateConversation);
         } catch (Exception $e) {
-            return finalResponse('failed',$e->getCode(),null,null,$e->getMessage());
+            return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
     }
 
@@ -227,10 +243,13 @@ class ChatController extends Controller
                 ->where('status', 'invited')
                 ->withTrashed()
                 ->where('deleted_at', '>', now())
-                ->with(['sender', 'receiver',
+                ->with([
+                    'sender',
+                    'receiver',
                     'messages' => function ($query) {
                         $query->lastMessage();
-                    }])
+                    }
+                ])
                 ->paginate($per_page);
             if ($conversations->isEmpty()) {
                 throw new Exception(__('errors.No_conversation_found'), 204);
@@ -264,7 +283,7 @@ class ChatController extends Controller
     {
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],
-            'conversation_id' => ['required','exists:conversations,id']
+            'conversation_id' => ['required', 'exists:conversations,id']
         ]);
         try {
             $user = $request->user();
@@ -275,27 +294,26 @@ class ChatController extends Controller
                 ->where('deleted_at', '>', now()->subHour())
                 ->withTrashed()
                 ->first();
-                if(!$conversations)
-                {
-                    throw new Exception(__('errors.No_matching_conversation'), 405);
-                }
-                $conversations->update(['status' => 'accept']);
-                if($conversations->sender->notification_status==1)
-                {
-                    $receiverToken = $conversations->sender->device_token;
-                    $this->notification->sendOneNotifyOneDevice([
-                        'title' => 'your request Chat is accepted',
-                        'message' => 'you can chat now',
-                        'photo' => ''
-                    ], $receiverToken);
-                    // have message
-                    $name = $conversations->receiver->first_name .' '. $conversations->receiver->last_name;
+            if (!$conversations) {
+                throw new Exception(__('errors.No_matching_conversation'), 405);
+            }
+            $conversations->update(['status' => 'accept']);
+            if ($conversations->sender->notification_status == 1) {
+                $receiverToken = $conversations->sender->device_token;
+                $recevierName = $conversations->receiver->first_name . $conversations->receiver->last_name;
+                $this->notification->sendOneNotifyOneDevice([
+                    'title' => "$recevierName accept your chat request",
+                    'message' => 'you can chat now',
+                    'image' => ''
+                ], $receiverToken);
+                // have message
+                $name = $conversations->receiver->first_name . ' ' . $conversations->receiver->last_name;
                 GeneralNotification::acceptChat($conversations->sender, $name);
 
             }
-                return finalResponse('success', 200, $conversations);
+            return finalResponse('success', 200, $conversations);
         } catch (Exception $e) {
-            return finalResponse('failed', 500,null,null,$e->getMessage());
+            return finalResponse('failed', 500, null, null, $e->getMessage());
         }
     }
 
@@ -363,7 +381,7 @@ class ChatController extends Controller
             if (!$banRecord->wasRecentlyCreated) {
                 throw new Exception(__('errors.User_already_baned'), 405);
             }
-            throw new Exception(__('errors.No_matching_conversation'), 405);
+            return finalResponse('success', 200, $banRecord);
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }
@@ -420,7 +438,7 @@ class ChatController extends Controller
                 'status' => 'report',
                 'reason' => $request->reason
             ]);
-            throw new Exception(__('errors.No_matching_conversation'), 405);
+            return finalResponse('success', 200, $banUser);
         } catch (Exception $e) {
             return finalResponse('failed', $e->getCode(), null, null, $e->getMessage());
         }

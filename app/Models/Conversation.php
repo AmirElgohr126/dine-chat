@@ -6,10 +6,11 @@ use App\Models\User;
 use App\Models\Message;
 
 
+use App\Models\BanedChats;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Conversation extends Model
 {
@@ -65,8 +66,8 @@ class Conversation extends Model
 
 
 
-    public function banChat($conversationId)
+    public function banChat()
     {
-        return $this->hasOne(BanedChats::class,'conversation_id','id')->where('conversation_id',$conversationId);
+        return $this->hasOne(BanedChats::class,'conversation_id','id');
     }
 }

@@ -6,7 +6,7 @@ use App\Models\User;
 use App\Models\Notification;
 use App\Models\UserAttendance;
 use Illuminate\Console\Command;
-use App\Http\Controllers\Dashboards\DashboardRestaurant\Notifications\NotificationSender;
+use App\Http\Controllers\V1\Dashboards\DashboardRestaurant\Notifications\NotificationSender;
 
 class SendPendingNotifications extends Command
 {

@@ -62,14 +62,30 @@ class ConversationDeleteAfter extends Model
 
     public static function firstRowNormalCase()
     {
-        $model = self::find(1);
+        $model = self::findOrNew(1);
+        // if new row created implement this
+        if (!$model->exists) {
+            $model->period_reservation_deleted_after = 1;
+            $model->period_reservation_unit = 'hour';
+            $model->period_reservation_deleted_after_followers = 1;
+            $model->period_reservation_unit_followers = 'hour';
+            $model->save();
+        }
         $period = self::determainPeriodInNormalCase($model);
         return $period;
     }
 
     public static function firstRowForFollower()
     {
-        $model = self::find(1);
+        $model = self::findOrNew(1);
+        // if new row created implement this
+        if (!$model->exists) {
+            $model->period_reservation_deleted_after_followers = 1;
+            $model->period_reservation_unit_followers = 'hour';
+            $model->period_reservation_deleted_after = 1;
+            $model->period_reservation_unit = 'hour';
+            $model->save();
+        }
         $period = self::determainPeriodForFollower($model);
         return $period;
     }

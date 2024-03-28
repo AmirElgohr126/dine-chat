@@ -1,11 +1,12 @@
 <?php
 namespace App\Service\Notifications;
 
-use App\Service\Notifications\NotificationInterface;
 use GuzzleHttp\Pool;
 use GuzzleHttp\Client;
 use GuzzleHttp\Promise;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Exception\GuzzleException;
+use App\Service\Notifications\NotificationInterface;
 
 /**
  * Summary of NotificationServices
@@ -80,7 +81,6 @@ class NotificationServices implements NotificationInterface
     public function sendOneNotifyOneDevice($notification, $deviceToken)
     {
         $this->setNotification($notification);
-        $curl = curl_init();
         $postData = [
             'message' => [
                 'notification' => [
@@ -103,22 +103,29 @@ class NotificationServices implements NotificationInterface
                 'token' => $deviceToken,
             ]
         ];
-        curl_setopt_array($curl, [
-            CURLOPT_URL => "https://fcm.googleapis.com/v1/projects/$this->projectId/messages:send",
-            CURLOPT_RETURNTRANSFER => true,
-            CURLOPT_CUSTOMREQUEST => "POST",
-            CURLOPT_POSTFIELDS => json_encode($postData),
-            CURLOPT_HTTPHEADER => $this->headers,
-        ]);
-        $response = curl_exec($curl);
-        if (!curl_errno($curl)) {
-            $responses[] = json_decode($response, true);
+        try {
+            $response = $this->client->post("https://fcm.googleapis.com/v1/projects/{$this->projectId}/messages:send", [
+                'headers' => $this->headers,
+                'json' => $postData,
+            ]);
+
+            // Decode the JSON response into an associative array.
+            $responseData = json_decode($response->getBody()->getContents(), true);
+
+            // Assuming you want to return an array of responses like the original curl version.
+            $responses = [$responseData];
+            return $responses;
+        } catch (GuzzleException $e) {
+            // Handle the exception according to your needs.
+            // For example, you could log the error or return a specific error structure.
+            return ['error' => $e->getMessage()];
         }
-        curl_close($curl);
-        return $responses;
     }
+
+
+
     /**
-     *
+     * send one notify to multi Device in one request
      * @param mixed $notification
      * @param mixed $deviceTokens
      */

@@ -55,5 +55,6 @@ return [
     'succees_notification_create' => 'succees notification create',
     'you_make_reservation_in_another_place' => 'you make reservation in another place',
     'no_contacts_found' => 'no contacts found',
-
+    'success_request' => 'success request',
+    'no_request_found' => 'no request found',
 ];

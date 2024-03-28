@@ -52,5 +52,6 @@ return [
     'email_not_found' => 'البريد الإلكتروني غير موجود',
     'update_succeesfully' => 'تم تحديث الملف الشخصي بنجاح',
     'no_user_found' => 'لم يتم العثور على المستخدم',
+    'success_request' => 'طلب ناجح',
 ];
 

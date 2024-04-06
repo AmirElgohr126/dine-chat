@@ -7,6 +7,7 @@ use App\Models\Message;
 use App\Models\UserGhost;
 use App\Models\Conversation;
 use App\Models\UserAttendance;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Laravel\Sanctum\HasApiTokens;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use App\Notifications\CustomVerifyEmail;
@@ -111,6 +112,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     {
         return $this->hasMany(Message::class, 'sender_id');
     }
+
     public function receivedMessages()
     {
         return $this->hasMany(Message::class, 'receiver_id');
@@ -140,6 +142,26 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         return $this->belongsToMany(Notification::class, 'notification_user');
     }
 
+//    ================================== otp ============================================
+    public function otp()
+    {
+        return $this->hasOne(OtpUser::class);
+    }
+
+    public function isOtpExpiry()
+    {
+        if($this->otp && $this->otp->isExpired()){
+            return true;
+        }
+        return false;
+    }
+
+//    ================================== user attendance ============================================
+
+    public function userAttendancePublicPlace(): HasMany
+    {
+        return $this->hasMany(UserAttendancePublicPlace::class);
+    }
     public function canAccessConversation($conversationId)
     {
         // Check if the user is authenticated

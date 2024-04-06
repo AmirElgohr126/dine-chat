@@ -22,10 +22,10 @@ class QrPlacesController extends Controller
 
     /**
      * generate Qr Code for Public Places
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return jsonResponse
      */
-    public function generateQrCode(Request $request)
+    public function generateQrCode(Request $request): JsonResponse
     {
         $request->validate([
             'id_public_place' => ['required', 'exists:public_places,id']
@@ -43,10 +43,10 @@ class QrPlacesController extends Controller
 
     /**
      * get qr code for restaurant
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return jsonResponse
      */
-    public function getQrCode(Request $request)
+    public function getQrCode(Request $request): JsonResponse
     {
         $request->merge(['id' => $request->id]);
         $validated = $request->validate([
@@ -66,10 +66,10 @@ class QrPlacesController extends Controller
 
     /**
      * delete Qr Code for Public Places
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return  jsonResponse
      */
-    public function deleteQrCode(Request $request)
+    public function deleteQrCode(Request $request): JsonResponse
     {
         $request->validate([
             'id' => 'required|exists:public_places,id',
@@ -92,7 +92,13 @@ class QrPlacesController extends Controller
 
 
 
-    public static function generateQr($url, $id)
+    /**
+     * generate Qr Code for Public Places
+     * @param string $url
+     * @param int $id
+     * @return string
+     */
+    public static function generateQr(string $url, $id): string
     {
         $qrCode = Builder::create()
             ->writer(new PngWriter())
@@ -124,23 +130,27 @@ class QrPlacesController extends Controller
         // Save the QR code image to the specified path
         $qrCode->saveToFile($filePath);
 
-        $publicPath = "public_places/place{$id}/Qr_code/" . $fileName;
-
-        // Return the file path or URL to access the QR code image
-        return $publicPath; // Or return a URL if needed
+        return "public_places/place{$id}/Qr_code/" . $fileName;
     }
 
 
-    public static function buildUrl($place)
+    /**
+     * build url for public place
+     * @param PublicPlace $place
+     * @return string
+     */
+    public static function buildUrl(PublicPlace $place): string
     {
         $data = [
             'id_public_place' => $place->id,
+            'type' => 'public_place',
             'latitude' => $place->latitude,
             'longitude' => $place->longitude,
         ];
-        $url = $baseUrl = "https://dinechat.chat/";
-        $url = $baseUrl . '?' . http_build_query($data);
-        return $url;
+        $baseUrl = "https://dinechat.chat/";
+        return  $baseUrl . '?' . http_build_query($data);
+
+
     }
 
 }

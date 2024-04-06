@@ -21,7 +21,10 @@ class PublicPlaceResource extends JsonResource
             'latitude' => $this->latitude,
             'photo' => retriveMedia(). $this->photo,
             'description' => $this->description ?? '',
-            'status' => $this->status
+            'status' => $this->status,
+            'spaces' => $this->spaces,
+            'spaces_unit' => $this->spaces_unit,
+
 
         ];
     }

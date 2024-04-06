@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Controllers\V1\App\Restaurant;
+namespace App\Http\Controllers\V1\App\Map;
 
-use Exception;
-use App\Models\Restaurant;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\App\Restaurant\GetMapRestaurantRequest;
+use App\Models\Restaurant;
+use Exception;
+use Illuminate\Http\JsonResponse;
 
 
 class GetMapsOfRestaurantController extends Controller
@@ -16,9 +17,9 @@ class GetMapsOfRestaurantController extends Controller
      * Retrieve a list of restaurants based on proximity to a given location.
      *
      * @param GetMapRestaurantRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function closestRestaurants(GetMapRestaurantRequest $request)
+    public function closestRestaurants(GetMapRestaurantRequest $request): JsonResponse
     {
         try {
             // Extract parameters from the request

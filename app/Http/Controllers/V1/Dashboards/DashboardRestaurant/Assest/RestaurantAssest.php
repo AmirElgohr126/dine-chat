@@ -4,6 +4,7 @@ namespace App\Http\Controllers\V1\Dashboards\DashboardRestaurant\Assest;
 
 use Exception;
 use App\Models\Restaurant;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +13,7 @@ use App\Http\Requests\V1\Dashboard\Tables\TablesDashboardRequest;
 
 class RestaurantAssest extends Controller
 {
-    public function createAssest(TablesDashboardRequest $request)
+    public function createAssets(TablesDashboardRequest $request): JsonResponse
     {
         try {
             $user = $request->user('restaurant');
@@ -55,7 +56,7 @@ class RestaurantAssest extends Controller
 
 
 
-    public function listAssets(Request $request)
+    public function listAssets(Request $request): JsonResponse
     {
         try {
             $user = $request->user('restaurant');
@@ -108,14 +109,14 @@ class RestaurantAssest extends Controller
         }
     }
 
-    private function extractAssets($assets, $type)
+    private function extractAssets($assets, $type): array
     {
         return collect($assets)->filter(function ($asset) use ($type) {
             return str_contains($asset['key'], $type);
         })->all();
     }
 
-    private function getAssets($restaurant)
+    private function getAssets($restaurant): array
     {
         $assets = [];
 
@@ -129,7 +130,7 @@ class RestaurantAssest extends Controller
 
         return $assets;
     }
-    private function formatAsset($item, $key)
+    private function formatAsset($item, $key): array
     {
         return [
             'id' => $item->id,

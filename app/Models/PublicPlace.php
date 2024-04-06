@@ -18,6 +18,14 @@ class PublicPlace extends Model
         'qr_link',
         'qr_path',
         'description',
-        'status'
+        'status',
+        'spaces',
+        'spaces_unit'
     ];
+
+
+    public function space(): string
+    {
+        return $this->spaces . ' ' . $this->spaces_unit;
+    }
 }

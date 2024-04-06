@@ -57,4 +57,9 @@ return [
     'no_contacts_found' => 'no contacts found',
     'success_request' => 'success request',
     'no_request_found' => 'no request found',
+    'otp_not_expired' => 'otp not expired',
+    'otp_expired' => 'otp expired',
+    'password_reset_success' => 'password reset success',
+    'otp_sent' => 'otp sent',
+    'not_in_place' => 'you are not in this place',
 ];

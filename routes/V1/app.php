@@ -1,26 +1,26 @@
 <?php
 
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\V1\App\Nfc\NfcController;
-use App\Http\Controllers\V1\App\Chat\ChatController;
-use App\Http\Controllers\V1\App\Auth\LoginController;
-use App\Http\Controllers\V1\App\Games\GameController;
 use App\Http\Controllers\V1\App\About\AboutController;
+use App\Http\Controllers\V1\App\Auth\ForgetPasswordController;
+use App\Http\Controllers\V1\App\Auth\LoginController;
 use App\Http\Controllers\V1\App\Auth\LogoutController;
-use App\Http\Controllers\V1\App\Chat\MessageController;
 use App\Http\Controllers\V1\App\Auth\RegisterController;
-use App\Http\Controllers\V1\App\Games\XOgame\XoController;
-use App\Http\Controllers\V1\App\Profile\ProfileController;
 use App\Http\Controllers\V1\App\Auth\VerificationController;
-use App\Http\Controllers\V1\App\Settings\SettingsController;
-use App\Http\Controllers\V1\App\Ratings\FoodRatingController;
-use App\Http\Controllers\V1\App\Restaurant\RestaurantController;
-use App\Http\Controllers\V1\App\Ratings\RestaurantRatingController;
+use App\Http\Controllers\V1\App\Chat\ChatController;
+use App\Http\Controllers\V1\App\Chat\MessageController;
 use App\Http\Controllers\V1\App\ContactsList\ContactsListController;
+use App\Http\Controllers\V1\App\Games\GameController;
+use App\Http\Controllers\V1\App\Games\XOgame\XoController;
+use App\Http\Controllers\V1\App\Map\GetMapsOfRestaurantController;
 use App\Http\Controllers\V1\App\Notifications\NotificationController;
-use App\Http\Controllers\V1\App\Restaurant\GetMapsOfRestaurantController;
+use App\Http\Controllers\V1\App\Profile\ProfileController;
+use App\Http\Controllers\V1\App\Ratings\FoodRatingController;
+use App\Http\Controllers\V1\App\Ratings\RestaurantRatingController;
+use App\Http\Controllers\V1\App\Reservation\ReservationController;
+use App\Http\Controllers\V1\App\Restaurant\RestaurantController;
+use App\Http\Controllers\V1\App\Settings\SettingsController;
+use Illuminate\Support\Facades\Route;
 
 
 Route::middleware('set_lang')->group(function () {
@@ -36,10 +36,13 @@ Route::middleware('set_lang')->group(function () {
         Route::post('/register', [RegisterController::class, 'register']); // finished
         Route::post('/login', [LoginController::class, 'login']); // finished
         Route::delete('/logout', [LogoutController::class, 'logout']); // finished
+        Route::post('/forgot-password', [ForgetPasswordController::class, 'forgetPasswordSendOtp']); // finished
+        Route::post('verify-otp', [ForgetPasswordController::class, 'verifyOtp']); // finished
+        Route::post('/reset-password', [ForgetPasswordController::class, 'resetPassword']); // finished
     });
     // =====================================================================================
     Route::prefix('email')->group(function () {
-        Route::get('verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify');
+        Route::get('verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify'); // finished
         Route::post('resend', [VerificationController::class, 'resend'])->name('verification.resend'); // finished
         Route::get('verify', function () {
             return view('auth.verify-email');
@@ -56,13 +59,13 @@ Route::middleware('set_lang')->group(function () {
             Route::post('/invite', [ContactsListController::class, 'inviteContact']); // finished
         });
         // =====================================================================================
-        Route::post('nfc/vaildate', [NfcController::class, 'VaildateNfcParameter']); // finished
+        Route::post('parameter/validate', [ReservationController::class, 'reservationFactory']); // finished
         // =====================================================================================
         Route::group(['prefix' => 'restaurant'], function () {
             Route::get('map', [GetMapsOfRestaurantController::class, 'closestRestaurants']); // finished
             Route::get('user', [RestaurantController::class, 'usersInRestaurant']); // finished
             Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // finished
-            Route::post('/delete', [RestaurantController::class, 'DeleteReservation']); // finished
+            Route::post('/delete', [RestaurantController::class, 'deleteReservation']); // finished
             // =====================================================================================
 
         });
@@ -72,7 +75,7 @@ Route::middleware('set_lang')->group(function () {
         });
         // =====================================================================================
         Route::group(['prefix' => 'rating'],function (){
-            Route::get('/', [FoodRatingController::class, 'getFoodOfrestaurant'])->middleware('check_reservation'); // finished
+            Route::get('/', [FoodRatingController::class, 'getFoodOfRestaurant'])->middleware('check_reservation'); // finished
             Route::post('add', [FoodRatingController::class, 'makeRatingForFood'])->middleware('check_reservation');
             Route::get('restaurant',[RestaurantRatingController::class,'restaurantsRating']); // finished
             Route::get('food',[FoodRatingController::class,'foodsRating']); // finished
@@ -103,8 +106,8 @@ Route::middleware('set_lang')->group(function () {
             Route::post('request/cancel',[ChatController::class,'cancelRequestChat']); // finished
             Route::get('request/list',[ChatController::class,'listRequestsChat']); // finished
             // ==========================
-            Route::post('inbox/accept',[ChatController::class,'AcceptinboxChat']); // finished
-            Route::delete('inbox/reject',[ChatController::class,'RejectinboxChat']); // finished
+            Route::post('inbox/accept',[ChatController::class,'acceptInboxChat']); // finished
+            Route::delete('inbox/reject',[ChatController::class,'rejectInboxChat']); // finished
             Route::get('inbox/list',[ChatController::class,'listInboxChat']); // finished
             // ===========================
             Route::get('/{id}', [MessageController::class, 'getMessages'])
@@ -123,7 +126,7 @@ Route::middleware('set_lang')->group(function () {
         });
         // =====================================================================================
         Route::group(['prefix' => 'game','middleware'=>'check_reservation'], function () {
-                Route::post('request/send', [GameController::class, 'RequestToPlay']); // finished
+                Route::post('request/send', [GameController::class, 'requestToPlay']); // finished
                 Route::post('request/cancel', [GameController::class, 'cancelRequest']); // finished
                 Route::get('request/list', [GameController::class, 'listRequests']); // finished
                 // ==========================

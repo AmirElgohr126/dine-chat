@@ -53,5 +53,10 @@ return [
     'update_succeesfully' => 'تم تحديث الملف الشخصي بنجاح',
     'no_user_found' => 'لم يتم العثور على المستخدم',
     'success_request' => 'طلب ناجح',
+    'otp_not_expired' => 'لم ينتهي صلاحية رمز التحقق',
+    'otp_expired' => 'انتهت صلاحية رمز التحقق',
+    'password_reset_success' => 'تمت إعادة تعيين كلمة المرور بنجاح',
+    'otp_sent' => 'تم إرسال رمز التحقق',
+    'not_in_place' => 'أنت لست في هذا المكان',
 ];
 

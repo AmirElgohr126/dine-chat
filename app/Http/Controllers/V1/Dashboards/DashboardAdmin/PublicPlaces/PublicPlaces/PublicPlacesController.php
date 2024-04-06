@@ -12,15 +12,15 @@ use App\Http\Resources\V1\DashboardAdmin\PublicPlaces\PublicPlaceResource;
 /**
  * Public Places Controller class contain generate public places, list
  */
-class PublicPlacesContoller extends Controller
+class PublicPlacesController extends Controller
 {
 
     /**
      * create Public Places
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return jsonResponse
      */
-    public function addPublicPlace(Request $request)
+    public function addPublicPlace(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
@@ -28,10 +28,13 @@ class PublicPlacesContoller extends Controller
             'latitude' => 'required|numeric|between:-90,90',
             'photo' => 'required|image|max:2048',
             'description' => 'nullable|string',
-            'status' => 'required|boolean'
+            'status' => 'required|boolean',
+            // validate the spaces of public places key is number of space and value is km or m
+            'spaces' => ['required', 'numeric','min:10'],
+            'spaces_unit' => ['required', 'string','in:km,m'],
         ]);
-        try{
 
+        try{
             $publicPlace = PublicPlace::create($validated);
             $photo = $validated['photo'];
             $pathImage = storeFile($photo, "public_places/place{$publicPlace->id}", 'public');
@@ -47,10 +50,10 @@ class PublicPlacesContoller extends Controller
 
     /**
      * list Public Places
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function listPublicPlace(Request $request)
+    public function listPublicPlace(Request $request): JsonResponse
     {
         $per_page = $request->per_page ?? 10;
         $publicPlaces = PublicPlace::paginate($per_page);
@@ -58,17 +61,17 @@ class PublicPlacesContoller extends Controller
             return finalResponse('failed', 400, null, null, 'something error happen');
         }
         $publicPlaces = PublicPlaceResource::collection($publicPlaces);
-        $pagnationResponse = pagnationResponse($publicPlaces);
-        return finalResponse('success', 200, $publicPlaces, $pagnationResponse);
+        $paginationResponse = pagnationResponse($publicPlaces);
+        return finalResponse('success', 200, $publicPlaces, $paginationResponse);
     }
 
 
     /**
      * update Public Places
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function updatePublicPlace(Request $request)
+    public function updatePublicPlace(Request $request): JsonResponse
     {
         $request->merge(['id' => $request->id]);
         $validated = $request->validate([
@@ -78,7 +81,9 @@ class PublicPlacesContoller extends Controller
             'latitude' => 'numeric|between:-90,90',
             'photo' => 'image|max:2048',
             'description' => 'nullable|string',
-            'status' => 'boolean'
+            'status' => 'boolean',
+            'spaces' => ['numeric','min:10'],
+            'spaces_unit' => ['string','in:km,m'],
         ]);
         try{
 
@@ -104,10 +109,10 @@ class PublicPlacesContoller extends Controller
 
     /**
      * delete Public Places
-     * @param \Illuminate\Http\Request $request
+     * @param Request $request
      * @return JsonResponse
      */
-    public function deletePublicPlace(Request $request)
+    public function deletePublicPlace(Request $request): JsonResponse
     {
         $request->merge(['id'=> $request->id]);
         $publicPlace = PublicPlace::find($request->id);

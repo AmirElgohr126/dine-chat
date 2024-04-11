@@ -21,7 +21,7 @@ class DeleteReservation implements ShouldBroadcast
         $this->userId = $userId;
     }
 
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return [
             'user_id' => $this->userId
@@ -29,7 +29,7 @@ class DeleteReservation implements ShouldBroadcast
     }
 
 
-    public function broadcastOn()
+    public function broadcastOn(): PrivateChannel
     {
         return new PrivateChannel('restaurant.' . $this->restaurantId);
     }

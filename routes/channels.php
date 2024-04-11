@@ -22,6 +22,11 @@ Broadcast::channel('restaurant.{restaurantId}', function ($user, $restaurantId) 
     // Check if the user is authorized to access the conversation
     return $user->canAccessRestaurant($restaurantId);
 });
+
+Broadcast::channel('public_place.{placeId}', function ($user, $publicPlaceId) {
+    // Check if the user is authorized to access the conversation
+    return $user->canAccessPlace($publicPlaceId);
+});
 Broadcast::channel('room.{roomId}', function ($user, $roomId) {
     // Check if the user is authorized to access the room
     return $user->canAccessRoom($roomId);

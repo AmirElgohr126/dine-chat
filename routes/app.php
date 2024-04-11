@@ -12,5 +12,4 @@
 |
 */
 require_once('V1/app.php');
-require_once('V2/app.php');
 

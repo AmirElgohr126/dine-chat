@@ -7,6 +7,7 @@ use App\Models\UserGhost;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\App\Auth\loginRequest;
 use App\Http\Resources\V1\App\User\UserResources;
+use Illuminate\Http\JsonResponse;
 
 /**
  * Class LoginController
@@ -16,11 +17,10 @@ class LoginController extends Controller
 {
     /**
      * Handle user login.
-     *
      * @param loginRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function login(loginRequest $request)
+    public function login(loginRequest $request): JsonResponse
     {
         try {
             //  Validate user credentials from the incoming request

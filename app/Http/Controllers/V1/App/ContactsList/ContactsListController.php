@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\App\ContactsList;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -14,7 +15,10 @@ use App\Repository\V1\ContactsListRepository\ContactsListInterface;
 
 class ContactsListController extends Controller
 {
-    public $repo ;
+    /**
+     * @var ContactsListInterface
+     */
+    public ContactsListInterface $repo ;
 
     public function __construct(ContactsListInterface $contactsListInterface)
     {
@@ -23,7 +27,12 @@ class ContactsListController extends Controller
 
 
 
-    public function getContactList (Request $request)
+    /**
+     * get all contacts list by user_id
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getContactList (Request $request): JsonResponse
     {
         // get all contacts list by user_id
         try{
@@ -37,9 +46,14 @@ class ContactsListController extends Controller
 
 
 
-    public function postContactList(ContactsRequest $request)
+    /**
+     * post all contacts and check if duplcate by phone and make subscriped followed by user
+     * @param ContactsRequest $request
+     * @return JsonResponse
+     */
+    public function postContactList(ContactsRequest $request): JsonResponse
     {
-        // post all contacts and check if duplcate by phone and make subscriped followed by user
+        // post all contacts and check if duplicate by phone and make subscribed followed by user
         try{
 
             $savedContacts = $this->repo->postContactList($request);
@@ -53,7 +67,12 @@ class ContactsListController extends Controller
 
 
 
-    public function followContact (FollowContactRequest $request)
+    /**
+     * follow contact by user_id
+     * @param FollowContactRequest $request
+     * @return JsonResponse
+     */
+    public function followContact (FollowContactRequest $request): JsonResponse
     {
         try {
             $this->repo->followContact($request);
@@ -65,7 +84,12 @@ class ContactsListController extends Controller
 
 
 
-    public function unfollowContact (UnfollowContactRequest $request)
+    /**
+     * unfollow contact by user_id
+     * @param UnfollowContactRequest $request
+     * @return JsonResponse
+     */
+    public function unfollowContact (UnfollowContactRequest $request): JsonResponse
     {
         try {
             $this->repo->unfollowContact($request);
@@ -78,7 +102,12 @@ class ContactsListController extends Controller
 
 
 
-    public function inviteContact(UnfollowContactRequest $request)
+    /**
+     * invite contact by user_id
+     * @param UnfollowContactRequest $request
+     * @return JsonResponse
+     */
+    public function inviteContact(UnfollowContactRequest $request): JsonResponse
     {
         try {
             $this->repo->inviteContact($request);

@@ -11,6 +11,7 @@ class NotificationController extends Controller
 {
 
     /**
+     * Retrieve a list of notifications for the authenticated user...
      * @param Request $request
      * @return JsonResponse
      */

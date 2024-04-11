@@ -35,7 +35,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         'phone',
         'ghost_mood',
         'device_token',
-        'notification_status'
+        'notification_status',
     ];
 
     /**
@@ -64,7 +64,7 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
      *
      * @return mixed
      */
-    public function getJWTIdentifier()
+    public function getJWTIdentifier(): mixed
     {
         return $this->getKey();
     }
@@ -74,14 +74,14 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
      *
      * @return array
      */
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(): array
     {
         return [];
     }
 
 
 
-    protected static function booted()
+    protected static function booted(): void
     {
         // Event for decrypting the content after a Post is retrieved
         static::created(function ($user) {
@@ -90,65 +90,70 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
 
 
-    public function contacts()
+    public function contacts(): HasMany
     {
         return $this->hasMany(Contact::class,'user_id','id');
     }
-    public function ghost()
+    public function ghost(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(UserGhost::class, 'user_id', 'id');
     }
 
     // ================================= ratings restaurant ============================================
 
-    public function restaurantRatings()
+    public function restaurantRatings(): HasMany
     {
         return $this->hasMany(RestaurantRating::class,'user_id','id');
     }
 
     // ================================= message ============================================
 
-    public function sentMessages()
+    public function sentMessages(): HasMany
     {
         return $this->hasMany(Message::class, 'sender_id');
     }
 
-    public function receivedMessages()
+    public function receivedMessages(): HasMany
     {
         return $this->hasMany(Message::class, 'receiver_id');
     }
 
-    public function sentMessagesFromConversation($conversationId)
+    public function sentMessagesFromConversation($conversationId): HasMany
     {
         return $this->hasMany(Message::class, 'sender_id')
             ->where('conversation_id', $conversationId)
             ->latest('created_at');
     }
 
-    public function receivedMessagesFromConversation($conversationId)
+    public function receivedMessagesFromConversation($conversationId): HasMany
     {
         return $this->hasMany(Message::class, 'receiver_id')
             ->where('conversation_id', $conversationId)
             ->latest('created_at');
     }
 
-    public function conversations()
+    public function conversations(): HasMany
     {
         return $this->hasMany(Conversation::class, 'sender_id','id');
     }
 
-    public function notifications()
+    public function notifications(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Notification::class, 'notification_user');
     }
 
 //    ================================== otp ============================================
-    public function otp()
+    public function otp(): \Illuminate\Database\Eloquent\Relations\HasOne
     {
         return $this->hasOne(OtpUser::class);
     }
 
-    public function isOtpExpiry()
+    /**
+     * Check if the user has an OTP and if it is expired
+     *
+     * @return bool
+     */
+    public function isOtpExpiry(): bool
     {
         if($this->otp && $this->otp->isExpired()){
             return true;
@@ -160,9 +165,18 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
 
     public function userAttendancePublicPlace(): HasMany
     {
-        return $this->hasMany(UserAttendancePublicPlace::class);
+        return $this->hasMany(UserAttendance::class)->where('public_place_id', '!=', null);
     }
-    public function canAccessConversation($conversationId)
+
+
+
+    /**
+     * Check if the user can access the conversation
+     *
+     * @param int $conversationId
+     * @return bool
+     */
+    public function canAccessConversation($conversationId): bool
     {
         // Check if the user is authenticated
         if (!auth('api')->check()) {
@@ -178,7 +192,13 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
     }
 
 
-    public function canAccessRestaurant($restaurantId)
+    /**
+     * Check if the user can access the restaurant
+     *
+     * @param int $restaurantId
+     * @return bool
+     */
+    public function canAccessRestaurant($restaurantId): bool
     {
         if (!auth('api')->check()) {
             return false;
@@ -192,7 +212,38 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         }
         return true;
     }
-    public function canAccessRoom($roomId)
+
+    /**
+     * Check if the user can access the public place
+     *
+     * @param int $placeId
+     * @return bool
+     */
+    public function canAccessPlace(int $placeId): bool
+    {
+        if (!auth('api')->check()) {
+            return false;
+        }
+        // Check if the user is make reservation
+        $reservation = UserAttendance::where('user_id', $this->id)->where('public_place_id',$placeId)
+            ->where('created_at', '>=', now())
+            ->first();
+        if (!$reservation) {
+            return false;
+        }
+        return true;
+    }
+
+
+
+
+    /**
+     * Check if the user can access the room
+     *
+     * @param int $roomId
+     * @return bool
+     */
+    public function canAccessRoom(int $roomId): bool
     {
         if (!auth('api')->check()) {
             return false;
@@ -205,7 +256,15 @@ class User extends Authenticatable implements MustVerifyEmail, JWTSubject
         // Check if the user is either the sender or receiver of the room
         return $this->id == $room->sender_id || $this->id == $room->receiver_id;
     }
-    public function canAccessGame($gameId)
+
+
+    /**
+     * Check if the user can access the game
+     *
+     * @param int $gameId
+     * @return bool
+     */
+    public function canAccessGame(int $gameId): bool
     {
         if (!auth('api')->check()) {
             return false;

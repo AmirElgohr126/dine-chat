@@ -2,13 +2,20 @@
 namespace App\Http\Controllers\V1\App\About;
 
 use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\AboutApplication;
 use App\Http\Controllers\Controller;
 
 class AboutController extends Controller
 {
-    public function privacyPolicy(Request $request)
+
+    /**
+     * Get privacy policy
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function privacyPolicy(Request $request): JsonResponse
     {
         try {
             $privacyPolicy = AboutApplication::where('id', 1)->select('privacy_policy')->first();
@@ -21,7 +28,14 @@ class AboutController extends Controller
             return finalResponse('failed', $e->getCode(), $e->getMessage());
         }
     }
-    public function termsConditions(Request $request)
+
+
+    /**
+     * Get terms and conditions
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function termsConditions(Request $request): JsonResponse
     {
         try {
             $terms_conditions = AboutApplication::where('id', 1)->select('terms_conditions')->first();
@@ -34,7 +48,15 @@ class AboutController extends Controller
             return finalResponse('failed', $e->getCode(), $e->getMessage());
         }
     }
-    public function aboutUs(Request $request)
+
+
+
+    /**
+     * Get about us
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function aboutUs(Request $request): JsonResponse
     {
         try {
             $about_us = AboutApplication::where('id', 1)->select('about_us')->first();

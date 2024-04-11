@@ -6,6 +6,7 @@ use App\Models\Message;
 use App\Models\Restaurant;
 use App\Events\MessageSent;
 use App\Models\Conversation;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
@@ -16,31 +17,54 @@ use App\Http\Requests\V1\App\Chat\UpdateChatMessageRequest;
 class MessageController extends Controller
 {
 
-    protected $notification;
+    /**
+     * @var NotificationInterface
+     */
+    protected NotificationInterface $notification;
 
-    public function __construct(NotificationInterface $notificationServices)
+    /**
+     * @var string
+     */
+    protected string $place;
+
+    /**
+     * @var int
+     */
+    protected int $placeId;
+
+    public function __construct(NotificationInterface $notificationServices,Request $request)
     {
         $this->notification = $notificationServices;
+        $this->setColumns($request);
     }
 
+    /**
+     * Set the place name and place id for the chat.
+     * @param  Request  $request
+     * @return void
+     */
+    protected function setColumns(Request $request): void
+    {
+        $this->place = ($request->type == 'restaurant') ? 'restaurant_id' : 'public_place_id';
+        $this->placeId = ($request->type == 'restaurant') ? $request->restaurant_id : $request->public_place_id;
+    }
 
     /**
      * Get all messages for a specific conversation
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function getMessages(Request $request)
+    public function getMessages(Request $request): JsonResponse
     {
         try {
             $user = $request->user();
             $per_page = $request->per_page ?? 10;
             $chat_id = $request->id;
-            $restaurant = Restaurant::find($request->restaurant_id);
             $conversation = Conversation::where('id', $chat_id)
                 ->where(function ($query) use ($user) {
                     $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
                 })
-                ->where('restaurant_id', $restaurant->id)
+                ->where($this->place, $this->placeId)
                 ->where('status', 'accept')
                 ->where('deleted_at', '>', now())
                 ->withTrashed()
@@ -61,22 +85,23 @@ class MessageController extends Controller
         }
     }
 
+
+
     /**
      * Send a new message
      * @param NewChatMessageRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function sendMessage(NewChatMessageRequest $request)
+    public function sendMessage(NewChatMessageRequest $request): JsonResponse
     {
         try {
             $user = $request->user();
             $id_replay = $request->replay_on;
-            $restaurant = Restaurant::find($request->restaurant_id);
             $conversation = Conversation::
                 where('id', $request->id)->where(function ($query) use ($user) {
                     $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
                 })
-                ->where('restaurant_id', $restaurant->id)
+                ->where($this->place, $this->placeId)
                 ->where('status', 'accept')
                 ->withTrashed()
                 ->where('deleted_at', '>', now())
@@ -128,21 +153,20 @@ class MessageController extends Controller
     /**
      * Update a message
      * @param UpdateChatMessageRequest $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function updateMessage(UpdateChatMessageRequest $request)
+    public function updateMessage(UpdateChatMessageRequest $request): JsonResponse
     {
         try {
             $user = $request->user();
             $id_chat = $request->id;
             $id_message = $request->id_message;
             // ================================================================
-            $restaurant = Restaurant::find($request->restaurant_id);
             $conversation = Conversation::where('id', $id_chat)
                 ->where(function ($query) use ($user) {
                     $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
                 })
-                ->where('restaurant_id', $restaurant->id)
+                ->where($this->place, $this->placeId)
                 ->where('status', 'accept')
                 ->withTrashed()
                 ->where('deleted_at', '>', now())
@@ -169,21 +193,20 @@ class MessageController extends Controller
     /**
      * Delete a message
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function deleteMessage(Request $request)
+    public function deleteMessage(Request $request): JsonResponse
     {
         try {
             $user = $request->user();
             $id_chat = $request->id;
             $id_message = $request->id_message;
             // ================================================================
-            $restaurant = Restaurant::find($request->restaurant_id);
             $conversation = Conversation::where('id', $id_chat)
                 ->where(function ($query) use ($user) {
                     $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
                 })
-                ->where('restaurant_id', $restaurant->id)
+                ->where($this->place, $this->placeId)
                 ->where('status', 'accept')
                 ->withTrashed()
                 ->where('deleted_at', '>', now())
@@ -208,21 +231,20 @@ class MessageController extends Controller
     /**
      * Delete a message
      * @param Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function deleteAttachment(Request $request)
+    public function deleteAttachment(Request $request): JsonResponse
     {
         try {
             $user = $request->user();
             $id_chat = $request->id;
             $id_message = $request->id_message;
             // ================================================================
-            $restaurant = Restaurant::find($request->restaurant_id);
             $conversation = Conversation::where('id', $id_chat)
                 ->where(function ($query) use ($user) {
                     $query->where('sender_id', $user->id)->orWhere('receiver_id', $user->id);
                 })
-                ->where('restaurant_id', $restaurant->id)
+                ->where($this->place, $this->placeId)
                 ->where('status', 'accept')
                 ->withTrashed()
                 ->where('deleted_at', '>', now())

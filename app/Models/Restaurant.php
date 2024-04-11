@@ -59,4 +59,10 @@ class Restaurant extends Model implements TranslatableContract
         return $this->hasMany(Conversation::class, 'restaurant_id', 'id');
     }
 
+
+    public function waiters()
+    {
+        return $this->belongsToMany(User::class, 'waiters', 'restaurant_id', 'user_id');
+    }
+
 }

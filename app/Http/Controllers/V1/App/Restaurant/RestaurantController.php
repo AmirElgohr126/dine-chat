@@ -18,6 +18,7 @@ class RestaurantController extends Controller
 {
 
     /**
+     *  get all users in the restaurant { note this package is not used }
      * @param Request $request
      * @return JsonResponse
      */
@@ -70,7 +71,12 @@ class RestaurantController extends Controller
                 return finalResponse('success', 204);
             }
             $users = [];
+
+            $waiterIds = $restaurant->waiters()->pluck('id')->toArray();
             foreach ($userAttendance as $attendance) {
+                if (in_array($attendance->user_id, $waiterIds)) {
+                    continue;
+                }
                 $userData = $attendance->users->toArray();
                 $userData['x'] = $attendance->chairs->x;
                 $userData['y'] = $attendance->chairs->y;
@@ -84,8 +90,8 @@ class RestaurantController extends Controller
             }
             $tables = $restaurant->tables()->get();
             $chairs = $restaurant->chairs()->get();
-
-            return finalResponse('success', 200, ['restaurant' => $restaurant,'tables'=>$tables,'chairs'=> $chairs ,'users'=>$users]);
+            $waiters = $restaurant->waiters()->get();
+            return finalResponse('success', 200, ['restaurant' => $restaurant,'tables'=>$tables,'chairs'=> $chairs ,'users'=>$users,'waiters'=>$waiters]);
         } catch (Exception $e) {
             return finalResponse('success', 405, null, null, $e->getMessage());
         }

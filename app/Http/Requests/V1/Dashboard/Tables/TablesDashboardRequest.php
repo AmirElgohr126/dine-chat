@@ -15,6 +15,7 @@ class TablesDashboardRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'layer' => 'required|numeric|min:0',
             'assets' => 'sometimes|array',
             'assets.*.name' => 'required_with:assets|string',
             'assets.*.x' => 'required_with:assets|numeric',

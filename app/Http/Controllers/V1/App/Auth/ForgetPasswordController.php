@@ -7,6 +7,7 @@ use App\Mail\OtpUser;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 
@@ -39,7 +40,7 @@ class ForgetPasswordController extends Controller
             'expires_at' => $expiresAt,
         ]);
         $fullName = $user->first_name . ' ' . $user->last_name;
-        $user->notify(new OtpUser($fullName, $otp, $expiresAt));
+        Mail::to($user->email)->send(new OtpUser($fullName, $otp, $expiresAt));
 
         return finalResponse('success', 200, __('errors.otp_sent'));
     }

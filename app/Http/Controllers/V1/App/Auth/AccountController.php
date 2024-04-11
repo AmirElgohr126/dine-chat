@@ -1,12 +1,24 @@
 <?php
 namespace App\Http\Controllers\V1\App\Auth;
 use App\Models\User;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Models\DeletedAccount;
 use App\Http\Controllers\Controller;
+use Illuminate\Routing\Redirector;
 use Illuminate\Support\Facades\Hash;
 
 class AccountController extends Controller{
+
+
+    /**
+     * Show the form for deleting the specified resource.
+     *
+     * @return Application|Factory|View
+     */
     public function view()
     {
         // Pass the user data to the view
@@ -14,6 +26,12 @@ class AccountController extends Controller{
     }
 
 
+    /**
+     * Delete the account and redirect to the welcome page.
+     *
+     * @param Request $request
+     * @return Application|RedirectResponse|Redirector
+     */
     public function delete(Request $request)
     {
         $request->validate([

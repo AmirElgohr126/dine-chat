@@ -17,6 +17,20 @@ class BookingDates extends Model
         'period_logout_unit_public_places'
     ];
 
+
+    public static function getDateOfPlace($type): Carbon|string
+    {
+        if ($type == 'restaurant') {
+            return self::firstRowRestaurant();
+        } else {
+            return self::firstRowForPublicPlaces();
+        }
+    }
+
+
+
+
+
     /**
      * @return Carbon
      */

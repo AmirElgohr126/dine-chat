@@ -3,7 +3,7 @@ namespace App\Service\GamesServices;
 
 interface GameInterface
 {
-    public function RequestToPlay($type_room,$senderId, $receiverId, $restaurantId);
+    public function RequestToPlay($senderId, $receiverId, $placeId,$place, $type_room);
 
     public function cancelRequest($roomId, $senderId);
 

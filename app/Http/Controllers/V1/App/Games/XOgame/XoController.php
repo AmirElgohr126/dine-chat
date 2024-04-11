@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\V1\App\Games\XOgame;
 
 use App\Models\XOGame;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Events\XoGame as XoEvent;
 use Illuminate\Routing\Controller;
@@ -12,12 +13,22 @@ use App\Http\Resources\V1\App\Games\GameStateResource;
 class XoController extends Controller
 {
 
-    public static function start($room)
+    /**
+     * start the game and create the board
+     * @param $room
+     * @return XOGame
+     */
+    public static function start($room): XOGame
     {
         return self::intailBoard($room);
     }
 
-    public static function intailBoard($room)
+    /**
+     * create the board for the game
+     * @param $room
+     * @return mixed
+     */
+    public static function intailBoard($room): mixed
     {
         $board = [
             ['', '', ''],
@@ -43,7 +54,12 @@ class XoController extends Controller
     }
 
 
-    public function move(Request $request)
+    /**
+     * make a move in the game
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function move(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'row' => 'required|integer|min:0|max:2',
@@ -69,8 +85,14 @@ class XoController extends Controller
     }
 
 
-
-    public function makeMove($row, $col,$board)
+    /**
+     * make a move in the game and check if the game is finished
+     * @param $row
+     * @param $col
+     * @param $board
+     * @return mixed
+     */
+    public function makeMove($row, $col, $board): mixed
     {
         $current_player = $board->current_player;
         $status = $board->status;
@@ -93,9 +115,12 @@ class XoController extends Controller
     }
 
 
-
-
-    private function checkWinner($board)
+    /**
+     * check if the game is finished
+     * @param $board
+     * @return array|string[]
+     */
+    private function checkWinner($board): array
     {
         // Checking rows and columns for a win
         for ($i = 0; $i < 3; $i++) {
@@ -125,7 +150,12 @@ class XoController extends Controller
         return ['status' => 'active', 'winner' => ''];
     }
 
-    private function isBoardFull($board)
+    /**
+     * check if the board is full
+     * @param $board
+     * @return bool
+     */
+    private function isBoardFull($board): bool
     {
         foreach ($board as $row) {
             if (in_array('', $row)) {
@@ -135,14 +165,23 @@ class XoController extends Controller
         return true;
     }
 
-    private function switchTurn($current_player)
+    /**
+     * switch the turn between the players
+     * @param $current_player
+     * @return string
+     */
+    private function switchTurn($current_player): string
     {
         return $current_player == 'X' ? 'O' : 'X';
     }
 
 
-
-    public function getBoard(Request $request)
+    /**
+     * get the board of the game
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getBoard(Request $request): JsonResponse
     {
         $request->validate([
             'game_id' => ['required','exists:x_o_games,id'],

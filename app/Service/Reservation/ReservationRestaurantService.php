@@ -16,6 +16,7 @@ class ReservationRestaurantService extends DistanceServices
      * @param $restaurant
      * @param $request
      * @param $chair
+     * @return mixed
      */
     public function createReservation($restaurant,$request,$chair) : mixed
     {
@@ -85,7 +86,7 @@ class ReservationRestaurantService extends DistanceServices
             ->where('created_at', '>=', now())
             ->first();
         if ($conflictingReservation) {
-            DeleteReservation::dispatch($conflictingReservation->restaurant_id, $request->user()->id);
+            DeleteReservation::dispatch($conflictingReservation->restaurant_id, $conflictingReservation->user_id);
             $conflictingReservation->delete();
         }
 

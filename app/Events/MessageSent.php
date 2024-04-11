@@ -27,13 +27,13 @@ class MessageSent implements ShouldBroadcast
         $this->receiver_photo = $receiver_photo;
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): PrivateChannel
     {
         return new PrivateChannel('chat.' . $this->conversationId);
     }
 
 
-    public function broadcastWith()
+    public function broadcastWith(): array
     {
         return [
             'message' => [

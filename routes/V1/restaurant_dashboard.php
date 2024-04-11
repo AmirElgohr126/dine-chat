@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\V1\Dashboards\DashboardRestaurant\Waiter\WaiterController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\V1\Dashboards\DashboardRestaurant\Foods\FoodController;
@@ -15,7 +16,6 @@ use App\Http\Controllers\V1\Dashboards\DashboardRestaurant\User\Profile\ProfileR
 use App\Http\Controllers\V1\Dashboards\DashboardRestaurant\User\Auth\ResetPasswordRestaurantController;
 
 
-
 Route::middleware('set_lang')->group(function () {
     Route::group(['prefix' => 'user/auth'], function () {
         Route::post('/login', [LoginRestaurantController::class, 'loginRestaurant']); // finished
@@ -29,6 +29,15 @@ Route::middleware('set_lang')->group(function () {
         Route::post('update', [FoodController::class, 'updateFood']); // finished
         Route::post('delete', [FoodController::class, 'deleteFood']); // finished
         Route::get('/{id}', [FoodController::class, 'getOneFood'])
+            ->where('id', '[0-9]+'); // finished
+    });
+    Route::group(['prefix' => 'waiter', 'middleware' => ['auth:restaurant']], function () {
+        Route::post('add', [WaiterController::class, 'addWaiter']); // finished
+        Route::post('delete', [WaiterController::class, 'deleteWaiter']); // finished
+        Route::post('deactivate', [WaiterController::class, 'deactivateWaiter']); // finished
+        Route::post('activate', [WaiterController::class, 'activateWaiter']); // finished
+        Route::get('/list', [WaiterController::class, 'getWaiters']); // finished
+        Route::get('/', [WaiterController::class, 'getOneWaiter'])
             ->where('id', '[0-9]+'); // finished
     });
     Route::group(['prefix' => 'profile', 'middleware' => ['auth:restaurant']], function () {

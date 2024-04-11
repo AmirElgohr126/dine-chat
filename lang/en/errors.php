@@ -62,4 +62,14 @@ return [
     'password_reset_success' => 'password reset success',
     'otp_sent' => 'otp sent',
     'not_in_place' => 'you are not in this place',
-];
+    'no_reservation' => 'no reservation',
+    'user_not_in_the_same_place' => 'user not in the same place',
+    'waiter_deleted' => 'waiter deleted',
+    'waiter_not_found' => 'waiter not found',
+    'waiter_added' => 'waiter added',
+    'waiter_not_added' => 'waiter not added',
+    'waiter_not_deleted' => 'waiter not deleted',
+    'The_user_is_not_a_waiter_in_this_restaurant' => 'The user is not a waiter in this restaurant.',
+    'waiter_deactivated' => 'waiter deactivated',
+
+    ];

@@ -14,6 +14,7 @@ class Room extends Model
         'receiver_id',
         'status',
         'restaurant_id',
+        'public_place_id',
         'type_room'
     ];
 
@@ -32,7 +33,7 @@ class Room extends Model
     }
 
 
-    
+
     public function sender()
     {
         return $this->belongsTo(User::class, 'sender_id', 'id')->select(

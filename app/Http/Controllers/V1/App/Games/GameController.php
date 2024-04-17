@@ -3,6 +3,7 @@ namespace App\Http\Controllers\V1\App\Games;
 
 use App\Models\User;
 use App\Events\XoRoom;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Events\XoGame as EventsXoGame;
@@ -16,24 +17,60 @@ use App\Http\Controllers\V1\App\Games\CheesGame\ChessController;
 
 class GameController extends Controller
 {
-    protected $gameServices;
+    /**
+     * @var GameServices
+     */
+    protected GameServices $gameServices;
 
-    public function __construct(GameServices $gameServices)
+
+    /**
+     * @var string
+     */
+    protected string $place;
+
+
+    /**
+     * @var int
+     */
+    protected int $placeId;
+
+
+    /**
+     * GameController constructor.
+     * @param GameServices $gameServices
+     * @param Request $request
+     */
+    public function __construct(GameServices $gameServices, Request $request)
     {
         $this->gameServices = $gameServices;
+        $this->setColumns($request);
+    }
+
+    /**
+     * Set the place name and place id for the chat.
+     * @param  Request  $request
+     * @return void
+     */
+    protected function setColumns(Request $request): void
+    {
+        $this->place = ($request->type == 'restaurant') ? 'restaurant_id' : 'public_place_id';
+        $this->placeId = ($request->type == 'restaurant') ? $request->restaurant_id : $request->public_place_id;
     }
 
 
-
-
-    public function requestToPlay(Request $request): \Illuminate\Http\JsonResponse
+    /**
+     * Request to play
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function requestToPlay(Request $request): JsonResponse
     {
         $request->validate([
             'receiver_id' => 'required|integer|exists:users,id',
             'type_room' => 'required|in:chess,xo',
         ]);
         $userId = $request->user()->id;
-        $room = $this->gameServices->RequestToPlay($userId, $request->receiver_id, $request->restaurant_id, $request->type_room);
+        $room = $this->gameServices->RequestToPlay($userId, $request->receiver_id, $this->placeId,$this->place, $request->type_room);
         $room->sender;
         $room->receiver;
 
@@ -49,7 +86,14 @@ class GameController extends Controller
         return finalResponse('success', 200, $room);
     }
 
-    public function cancelRequest(Request $request): \Illuminate\Http\JsonResponse
+
+
+    /**
+     * Cancel the request to play
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function cancelRequest(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'room_id' => 'required|integer',
@@ -59,7 +103,12 @@ class GameController extends Controller
     }
 
 
-    public function AcceptInvite(Request $request)
+    /**
+     * Accept the invitation to play
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function AcceptInvite(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'room_id' => 'required|integer|exists:rooms,id',
@@ -92,7 +141,13 @@ class GameController extends Controller
         return finalResponse('success', 200, $game);
     }
 
-    public function cancelInvite(Request $request): \Illuminate\Http\JsonResponse
+
+    /**
+     * Reject the invitation to play
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function cancelInvite(Request $request): JsonResponse
     {
         $validated = $request->validate([
             'room_id' => 'required|integer'
@@ -102,7 +157,12 @@ class GameController extends Controller
         return finalResponse('success', 200, $room);
     }
 
-    public function listInvites(Request $request)
+    /**
+     * List the invites
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function listInvites(Request $request): JsonResponse
     {
         $userId = $request->user()->id; // Assuming user authentication
         $invites = $this->gameServices->listInvites($userId);

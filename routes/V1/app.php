@@ -12,9 +12,10 @@ use App\Http\Controllers\V1\App\Chat\MessageController;
 use App\Http\Controllers\V1\App\ContactsList\ContactsListController;
 use App\Http\Controllers\V1\App\Games\GameController;
 use App\Http\Controllers\V1\App\Games\XOgame\XoController;
-use App\Http\Controllers\V1\App\Map\GetMapsOfRestaurantController;
+use App\Http\Controllers\V1\App\Map\GetMapDetailsController;
 use App\Http\Controllers\V1\App\Notifications\NotificationController;
 use App\Http\Controllers\V1\App\Profile\ProfileController;
+use App\Http\Controllers\V1\App\PublicPlaces\PublicPlaceController;
 use App\Http\Controllers\V1\App\Ratings\FoodRatingController;
 use App\Http\Controllers\V1\App\Ratings\RestaurantRatingController;
 use App\Http\Controllers\V1\App\Reservation\ReservationController;
@@ -40,7 +41,7 @@ Route::middleware('set_lang')->group(function () {
         Route::post('verify-otp', [ForgetPasswordController::class, 'verifyOtp']); // finished
         Route::post('/reset-password', [ForgetPasswordController::class, 'resetPassword']); // finished
     });
-    // =====================================================================================
+
     Route::prefix('email')->group(function () {
         Route::get('verify/{id}', [VerificationController::class, 'verify'])->name('verification.verify'); // finished
         Route::post('resend', [VerificationController::class, 'resend'])->name('verification.resend'); // finished
@@ -49,6 +50,7 @@ Route::middleware('set_lang')->group(function () {
         })->middleware('auth')->name('verification.notice'); // finished
     });
 
+    // =====================================================================================
     Route::group(['middleware' => ['auth:api', 'verified']], function () {
         // =====================================================================================
         Route::group(['prefix' => 'contactlist'], function () {
@@ -59,16 +61,24 @@ Route::middleware('set_lang')->group(function () {
             Route::post('/invite', [ContactsListController::class, 'inviteContact']); // finished
         });
         // =====================================================================================
+
         Route::post('parameter/validate', [ReservationController::class, 'reservationFactory']); // finished
+        Route::get('map', [GetMapDetailsController::class, 'closestPlaceFactory']); // finished
+
+
         // =====================================================================================
         Route::group(['prefix' => 'restaurant'], function () {
-            Route::get('map', [GetMapsOfRestaurantController::class, 'closestRestaurants']); // finished
             Route::get('user', [RestaurantController::class, 'usersInRestaurant']); // finished
             Route::get('assets', [RestaurantController::class, 'getTablesAndChairs']); // finished
             Route::post('/delete', [RestaurantController::class, 'deleteReservation']); // finished
-            // =====================================================================================
-
         });
+        // =====================================================================================
+        Route::group(['prefix' => 'public_place'], function () {
+            Route::get('users', [PublicPlaceController::class, 'usersInPublicPlace']); // finished
+            Route::post('/delete', [PublicPlaceController::class, 'deleteReservation']); // finished
+        });
+        // =====================================================================================
+        Route::post('user/follow',[RestaurantController::class,'followUser']); // finished
         // =====================================================================================
         Route::group(['prefix' => 'notification'], function () {
             Route::get('/', [NotificationController::class, 'getNotifications']); // finished
@@ -95,12 +105,9 @@ Route::middleware('set_lang')->group(function () {
             Route::post('bio', [ProfileController::class, 'bio']); // finished
         });
         // =====================================================================================
-
-        // =====================================================================================
-        Route::post('user/follow',[RestaurantController::class,'followUser']); // finished
-        // =====================================================================================
         Route::group(['prefix' => 'chat','middleware'=>'check_reservation'], function () {
-            Route::get('/', [ChatController::class, 'getChats']); // finished .. get chats with only one message and info of user that i send to you
+            //  get chats with only one message and info of user that I send to you
+            Route::get('/', [ChatController::class, 'getChats']); // finished
             // ==========================
             Route::post('request/send',[ChatController::class,'sendRequestChat']); // finished
             Route::post('request/cancel',[ChatController::class,'cancelRequestChat']); // finished

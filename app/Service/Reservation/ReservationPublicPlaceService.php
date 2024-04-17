@@ -4,6 +4,7 @@ namespace App\Service\Reservation;
 
 use App\Models\BookingDates;
 use App\Models\PublicPlace;
+use App\Models\UserAttendance;
 use App\Models\UserAttendancePublicPlace;
 
 /****************************************************
@@ -31,16 +32,15 @@ class ReservationPublicPlaceService extends DistanceServices
     }
 
 
-
     /**
      * handle existing reservation
+     * @param $user
      * @param $publicPlace
-     * @param $data
      * @return void
      */
-    public function handleExistingReservation($publicPlace,$user) : void
+    public function handleExistingReservation($user,$publicPlace) : void
     {
-        $checkReservationBefore = UserAttendancePublicPlace::where('user_id', $user->id)
+        $checkReservationBefore = UserAttendance::where('user_id', $user->id)
             ->where('public_place_id', $publicPlace->id)
             ->where('created_at', '>=', now())
             ->first();
@@ -64,7 +64,7 @@ class ReservationPublicPlaceService extends DistanceServices
     public function createReservation($publicPlace,$user) : mixed
     {
         $periodReservation = BookingDates::firstRowForPublicPlaces();
-        $reserve = UserAttendancePublicPlace::create([
+        $reserve = UserAttendance::create([
             'user_id' => $user->id,
             'public_place_id' => $publicPlace->id,
             'created_at' => $periodReservation,

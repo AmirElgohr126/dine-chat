@@ -33,6 +33,7 @@ class InvitationResource extends JsonResource
                 'photo' => retriveMedia(). $this->receiver->photo,
             ],
             'restaurant_id' => $this->restaurant_id,
+            'public_place_id' => $this->public_place_id,
         ];
     }
 }

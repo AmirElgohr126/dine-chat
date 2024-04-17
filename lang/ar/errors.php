@@ -58,5 +58,14 @@ return [
     'password_reset_success' => 'تمت إعادة تعيين كلمة المرور بنجاح',
     'otp_sent' => 'تم إرسال رمز التحقق',
     'not_in_place' => 'أنت لست في هذا المكان',
+    'no_reservation' => 'لا يوجد حجز',
+    'user_not_in_the_same_place' => 'المستخدم ليس في نفس المكان',
+    'waiter_deleted' => 'تم حذف النادل',
+    'waiter_not_found' => 'النادل غير موجود',
+    'waiter_added' => 'تمت إضافة النادل',
+    'waiter_not_added' => 'لم يتم إضافة النادل',
+    'waiter_not_deleted' => 'لم يتم حذف النادل',
+    'The_user_is_not_a_waiter_in_this_restaurant' => 'المستخدم ليس نادلًا في هذا المطعم.',
+    'waiter_deactivated' => 'تم تعطيل النادل',
 ];
 

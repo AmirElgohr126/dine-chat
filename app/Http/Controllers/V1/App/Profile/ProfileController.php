@@ -3,13 +3,20 @@ namespace App\Http\Controllers\V1\App\Profile;
 
 use Exception;
 use App\Models\UserGhost;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\App\User\UserResources;
 
 class ProfileController extends Controller
 {
-    public function photo(Request $request)
+    /**
+     * Update the user's photo.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function photo(Request $request): JsonResponse
     {
         $request->validate(['photo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:6144']);
         $user = $request->user();
@@ -30,7 +37,13 @@ class ProfileController extends Controller
         }
     }
 
-    public function bio(Request $request)
+    /**
+     * Update the user's bio.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function bio(Request $request): JsonResponse
     {
         $request->validate(['bio' => 'nullable|string|max:101']);
         $user = $request->user();
@@ -43,7 +56,14 @@ class ProfileController extends Controller
             return finalResponse('failed', $e->getCode(), $e->getMessage());
         }
     }
-    public function name(Request $request)
+
+    /**
+     * Update the user's name.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function name(Request $request): JsonResponse
     {
         $request->validate([
             'first_name' => 'required|string|max:30',
@@ -70,7 +90,13 @@ class ProfileController extends Controller
 
 
 
-    public function getUser(Request $request)
+    /**
+     * Retrieve the authenticated user's profile information.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getUser(Request $request): JsonResponse
     {
         try {
             $user = $request->user('api');

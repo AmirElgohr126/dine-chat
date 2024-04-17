@@ -6,6 +6,7 @@ use Exception;
 use App\Models\User;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\App\Auth\RegisterRequest;
+use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
@@ -13,9 +14,9 @@ class RegisterController extends Controller
      * Handle the user registration process.
      *
      * @param  RegisterRequest  $request
-     * @return \Illuminate\Http\JsonResponse;
+     * @return JsonResponse;
      */
-    public function register(RegisterRequest $request)
+    public function register(RegisterRequest $request): JsonResponse
     {
         try {
             $data = $request->processedData();

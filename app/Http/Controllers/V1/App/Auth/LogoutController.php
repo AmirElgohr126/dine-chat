@@ -3,12 +3,18 @@
 namespace App\Http\Controllers\V1\App\Auth;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class LogoutController extends Controller
 {
 
-    public function logout(Request $request)
+    /**
+     * Handle user logout.
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
     {
         try {
             auth('api')->logout();

@@ -19,6 +19,7 @@ class RoomResource extends JsonResource
             'sender_id' => $this->sender_id,
             'receiver_id' => $this->receiver_id,
             'restaurant_id' => $this->restaurant_id,
+            'public_place_id' => $this->public_place_id,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

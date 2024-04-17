@@ -18,56 +18,60 @@ class ChatService implements ChatServiceInterface
      * check chat with your self
      * @param mixed $authId
      * @param mixed $IdChatWith
+     * @throws Exception
      */
-    public function chatWithYourSelf($authId, $IdChatWith) {
+    public function chatWithYourSelf($authId, $IdChatWith): void
+    {
         if ($authId == $IdChatWith) {
             throw new Exception(__('errors.can_not_chat_with_yourself'), 201);
         }
     }
 
 
-
-
     /**
      * check corresponding user is in reservation in this restaurant or no
-     * @param mixed $restaurantId
+     * @param mixed $PlaceId
      * @param mixed $IdChatWith
+     * @param mixed $place
+     * @throws Exception
      */
-    public function checkAnotherPersonInRestaurant($restaurantId, $IdChatWith) {
-        $anotherUserAttendance = UserAttendance::where('user_id', $IdChatWith)
-            ->where('created_at', '>', now())
-            ->where('restaurant_id', $restaurantId)
-            ->first();
-        if (!$anotherUserAttendance) {
-            throw new Exception(__('errors.user_not_in_restaurant'), 201);
-        }
+    public function checkAnotherPersonInPlace($PlaceId, $IdChatWith, $place): void
+    {
+            $anotherUserAttendance = UserAttendance::where('user_id', $IdChatWith)
+                ->where($place, $PlaceId)
+                ->where('created_at', '>', now())
+                ->first();
+            if (!$anotherUserAttendance) {
+                throw new Exception(__('errors.user_not_in_the_same_place'), 201);
+            }
     }
-
-
 
 
     /**
      * Handle the case where the conversation already exists
      * @param mixed $user
      * @param mixed $request
-     * @param mixed $restaurant
+     * @param mixed $place
+     * @param mixed $placeId
+     * @throws Exception
      */
-    public function checkChatExist($user, $request, $restaurant) {
+    public function checkChatExist($user, $request, $place , $placeId): void
+    {
         $existingConversation = Conversation::
-            where(function ($query) use ($user, $request, $restaurant) {
+            where(function ($query) use ($user, $request, $place, $placeId) {
                 $query->where('sender_id', $user->id)
                     ->where('receiver_id', $request->user_id)
-                    ->where('restaurant_id', $restaurant->id)
+                    ->where($place , $placeId)
                     ->where(function ($q) {
                         $q->where('status', 'invited')
                             ->orWhere('status', 'accept');
                     })
                     ->where('deleted_at', '>', now());
             })
-            ->orWhere(function ($query) use ($user, $request, $restaurant) {
+            ->orWhere(function ($query) use ($user, $request, $place , $placeId) {
                 $query->where('sender_id', $request->user_id)
                     ->where('receiver_id', $user->id)
-                    ->where('restaurant_id', $restaurant->id)
+                    ->where($place , $placeId)
                     ->where(function ($q) {
                         $q->where('status', 'invited')
                             ->orWhere('status', 'accept');
@@ -88,8 +92,10 @@ class ChatService implements ChatServiceInterface
      * Handle the case if follow or no
      * @param mixed $user
      * @param mixed $request
+     * @return mixed
      */
-    public function checkFollow($user, $request, $setting) {
+    public function checkFollow($user, $request): mixed
+    {
         $dataDeleted = ConversationDeleteAfter::firstRowNormalCase();
         $checkFollow = UserFollower::where('user_id', $user->id)
             ->where('followed_user', $request->user_id)
@@ -101,5 +107,25 @@ class ChatService implements ChatServiceInterface
         return $dataDeleted;
     }
 
+    /**
+     * create chat
+     * @param mixed $dataDeleted
+     * @param mixed $place
+     * @param mixed $user
+     * @param mixed $request
+     * @param mixed $placeId
+     * @return mixed
+     */
+    public function createChat($dataDeleted, $place, $user, $request,$placeId): mixed
+    {
+        $request_reservation = Conversation::create([
+            'sender_id' => $user->id,
+            'receiver_id' => $request->user_id,
+             $place => $placeId,
+            'status' => 'invited',
+            'deleted_at' => $dataDeleted
+        ]);
+        return $request_reservation;
+    }
 }
 

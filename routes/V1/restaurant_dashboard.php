@@ -43,7 +43,7 @@ Route::middleware('set_lang')->group(function () {
         Route::post('send', [NotificationController::class, 'sendNotificationNow']); // finished
     });
     Route::group(['prefix' => 'tables', 'middleware' => ['auth:restaurant']], function () {
-        Route::post('/create', [RestaurantAssest::class, 'createAssest']); // finished
+        Route::post('/create', [RestaurantAssest::class, 'createAssets']); // finished
         Route::get('/list', [RestaurantAssest::class, 'listAssets']); // finished
     });
     Route::group(['prefix' => 'tickets', 'middleware' => ['auth:restaurant']], function () {

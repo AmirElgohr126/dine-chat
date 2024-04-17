@@ -12,7 +12,7 @@ use Endroid\QrCode\ErrorCorrectionLevel;
 use Endroid\QrCode\Label\LabelAlignment;
 use Endroid\QrCode\Label\Font\NotoSans;
 use Endroid\QrCode\RoundBlockSizeMode;
-
+use Illuminate\Http\JsonResponse;
 
 class GenerateUrlAndQrController extends Controller
 {
@@ -20,10 +20,10 @@ class GenerateUrlAndQrController extends Controller
 
     /**
      * Generate URL and QR code for each chair based on restaurant
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @param Request $request
+     * @return JsonResponse
      */
-    public function ChairsBasedOnRestaurant(Request $request)
+    public function chairsBasedOnRestaurant(Request $request): JsonResponse
     {
         $chairs = Chair::where('restaurant_id', $request->restaurant_id)->get();
         $restaurant = Restaurant::find($request->restaurant_id);
@@ -49,7 +49,7 @@ class GenerateUrlAndQrController extends Controller
      * @param string $nfcNumber
      * @return string
      */
-    public function generateQRCode($restaurantId, $url, $nfcNumber)
+    public function generateQRCode($restaurantId, $url, $nfcNumber) : string
     {
         $qrCode = Builder::create()
             ->writer(new PngWriter())
@@ -91,21 +91,21 @@ class GenerateUrlAndQrController extends Controller
 
     /**
      * Generate URL for each chair
-     * @param \App\Models\Restaurant $restaurant
-     * @param \App\Models\Chair $chair
+     * @param Restaurant $restaurant
+     * @param Chair $chair
      * @return string
      */
-    public function generateURL($restaurant, $chair)
+    public function generateURL($restaurant, $chair) : string
     {
         $data = [
+            'type' => 'restaurant',
             'latitude' => $restaurant->latitude,
             'longitude' => $restaurant->longitude,
             'restaurant_id' => $restaurant->id,
             'nfc_number' => $chair->nfc_number,
         ];
-        $url = $baseUrl = "https://dinechat.chat/";
-        $url = $baseUrl . '?' . http_build_query($data);
-        return $url;
+        $baseUrl = "https://dinechat.chat/";
+        return $baseUrl . '?' . http_build_query($data);
     }
 
 

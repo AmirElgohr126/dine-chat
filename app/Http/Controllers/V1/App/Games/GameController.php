@@ -25,7 +25,8 @@ class GameController extends Controller
 
 
 
-    public function RequestToPlay(Request $request)
+
+    public function requestToPlay(Request $request): \Illuminate\Http\JsonResponse
     {
         $request->validate([
             'receiver_id' => 'required|integer|exists:users,id',
@@ -48,7 +49,7 @@ class GameController extends Controller
         return finalResponse('success', 200, $room);
     }
 
-    public function cancelRequest(Request $request)
+    public function cancelRequest(Request $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validate([
             'room_id' => 'required|integer',
@@ -91,7 +92,7 @@ class GameController extends Controller
         return finalResponse('success', 200, $game);
     }
 
-    public function cancelInvite(Request $request)
+    public function cancelInvite(Request $request): \Illuminate\Http\JsonResponse
     {
         $validated = $request->validate([
             'room_id' => 'required|integer'

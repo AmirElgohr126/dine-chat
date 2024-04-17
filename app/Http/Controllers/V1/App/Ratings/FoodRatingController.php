@@ -98,7 +98,7 @@ class FoodRatingController extends Controller
     //     // Return the final response
     //     return finalResponse('success', 200, $responseData);
     // }
-    public function getFoodOfrestaurant(Request $request)
+    public function getFoodOfRestaurant(Request $request)
     {
         $restaurantId = $request->restaurant_id;
         $foods = Food::getFoodsWithUserRatings($restaurantId);

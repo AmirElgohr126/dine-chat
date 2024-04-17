@@ -8,7 +8,7 @@ use App\Http\Controllers\V1\Dashboards\DashboardAdmin\Statistics\StatisticsContr
 use App\Http\Controllers\V1\Dashboards\DashboardAdmin\Resturants\Users\ManageUsersController;
 use App\Http\Controllers\V1\Dashboards\DashboardAdmin\Settings\AboutSettings\AboutController;
 use App\Http\Controllers\V1\Dashboards\DashboardAdmin\Settings\ChatSettings\RestrictionsController;
-use App\Http\Controllers\V1\Dashboards\DashboardAdmin\PublicPlaces\PublicPlaces\PublicPlacesContoller;
+use App\Http\Controllers\V1\Dashboards\DashboardAdmin\PublicPlaces\PublicPlaces\PublicPlacesController;
 use App\Http\Controllers\V1\Dashboards\DashboardAdmin\PublicPlaces\QrCodeForPlaces\QrPlacesController;
 use App\Http\Controllers\V1\Dashboards\DashboardAdmin\Settings\ChatSettings\QuestionableChatController;
 use App\Http\Controllers\V1\Dashboards\DashboardAdmin\Resturants\Restaurants\ManageRestaurantsController;
@@ -47,17 +47,17 @@ Route::middleware('set_lang')->group(function () {
 
         Route::group(['prefix' => 'public-places'], function () {
             // List all public places
-            Route::get('/', [PublicPlacesContoller::class, 'listPublicPlace']);  // finished
+            Route::get('/', [PublicPlacesController::class, 'listPublicPlace']);  // finished
 
             // Create a new public place
-            Route::post('/add', [PublicPlacesContoller::class, 'addPublicPlace']); //finished
+            Route::post('/add', [PublicPlacesController::class, 'addPublicPlace']); //finished
 
             // Update a specific public place
-            Route::put('/{id}/update', [PublicPlacesContoller::class, 'updatePublicPlace']) //finished
+            Route::put('/{id}/update', [PublicPlacesController::class, 'updatePublicPlace']) //finished
                 ->where('id', '[0-9]+');
 
             // Delete a specific public place
-            Route::delete('{id}/delete', [PublicPlacesContoller::class, 'deletePublicPlace']) //finished
+            Route::delete('{id}/delete', [PublicPlacesController::class, 'deletePublicPlace']) //finished
                 ->where('id', '[0-9]+');
         });
 
@@ -91,7 +91,7 @@ Route::middleware('set_lang')->group(function () {
 
         Route::group(['prefix' => 'qr-restaurant'], function () {
             // Generate a QR code for restaurant chairs
-            Route::get('/generate', [GenerateUrlAndQrController::class, 'ChairsBasedOnRestaurant']); // finished
+            Route::get('/generate', [GenerateUrlAndQrController::class, 'chairsBasedOnRestaurant']); // finished
 
             // // Update a QR code for restaurant chairs
             // Route::get('/{id}', [GenerateUrlAndQrController::class, 'getQrCode'])
@@ -278,7 +278,7 @@ Route::middleware('set_lang')->group(function () {
 
             // Get count of new customers from the last week
             Route::get('/new-customers-last-week', [StatisticsController::class, 'getCountNewCustomersLastWeek']); // finished
-            
+
             // Get total number of customers
             Route::get('/total-customers', [StatisticsController::class, 'getTotalCustomers']); // finished
         });

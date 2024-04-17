@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class BookingDates extends Model
 {
@@ -16,25 +17,42 @@ class BookingDates extends Model
         'period_logout_unit_public_places'
     ];
 
-    public static function firstRowRestaurant()
+    /**
+     * @return Carbon
+     */
+    public static function firstRowRestaurant(): Carbon
     {
-        $model = self::find(1);
-        $period = self::determainPeriodForRestaurant($model);
-        return $period;
+        $model = self::findOrNew(1);
+        if (!$model->exists) {
+            $model->period_reservation_deleted_after = 1;
+            $model->period_reservation_unit = 'hour';
+            $model->save();
+        }
+        return self::determinePeriodForRestaurant($model);
     }
 
 
-    public static function firstRowForPublicPlaces()
+    public static function firstRowForPublicPlaces() : string
     {
-        $model = self::find(1);
-        $period = self::determainPeriodForPublicPlaces($model);
-        return $period;
+        $model = self::findOrNew(1);
+        if (!$model->exists) {
+            $model->period_logout_public_places = 1;
+            $model->period_logout_unit_public_places = 'hour';
+            $model->save();
+        }
+        return self::determinePeriodForPublicPlaces($model)->format('Y-m-d H:i:s');
+
     }
 
 
 
 
-    public static function determainPeriodForRestaurant($model)
+    /**
+     *
+     * @param $model
+     * @return Carbon
+     */
+    public static function determinePeriodForRestaurant($model): Carbon
     {
         $value = $model->period_reservation_deleted_after;
         switch ($model->period_reservation_unit) {
@@ -56,8 +74,12 @@ class BookingDates extends Model
 
 
 
-
-    public static function determainPeriodForPublicPlaces($model)
+    /**
+     * return period for public places logout
+     * @param $model
+     * @return Carbon
+     */
+    public static function determinePeriodForPublicPlaces($model): Carbon
     {
         $value = $model->period_logout_public_places;
         switch ($model->period_logout_unit_public_places) {

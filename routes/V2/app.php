@@ -3,7 +3,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\V2\App\Nfc\NfcController;
+use App\Http\Controllers\V2\App\Reservation\NfcController;
 use App\Http\Controllers\V2\App\Chat\ChatController;
 use App\Http\Controllers\V2\App\Auth\LoginController;
 use App\Http\Controllers\V2\App\Games\GameController;

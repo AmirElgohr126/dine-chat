@@ -5,6 +5,7 @@ use Exception;
 
 use App\Models\Restaurant;
 use App\Models\UserFollower;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Models\UserAttendance;
 use Illuminate\Validation\Rule;
@@ -16,7 +17,11 @@ use App\Http\Controllers\Controller;
 class RestaurantController extends Controller
 {
 
-    public function usersInRestaurant(Request $request)
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function usersInRestaurant(Request $request): JsonResponse
     {
         try {
             $restaurant = Restaurant::find($request->restaurant_id);
@@ -24,7 +29,6 @@ class RestaurantController extends Controller
             {
                 throw new Exception(__('errors.no_restaurant'), 405);
             }
-            // $oneHourAgo = Carbon::now()->subHour();
             $userAttendance = $restaurant->userAttendance()->where('created_at', '>=', now())->get();
             if (isset($userAttendance) == null) {
                 return finalResponse('success', 204);
@@ -42,14 +46,18 @@ class RestaurantController extends Controller
 
                 $data[] = $userData; // Append the user data to the data array
             }
-            // $userAttendance = UserAttendanceResource::collection($userAttendance);
             return finalResponse('success', 200, $data);
         } catch (Exception $e) {
             return finalResponse('failed', 500, null, $e->getMessage());
         }
     }
 
-    public function getTablesAndChairs(Request $request)
+    /**
+     * Get tables and chairs and users in the restaurant
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function getTablesAndChairs(Request $request): JsonResponse
     {
         try {
             $restaurant = Restaurant::find($request->restaurant_id);
@@ -83,7 +91,12 @@ class RestaurantController extends Controller
         }
     }
 
-    public function followUser(Request $request)
+    /**
+     *  Follow a user in the restaurant
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function followUser(Request $request): JsonResponse
     {
         $request->validate([
             'user_id' => ['required',
@@ -112,7 +125,12 @@ class RestaurantController extends Controller
         }
     }
 
-    public function DeleteReservation(Request $request)
+    /**
+     * delete reservation from hall
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function deleteReservation(Request $request): JsonResponse
     {
         $checkReservation = UserAttendance::where('user_id', $request->user()->id)
             ->where('created_at', '>=', now())

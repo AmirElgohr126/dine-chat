@@ -103,7 +103,7 @@ class ChatController extends Controller
             // ====================================================================
             $this->chatService->checkAnotherPersonInRestaurant($request->restaurant_id, $request->user_id);
             // ====================================================================
-            // $this->chatService->checkChatExist($user, $request, $restaurant);
+            $this->chatService->checkChatExist($user, $request, $restaurant);
             // ====================================================================
             $dataDeleted = $this->chatService->checkFollow($user, $request, $settings);
             // ====================================================================
@@ -279,7 +279,7 @@ class ChatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function AcceptinboxChat(Request $request)
+    public function acceptInboxChat(Request $request)
     {
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],
@@ -330,7 +330,7 @@ class ChatController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function RejectinboxChat(Request $request)
+    public function rejectInboxChat(Request $request)
     {
         $request->validate([
             'user_id' => ['required', 'exists:users,id'],

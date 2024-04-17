@@ -15,9 +15,10 @@ class NotificationsResources extends JsonResource
     {
         return [
             'id' => $this->id,
+            'restaurant_name' => $this->restaurant_name,
             'message' => $this->message,
             'sent_at' => $this->sent_at,
-            'photo' => retriveMedia() . $this->photo
+            'media' => retriveMedia() . $this->photo
         ];
     }
 }

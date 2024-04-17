@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\V1\App\Nfc;
+namespace App\Http\Controllers\V2\App\Reservation;
 
 use App\Models\Restaurant;
 use App\Models\BookingDates;
@@ -9,12 +9,12 @@ use App\Models\UserAttendance;
 use App\Events\DeleteReservation;
 use App\Models\HistoryAttendances;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\V1\App\Nfc\NfcRequest;
+use App\Http\Requests\V2\App\Nfc\NfcRequest;
 
 
-class NfcController extends Controller
+class ReservationController extends Controller
 {
-    public function VaildateNfcParameter(NfcRequest $request)
+    public function vaildateNfcParameter(NfcRequest $request)
     {
         $data = $request->validated();
         try {
@@ -32,7 +32,8 @@ class NfcController extends Controller
                 $checkReservationBefore->delete();
             }
 
-            $conflictingReservation = UserAttendance::where('chair_id', $chair->id)
+            $conflictingReservation = UserAttendance::
+                where('chair_id', $chair->id)
                 ->where('restaurant_id',$restaurant->id)
                 ->where('created_at', '>=', now())
                 ->first();
@@ -43,7 +44,7 @@ class NfcController extends Controller
             }
 
             // there is no reservation
-            $periodCheckReservation = BookingDates::firstRowRestaurant();
+            $periodCheckReservation = BookingDates::firstRow();
             $formattedDate = $periodCheckReservation->format('Y-m-d H:i:s');
             $reserve = UserAttendance::create([
                 'user_id' => $request->user()->id,

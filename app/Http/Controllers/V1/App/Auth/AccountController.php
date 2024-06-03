@@ -21,7 +21,7 @@ class AccountController extends Controller{
      */
     public function view()
     {
-        // Pass the user data to the view
+        // Pass the user data to the view for display
         return view('Privacy.DeleteAccount');
     }
 

@@ -13,13 +13,10 @@ class SettingsController extends Controller
 {
     public function changeEmail(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate([
+             'email' => 'required|email|unique:users,email']);
         try {
             $user = $request->user();
-            $newEmail = User::where('email', $request->email)->first();
-            if (isset($newEmail)) {
-                throw new Exception(__('errors.email_already_exists'), 405);
-            }
             $user->update([
                 'email' => $request->email,
             ]);
@@ -28,7 +25,7 @@ class SettingsController extends Controller
             $user->sendEmailVerificationNotification();
             return finalResponse('success', 200, 'success change email');
         } catch (Exception $e) {
-            return finalResponse('faild', 500, null, null, $e->getMessage());
+            return finalResponse('faild', $e->getCode(), null, null, $e->getMessage());
         }
     }
 

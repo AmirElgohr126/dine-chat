@@ -19,7 +19,7 @@ class AboutApplicationFactory extends Factory
     public function definition(): array
     {
         return [
-            'orivacy_policy' => $this->faker->paragraph,
+            'privacy_policy' => $this->faker->paragraph,
             'about_us' => $this->faker->paragraph,
             'terms_conditions' => $this->faker->paragraph,
         ];

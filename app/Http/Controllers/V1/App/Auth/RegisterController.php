@@ -10,18 +10,12 @@ use Illuminate\Http\JsonResponse;
 
 class RegisterController extends Controller
 {
-    /**
-     * Handle the user registration process.
-     *
-     * @param  RegisterRequest  $request
-     * @return JsonResponse;
-     */
+
     public function register(RegisterRequest $request): JsonResponse
     {
         try {
             $data = $request->processedData();
-            // Process and store the user's photo
-            $user = User::create($data); // Create a new user
+            $user = User::create($data);
             if ($request->hasFile('photo')) {
                 $photo = $request->file('photo');
                 $path = storeFile($photo, "users/user{$user->id}/photo", 'public');
@@ -33,8 +27,7 @@ class RegisterController extends Controller
             }
             return finalResponse('success',200,["message" => __('errors.email_send'), "user_id" => $user->id]);
         } catch (Exception $e) {
-            // handle it appropriately
-            return finalResponse('faild',500,null,null, 'something error happen ' . $e->getMessage());
+            return finalResponse('failed',500,null,null, 'something error happen ' . $e->getMessage());
         }
     }
 }

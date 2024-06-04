@@ -28,9 +28,6 @@ class BookingDates extends Model
     }
 
 
-
-
-
     /**
      * @return Carbon
      */

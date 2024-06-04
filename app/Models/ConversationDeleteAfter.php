@@ -93,9 +93,5 @@ class ConversationDeleteAfter extends Model
             default:
                 return now()->addHour();
         }
-    }
-
-
-    // =================================================================================
-
+    } 
 }

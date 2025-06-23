@@ -1,18 +1,20 @@
 # DineChat
-logo 
+<img src="http://localhost/dine-chat/storage/app/public/Dafaults/Logo/logo.png" alt="DineChat Logo" width="100"/><br>
+## DineChat: Revolutionizing Dining Experiences
 DineChat revolutionizes the dining experience by integrating a comprehensive food rating system, seamless reservation capabilities via QR codes and NFC technology, and an interactive dashboard for restaurant management. Designed to enrich the interaction between restaurants and their patrons, DineChat offers an innovative approach to dining out.
 
 ## Features
 
 ### Food Rating System
 
-Our robust platform allows customers to rate their dining experiences, providing invaluable feedback on dishes served at various restaurants. This feature aids future customers in making informed dining choices.
+Our robust platform allows customers to rate their dining experiences, providing invaluable feedback on dishes served at various restaurants. This feature aids future customers in making informed dining choices.<br>
+<img src="http://localhost/dine-chat/storage/app/public/readme/rating.png" alt="Food Rating Example" width="200"/>
 
 ### Seamless Reservations
 
 DineChat simplifies the reservation process. Each chair in participating restaurants is equipped with a unique QR code and NFC technology, enabling patrons to make reservations with just a tap or a scan.
-
-https://dinechat.chat/storage/restaurant_1/Qr_codes/qr_code_1_3.png
+<br>
+<img src="http://localhost/dine-chat/storage/app/public/readme/reservation.png" alt="QR Code Example" width="200"/>
 
 ### Interactive Restaurant Dashboard
 
@@ -22,14 +24,14 @@ Restaurant owners and managers can effortlessly manage their seating arrangement
 
 ### Maps for Restaurant and Public Places Discovery
 
-Explore restaurants and public places within your vicinity or specific locations using our integrated maps feature. This tool is perfect for planning your dining adventures or discovering new hangout spots.
-
+Explore restaurants and public places within your vicinity or specific locations using our integrated maps feature. This tool is perfect for planning your dining adventures or discovering new hangout spots.<br>
+<img src="http://localhost/dine-chat/storage/app/public/readme/map.png" alt="Maps Example" width="200"/>
 
 
 ### In-line Chat and Games
 
-DineChat takes customer engagement to the next level with an in-line chat feature and entertaining games like Tic-Tac-Toe (XO game), powered by Pusher services. Engage in conversations and enjoy light-hearted games while waiting for your meal.
-
+DineChat takes customer engagement to the next level with an in-line chat feature and entertaining games like Tic-Tac-Toe (XO game), powered by Pusher services. Engage in conversations and enjoy light-hearted games while waiting for your meal.<br>
+<img src="http://localhost/dine-chat/storage/app/public/readme/chat.png" alt="In-line Chat Example" width="200"/>
 
 
 ## Getting Started
